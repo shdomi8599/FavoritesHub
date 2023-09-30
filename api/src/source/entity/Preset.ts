@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -13,6 +14,7 @@ export class Preset {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
   @Column()
   presetName: string;
 
