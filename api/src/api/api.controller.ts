@@ -32,8 +32,8 @@ export class ApiController {
   @Get("auth/refreshToken")
   async getRefreshToken(@Request() req) {
     const { address } = req.user;
-    const ret = await this.authService.getRefreshToken(address);
-    return { refreshToken: ret };
+    const refreshToken = await this.authService.getRefreshToken(address);
+    return { refreshToken };
   }
 
   @UseGuards(AuthGuard("jwt"))
@@ -42,12 +42,6 @@ export class ApiController {
     res.clearCookie("refreshToken");
     await this.authService.logout(req.user);
     return { message: "success" };
-  }
-
-  @UseGuards(AuthGuard("jwt"))
-  @Get("auth/user")
-  getProfile(@Request() req) {
-    return req.user;
   }
 
   @UseGuards(AuthGuard("jwt-refresh"))
