@@ -1,4 +1,5 @@
 import { Controller, Get, Res } from "@nestjs/common";
+import { AuthService } from "src/auth/auth.service";
 import { FavoriteService } from "src/favorite/favorite.service";
 import { PresetService } from "src/preset/preset.service";
 import { UserService } from "src/user/user.service";
@@ -6,6 +7,7 @@ import { UserService } from "src/user/user.service";
 @Controller("api")
 export class ApiController {
   constructor(
+    private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly presetService: PresetService,
     private readonly favoriteService: FavoriteService,
