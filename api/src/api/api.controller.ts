@@ -31,8 +31,8 @@ export class ApiController {
   @UseGuards(AuthGuard("jwt"))
   @Get("auth/refreshToken")
   async getRefreshToken(@Request() req) {
-    const { address } = req.user;
-    const refreshToken = await this.authService.getRefreshToken(address);
+    const { mail } = req.user;
+    const refreshToken = await this.authService.getRefreshToken(mail);
     return { refreshToken };
   }
 
@@ -48,6 +48,6 @@ export class ApiController {
   @Get("auth/refresh")
   async refreshTokens(@Request() req) {
     const accessToken = await this.authService.getAccessToken(req.user);
-    return { accessToken: accessToken };
+    return { accessToken };
   }
 }

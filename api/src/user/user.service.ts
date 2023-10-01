@@ -37,9 +37,9 @@ export class UserService {
     return user;
   }
 
-  async checkPassword(accessToken: string, mail: string) {
+  async checkPassword(password: string, mail: string) {
     const user = await this.findOne(mail);
-    return bcrypt.compare(accessToken, user.password);
+    return bcrypt.compare(password, user.password);
   }
 
   async updateloginTime(user: User): Promise<void> {
