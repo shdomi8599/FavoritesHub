@@ -16,11 +16,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async updateRefreshToken(mail: string, refreshToken: string) {
-    const hash = await this.getHashAsync(refreshToken);
-    await this.userService.updateRefreshToken(mail, hash);
-  }
-
   async getAccessToken(user: UserAuth) {
     const payload = { sub: user.sub }; // 이 부분 수정이 필요할 수도 있겠다.
     return await this.jwtService.signAsync(payload, {
@@ -35,7 +30,10 @@ export class AuthService {
       secret: JWT_REFRESH_SECRET,
       expiresIn: "7d",
     });
-    await this.updateRefreshToken(mail, refreshToken);
+
+    const hash = await bcrypt.hash(refreshToken, 10);
+    await this.userService.updateRefreshToken(mail, hash);
+
     return refreshToken;
   }
 
@@ -50,11 +48,7 @@ export class AuthService {
   }
 
   async logout(user: UserAuth) {
-    this.userService.updateRefreshToken(user.mail, "");
+    await this.userService.updateRefreshToken(user.mail, "");
     return true;
-  }
-
-  async getHashAsync(data: string) {
-    return await bcrypt.hash(data, 10);
   }
 }

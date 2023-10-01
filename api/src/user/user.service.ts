@@ -8,23 +8,23 @@ import { Repository } from "typeorm";
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userSchema: Repository<User>,
+    private userTable: Repository<User>,
   ) {}
 
   findAll(): Promise<User[]> {
-    return this.userSchema.find();
+    return this.userTable.find();
   }
 
   findOne(mail: string): Promise<User> {
-    return this.userSchema.findOne({ where: { mail } });
+    return this.userTable.findOne({ where: { mail } });
   }
 
   async remove(mail: string): Promise<void> {
-    await this.userSchema.delete(mail);
+    await this.userTable.delete(mail);
   }
 
   async add(mail: string, password: string): Promise<User> {
-    const hashedPassword = await this.getHashedPassword(password);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User();
 
@@ -32,14 +32,9 @@ export class UserService {
     user.password = hashedPassword;
     user.refreshToken = "";
 
-    await this.userSchema.save(user);
+    await this.userTable.save(user);
 
     return user;
-  }
-
-  async getHashedPassword(password: string) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    return hashedPassword;
   }
 
   async checkPassword(accessToken: string, mail: string) {
@@ -49,13 +44,13 @@ export class UserService {
 
   async updateloginTime(user: User): Promise<void> {
     user.lastLogin = new Date();
-    await this.userSchema.save(user);
+    await this.userTable.save(user);
   }
 
   async updateRefreshToken(mail: string, hash: string) {
     const user = await this.findOne(mail);
     user.refreshToken = hash;
-    await this.userSchema.save(user);
+    await this.userTable.save(user);
   }
 
   async validRefreshToken(mail: string, refreshToken: string): Promise<User> {
