@@ -11,30 +11,33 @@ export class UserService {
     private userTable: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.userTable.find();
+  async findAll(): Promise<User[]> {
+    const users = await this.userTable.find();
+    if (!users) {
+      throw new Error("사용자 리스트를 찾을 수 없습니다.");
+    }
+    return users;
   }
 
-  findOne(mail: string): Promise<User> {
-    return this.userTable.findOne({ where: { mail } });
+  async findOne(mail: string): Promise<User> {
+    const user = await this.userTable.findOne({ where: { mail } });
+    if (!user) {
+      throw new Error("사용자를 찾을 수 없습니다.");
+    }
+    return user;
+  }
+
+  async add(mail: string, password: string): Promise<void> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User();
+    user.mail = mail;
+    user.password = hashedPassword;
+    user.refreshToken = "";
+    await this.userTable.save(user);
   }
 
   async remove(mail: string): Promise<void> {
     await this.userTable.delete(mail);
-  }
-
-  async add(mail: string, password: string): Promise<User> {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User();
-
-    user.mail = mail;
-    user.password = hashedPassword;
-    user.refreshToken = "";
-
-    await this.userTable.save(user);
-
-    return user;
   }
 
   async checkPassword(password: string, mail: string) {

@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Migration1696097213058 implements MigrationInterface {
-  name = "Migration1696097213058";
+export class Migration1696139824306 implements MigrationInterface {
+  name = "Migration1696139824306";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -11,7 +11,7 @@ export class Migration1696097213058 implements MigrationInterface {
       `CREATE TABLE \`presets\` (\`id\` int NOT NULL AUTO_INCREMENT, \`presetName\` varchar(255) NOT NULL, \`userId\` int NULL, INDEX \`IDX_7bd663a558ec85144fe51d9c2f\` (\`presetName\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     );
     await queryRunner.query(
-      `CREATE TABLE \`favorites\` (\`id\` int NOT NULL AUTO_INCREMENT, \`domain\` varchar(255) NOT NULL, \`route\` varchar(255) NOT NULL, \`presetId\` int NULL, INDEX \`IDX_9f1a6b3b3f6a92ef5bb9040688\` (\`domain\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
+      `CREATE TABLE \`favorites\` (\`id\` int NOT NULL AUTO_INCREMENT, \`favoriteName\` varchar(255) NOT NULL, \`domain\` varchar(255) NOT NULL, \`route\` varchar(255) NOT NULL, \`presetId\` int NULL, INDEX \`IDX_fed65312e52baf4e4f20c95e75\` (\`favoriteName\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     );
     await queryRunner.query(
       `ALTER TABLE \`presets\` ADD CONSTRAINT \`FK_ae4b633aa4682700fe0745fb5ed\` FOREIGN KEY (\`userId\`) REFERENCES \`users\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
@@ -29,7 +29,7 @@ export class Migration1696097213058 implements MigrationInterface {
       `ALTER TABLE \`presets\` DROP FOREIGN KEY \`FK_ae4b633aa4682700fe0745fb5ed\``,
     );
     await queryRunner.query(
-      `DROP INDEX \`IDX_9f1a6b3b3f6a92ef5bb9040688\` ON \`favorites\``,
+      `DROP INDEX \`IDX_fed65312e52baf4e4f20c95e75\` ON \`favorites\``,
     );
     await queryRunner.query(`DROP TABLE \`favorites\``);
     await queryRunner.query(

@@ -14,6 +14,9 @@ export class Favorite {
 
   @Index()
   @Column()
+  favoriteName: string;
+
+  @Column()
   domain: string;
 
   @Column()
