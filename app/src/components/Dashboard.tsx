@@ -1,4 +1,8 @@
+import { useModal } from "@/hooks";
+import { useHandleWidth } from "@/hooks/useHandleWidth";
+import { isLoginState } from "@/states";
 import {
+  AccountCircle as AccountCircleIcon,
   ChevronLeft as ChevronLeftIcon,
   Dashboard as DashboardIcon,
   Menu as MenuIcon,
@@ -20,6 +24,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 
 const navItems = [
   { name: "Admin", route: "/" },
@@ -30,14 +35,16 @@ const navItems = [
 export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
   const router = useRouter();
+  const { handleOpen } = useModal();
+  const { width } = useHandleWidth();
 
   // 상태
-  const [width, setWidth] = useState(0);
-  const [open, setOpen] = useState(true);
+  const [toolBarOpen, setToolBartoolBarOpen] = useState(true);
+  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
 
   // 핸들러
   const handleDrawer = () => {
-    setOpen(!open);
+    setToolBartoolBarOpen(!toolBarOpen);
   };
 
   const handlePage = (route: string) => {
@@ -49,26 +56,15 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   // 이펙트
   useEffect(() => {
-    // 넓이 핸들러 및 최초 넓이 상태 세팅
-    const handleWidth = () => {
-      setWidth(window.innerWidth);
-    };
-    handleWidth();
-    window.addEventListener("resize", handleWidth);
-    return () => window.removeEventListener("resize", handleWidth);
-  }, []);
-
-  useEffect(() => {
-    // 넓이가 1500 이하라면 toolbar가 off 되도록
-    if (width && width < 1500) {
-      setOpen(false);
+    if (width < 1500) {
+      setToolBartoolBarOpen(false);
     }
   }, [width]);
 
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <AppBar open={open}>
+        <AppBar open={toolBarOpen}>
           <Toolbar
             sx={{
               pr: "24px",
@@ -77,11 +73,11 @@ export default function Dashboard({ children }: { children: ReactNode }) {
             <IconButton
               edge="start"
               color="inherit"
-              aria-label="open drawer"
+              aria-label="toolBarOpen drawer"
               onClick={handleDrawer}
               sx={{
                 marginRight: "36px",
-                ...(open && { display: "none" }),
+                ...(toolBarOpen && { display: "none" }),
               }}
             >
               <MenuIcon />
@@ -95,9 +91,12 @@ export default function Dashboard({ children }: { children: ReactNode }) {
             >
               Project
             </Typography>
+            <UserIconBox>
+              <AccountCircleIcon fontSize="large" />
+            </UserIconBox>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant="permanent" open={toolBarOpen}>
           <Toolbar
             sx={{
               display: "flex",
@@ -111,7 +110,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
+          <List component="nav" sx={{ height: "90%" }}>
             {navItems.map(({ name, route }) => (
               <ListItemButton onClick={() => handlePage(route)} key={name}>
                 <ListItemIcon>
@@ -120,8 +119,22 @@ export default function Dashboard({ children }: { children: ReactNode }) {
                 <ListItemText primary={name} />
               </ListItemButton>
             ))}
-            <Divider sx={{ my: 1 }} />
           </List>
+          {toolBarOpen && (
+            <>
+              <Divider />
+              <ToolBarLoginBox>
+                {isLogin ? (
+                  <></>
+                ) : (
+                  <>
+                    <AccountCircleIcon fontSize="large" />
+                    <span onClick={handleOpen}>Login</span>
+                  </>
+                )}
+              </ToolBarLoginBox>
+            </>
+          )}
         </Drawer>
         <Main component="main">{children}</Main>
       </Box>
@@ -158,6 +171,7 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
+    overflow: "hidden",
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -189,4 +203,20 @@ const Main = styled(Box)(({ theme }) => ({
   height: "100vh",
   overflow: "auto",
   paddingTop: "64px",
+}));
+
+const ToolBarLoginBox = styled(Box)(() => ({
+  minHeight: "3rem",
+  padding: "1rem",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "0.2rem",
+  "& > span": {
+    cursor: "pointer",
+  },
+}));
+
+const UserIconBox = styled(Box)(() => ({
+  cursor: "pointer",
 }));

@@ -1,4 +1,5 @@
 import Dashboard from "@/components/Dashboard";
+import LoginModal from "@/components/LoginModal";
 import "@/styles/globals.css";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -33,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <Dashboard>
+          <LoginModal />
           <Component {...pageProps} />
         </Dashboard>
       </QueryClientProvider>
