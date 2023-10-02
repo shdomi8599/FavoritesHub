@@ -1,6 +1,6 @@
-import { useHandleOpen, useHandleWidth, useModal } from "@/hooks";
+import { useBarHeight, useHandleOpen, useHandleWidth, useModal } from "@/hooks";
 import { isLoginState } from "@/states";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
@@ -13,11 +13,13 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { handleOpen } = useModal();
   const { width } = useHandleWidth();
+  const { ref: barRef, barHeight } = useBarHeight();
   const {
     isOpen: toolBarOpen,
     setIsOpen: setToolBartoolBarOpen,
     handleOpen: handleDrawer,
   } = useHandleOpen();
+  const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
   // 상태
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
@@ -38,26 +40,33 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <DashboardBar handleDrawer={handleDrawer} toolBarOpen={toolBarOpen} />
+      <DashboardBar
+        isLogin={isLogin}
+        barRef={barRef}
+        barHeight={barHeight}
+        handleDrawer={handleDrawer}
+        toolBarOpen={toolBarOpen}
+        isMinWidth600={isMinWidth600}
+        handleModalOpen={handleOpen}
+      />
       <DashboardDrawer
         handleDrawer={handleDrawer}
-        handleOpen={handleOpen}
+        handleModalOpen={handleOpen}
         handlePage={handlePage}
         toolBarOpen={toolBarOpen}
         isLogin={isLogin}
       />
-      <Main component="main">{children}</Main>
+      <Main component="main" barheight={barHeight}>
+        {children}
+      </Main>
     </Box>
   );
 }
 
-const Main = styled(Box)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === "light"
-      ? theme.palette.grey[100]
-      : theme.palette.grey[900],
+const Main = styled(Box)(({ barheight }: { barheight: number }) => ({
   flexGrow: 1,
   height: "100vh",
   overflow: "auto",
-  paddingTop: "64px",
+  paddingTop: `${barheight}px`,
+  backgroundColor: "#f3f3f3",
 }));

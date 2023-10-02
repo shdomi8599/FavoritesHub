@@ -7,9 +7,16 @@ export const useHandleOpen = () => {
     setIsOpen(!isOpen);
   };
 
+  const offContent = () => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+  };
+
   return {
     isOpen,
     handleOpen,
     setIsOpen,
+    offContent,
   };
 };

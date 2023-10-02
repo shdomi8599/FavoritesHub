@@ -22,13 +22,13 @@ type Props = {
   handleDrawer: () => void;
   handlePage: (route: string) => void;
   isLogin: boolean;
-  handleOpen: () => void;
+  handleModalOpen: () => void;
 };
 
 export default function DashboardDrawer({
   toolBarOpen,
   handleDrawer,
-  handleOpen,
+  handleModalOpen,
   handlePage,
   isLogin,
 }: Props) {
@@ -66,7 +66,7 @@ export default function DashboardDrawer({
             ) : (
               <>
                 <AccountCircleIcon fontSize="large" />
-                <span onClick={handleOpen}>Login</span>
+                <span onClick={handleModalOpen}>로그인</span>
               </>
             )}
           </ToolBarLoginBox>

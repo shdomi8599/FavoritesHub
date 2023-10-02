@@ -1,4 +1,4 @@
-import { useBarHeight, useHandleOpen } from "@/hooks";
+import { useHandleOpen, useOutSideRef } from "@/hooks";
 import {
   AccountCircle as AccountCircleIcon,
   Menu as MenuIcon,
@@ -10,21 +10,35 @@ import {
   AppBarProps as MuiAppBarProps,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { MutableRefObject } from "react";
+import BarUserModal from "./BarUserModal";
 
 type Props = {
   toolBarOpen: boolean;
   handleDrawer: () => void;
+  barHeight: number;
+  barRef: MutableRefObject<HTMLDivElement>;
+  isMinWidth600: boolean;
+  isLogin: boolean;
+  handleModalOpen: () => void;
 };
 
-export default function DashboardBar({ toolBarOpen, handleDrawer }: Props) {
-  const isMinWidth600 = useMediaQuery("min-width:600px");
-  const { isOpen, handleOpen } = useHandleOpen();
-  const { ref, barHeight } = useBarHeight();
+export default function DashboardBar({
+  barRef,
+  barHeight,
+  toolBarOpen,
+  handleDrawer,
+  handleModalOpen,
+  isMinWidth600,
+  isLogin,
+}: Props) {
+  const { isOpen, handleOpen, offContent } = useHandleOpen();
+  const { ref } = useOutSideRef(offContent);
+  const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
   return (
-    <Container ref={ref} open={toolBarOpen}>
+    <Container ref={barRef} open={toolBarOpen}>
       <Toolbar
         sx={{
           pr: "24px",
@@ -51,18 +65,19 @@ export default function DashboardBar({ toolBarOpen, handleDrawer }: Props) {
         >
           Project
         </Typography>
-        <UserIconBox>
+        <UserIconBox ref={ref}>
           <AccountCircleIcon
             onClick={handleOpen}
             sx={{ cursor: "pointer" }}
             fontSize="large"
           />
           {isOpen && (
-            <UserContentBox
-              top={isMinWidth600 ? barHeight - 17 : barHeight - 15}
-            >
-              zxzxc
-            </UserContentBox>
+            <BarUserModal
+              isLogin={isLogin}
+              handleOpen={handleOpen}
+              contentBoxTop={contentBoxTop}
+              handleModalOpen={handleModalOpen}
+            />
           )}
         </UserIconBox>
       </Toolbar>
@@ -98,13 +113,4 @@ const Container = styled(MuiAppBar, {
 const UserIconBox = styled(Box)(() => ({
   position: "relative",
   display: "flex",
-}));
-
-const UserContentBox = styled(Box)(() => ({
-  position: "absolute",
-  width: "14vw",
-  minWidth: "120px",
-  height: "40vh",
-  border: "1px solid black",
-  right: "0",
 }));

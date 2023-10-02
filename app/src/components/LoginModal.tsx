@@ -29,6 +29,5 @@ const ContentBox = styled(Box)(({}) => ({
   minWidth: "300px",
   backgroundColor: "white",
   border: "2px solid #000",
-  boxShadow: "24px",
   padding: "1.5rem",
 }));
