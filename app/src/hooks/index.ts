@@ -1,3 +1,4 @@
+import { useHandleWidth } from "./useHandleWidth";
 import { useModal } from "./useModal";
 
-export { useModal };
+export { useHandleWidth, useModal };
