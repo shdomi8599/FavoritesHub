@@ -1,3 +1,4 @@
+import { useDashboardBarHeight, useHandleOpen } from "@/hooks";
 import {
   AccountCircle as AccountCircleIcon,
   Menu as MenuIcon,
@@ -17,9 +18,13 @@ type Props = {
   handleDrawer: () => void;
 };
 
-export default function DashBoardBar({ toolBarOpen, handleDrawer }: Props) {
+export default function DashboardBar({ toolBarOpen, handleDrawer }: Props) {
+  const { ref, dashboardBarHeight } = useDashboardBarHeight();
+  const { isOpen, handleOpen } = useHandleOpen();
+  console.log(dashboardBarHeight);
+
   return (
-    <Container open={toolBarOpen}>
+    <Container ref={ref} open={toolBarOpen}>
       <Toolbar
         sx={{
           pr: "24px",
@@ -46,8 +51,13 @@ export default function DashBoardBar({ toolBarOpen, handleDrawer }: Props) {
         >
           Project
         </Typography>
-        <UserIconBox>
+        <UserIconBox onClick={handleOpen}>
           <AccountCircleIcon fontSize="large" />
+          {isOpen && (
+            <UserContentBox dashboardBarHeight={dashboardBarHeight}>
+              zxzxc
+            </UserContentBox>
+          )}
         </UserIconBox>
       </Toolbar>
     </Container>
@@ -81,4 +91,21 @@ const Container = styled(MuiAppBar, {
 
 const UserIconBox = styled(Box)(() => ({
   cursor: "pointer",
+  position: "relative",
+  display: "flex",
 }));
+
+type UserContentProps = {
+  dashboardBarHeight: number;
+};
+
+const UserContentBox = styled(Box)(
+  ({ dashboardBarHeight }: UserContentProps) => ({
+    position: "absolute",
+    width: "14vw",
+    height: "40vh",
+    border: "1px solid black",
+    top: `${dashboardBarHeight}px`,
+    right: "0",
+  })
+);

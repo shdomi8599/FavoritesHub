@@ -25,7 +25,7 @@ type Props = {
   handleOpen: () => void;
 };
 
-export default function DashBoardDrawer({
+export default function DashboardDrawer({
   toolBarOpen,
   handleDrawer,
   handleOpen,

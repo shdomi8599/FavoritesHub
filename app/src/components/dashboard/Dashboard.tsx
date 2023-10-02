@@ -1,27 +1,26 @@
-import { useHandleWidth, useModal } from "@/hooks";
+import { useHandleOpen, useHandleWidth, useModal } from "@/hooks";
 import { isLoginState } from "@/states";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import DashBoardBar from "./DashBoardBar";
-import DashBoardDrawer from "./DashBoardDrawer";
+import DashboardBar from "./DashBoardBar";
+import DashboardDrawer from "./DashBoardDrawer";
 
 export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
   const router = useRouter();
   const { handleOpen } = useModal();
   const { width } = useHandleWidth();
+  const {
+    isOpen: toolBarOpen,
+    setIsOpen: setToolBartoolBarOpen,
+    handleOpen: handleDrawer,
+  } = useHandleOpen();
 
   // 상태
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
-  const [toolBarOpen, setToolBartoolBarOpen] = useState(true);
-
-  // 핸들러
-  const handleDrawer = () => {
-    setToolBartoolBarOpen(!toolBarOpen);
-  };
 
   const handlePage = (route: string) => {
     if (route === router.asPath) {
@@ -35,12 +34,12 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     if (width < 1500) {
       setToolBartoolBarOpen(false);
     }
-  }, [width]);
+  }, [width, setToolBartoolBarOpen]);
 
   return (
     <Box sx={{ display: "flex" }}>
-      <DashBoardBar handleDrawer={handleDrawer} toolBarOpen={toolBarOpen} />
-      <DashBoardDrawer
+      <DashboardBar handleDrawer={handleDrawer} toolBarOpen={toolBarOpen} />
+      <DashboardDrawer
         handleDrawer={handleDrawer}
         handleOpen={handleOpen}
         handlePage={handlePage}
