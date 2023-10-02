@@ -1,17 +1,15 @@
-import { DashboardBarHeightState } from "@/states";
+import { barHeightState } from "@/states";
 import { useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 
-export const useDashboardBarHeight = () => {
+export const useBarHeight = () => {
   const ref = useRef<HTMLDivElement>(null!);
 
-  const [dashboardBarHeight, setDashboardBarHeight] = useRecoilState(
-    DashboardBarHeightState
-  );
+  const [barHeight, setBarHeight] = useRecoilState(barHeightState);
 
   useEffect(() => {
     const handleheight = () => {
-      setDashboardBarHeight(ref.current.offsetHeight);
+      setBarHeight(ref.current.offsetHeight);
     };
     handleheight();
     window.addEventListener("resize", handleheight);
@@ -20,6 +18,6 @@ export const useDashboardBarHeight = () => {
 
   return {
     ref,
-    dashboardBarHeight,
+    barHeight,
   };
 };

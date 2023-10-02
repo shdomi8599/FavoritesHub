@@ -1,6 +1,6 @@
-import { useDashboardBarHeight } from "./useDashboardBarHeight";
+import { useBarHeight } from "./useBarHeight";
 import { useHandleOpen } from "./useHandleOpen";
 import { useHandleWidth } from "./useHandleWidth";
 import { useModal } from "./useModal";
 
-export { useDashboardBarHeight, useHandleOpen, useHandleWidth, useModal };
+export { useBarHeight, useHandleOpen, useHandleWidth, useModal };

@@ -10,7 +10,8 @@ export const isModalState = atom({
   default: false,
 });
 
-export const DashboardBarHeightState = atom({
-  key: "DashboardBarHeightState",
+// 대시보드 바 높이 상태
+export const barHeightState = atom({
+  key: "barHeightState",
   default: 0,
 });

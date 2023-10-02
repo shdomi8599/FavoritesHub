@@ -1,4 +1,4 @@
-import { useDashboardBarHeight, useHandleOpen } from "@/hooks";
+import { useBarHeight, useHandleOpen } from "@/hooks";
 import {
   AccountCircle as AccountCircleIcon,
   Menu as MenuIcon,
@@ -10,6 +10,7 @@ import {
   AppBarProps as MuiAppBarProps,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -19,10 +20,9 @@ type Props = {
 };
 
 export default function DashboardBar({ toolBarOpen, handleDrawer }: Props) {
-  const { ref, dashboardBarHeight } = useDashboardBarHeight();
+  const isMinWidth600 = useMediaQuery("min-width:600px");
   const { isOpen, handleOpen } = useHandleOpen();
-  console.log(dashboardBarHeight);
-
+  const { ref, barHeight } = useBarHeight();
   return (
     <Container ref={ref} open={toolBarOpen}>
       <Toolbar
@@ -51,10 +51,16 @@ export default function DashboardBar({ toolBarOpen, handleDrawer }: Props) {
         >
           Project
         </Typography>
-        <UserIconBox onClick={handleOpen}>
-          <AccountCircleIcon fontSize="large" />
+        <UserIconBox>
+          <AccountCircleIcon
+            onClick={handleOpen}
+            sx={{ cursor: "pointer" }}
+            fontSize="large"
+          />
           {isOpen && (
-            <UserContentBox dashboardBarHeight={dashboardBarHeight}>
+            <UserContentBox
+              top={isMinWidth600 ? barHeight - 17 : barHeight - 15}
+            >
               zxzxc
             </UserContentBox>
           )}
@@ -90,22 +96,15 @@ const Container = styled(MuiAppBar, {
 }));
 
 const UserIconBox = styled(Box)(() => ({
-  cursor: "pointer",
   position: "relative",
   display: "flex",
 }));
 
-type UserContentProps = {
-  dashboardBarHeight: number;
-};
-
-const UserContentBox = styled(Box)(
-  ({ dashboardBarHeight }: UserContentProps) => ({
-    position: "absolute",
-    width: "14vw",
-    height: "40vh",
-    border: "1px solid black",
-    top: `${dashboardBarHeight}px`,
-    right: "0",
-  })
-);
+const UserContentBox = styled(Box)(() => ({
+  position: "absolute",
+  width: "14vw",
+  minWidth: "120px",
+  height: "40vh",
+  border: "1px solid black",
+  right: "0",
+}));
