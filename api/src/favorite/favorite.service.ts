@@ -77,4 +77,24 @@ export class FavoriteService {
     favorite.favoriteName = favoriteName;
     await this.favoriteTable.save(favorite);
   }
+
+  async updateVisitedTime(
+    mail: string,
+    presetName: string,
+    favoriteData: Partial<Favorite>,
+  ) {
+    const favorite = await this.findOne(mail, presetName, favoriteData);
+    favorite.lastVisitedAt = new Date();
+    await this.favoriteTable.save(favorite);
+  }
+
+  async handleStar(
+    mail: string,
+    presetName: string,
+    favoriteData: Partial<Favorite>,
+  ) {
+    const favorite = await this.findOne(mail, presetName, favoriteData);
+    favorite.star = !favorite.star;
+    await this.favoriteTable.save(favorite);
+  }
 }

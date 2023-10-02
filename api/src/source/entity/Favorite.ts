@@ -22,6 +22,15 @@ export class Favorite {
   @Column()
   route: string;
 
+  @Column({ default: false })
+  star: boolean;
+
+  @Column({ type: "timestamp", default: () => "now()" })
+  lastVisitedAt: Date;
+
+  @Column({ type: "timestamp", default: () => "now()" })
+  createdAt: Date;
+
   @ManyToOne(() => Preset, (preset) => preset.favorites)
   preset: Preset;
 }
