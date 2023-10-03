@@ -14,9 +14,7 @@ import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
 import { FavoriteService } from "src/favorite/favorite.service";
 import { PresetService } from "src/preset/preset.service";
-import { Favorite } from "src/source/entity/Favorite";
-import { Preset } from "src/source/entity/Preset";
-import { User } from "src/source/entity/User";
+import { Favorite, Preset, User } from "src/source/entity";
 import { UserService } from "src/user/user.service";
 
 @ApiTags("api")

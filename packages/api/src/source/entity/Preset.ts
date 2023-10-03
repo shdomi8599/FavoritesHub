@@ -1,4 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
   Column,
   Entity,
@@ -17,10 +16,6 @@ export class Preset {
 
   @Index()
   @Column()
-  @ApiProperty({
-    example: "제일 많이 보는 곳",
-    description: "프리셋 이름을 입력해주세요.",
-  })
   presetName: string;
 
   @ManyToOne(() => User, (user) => user.presets)
