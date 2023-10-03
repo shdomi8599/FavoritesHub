@@ -22,6 +22,7 @@ export class ApiController {
     private readonly presetService: PresetService,
     private readonly favoriteService: FavoriteService,
   ) {}
+
   @UseGuards(AuthGuard("local"))
   @Post("auth/login")
   async login(
@@ -86,7 +87,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  // @UseGuards(AuthGuard("local"))
+  // @UseGuards(AuthGuard("jwt"))
   @Delete("user")
   async userDelete(@Body() dto: { mail: string }) {
     const { mail } = dto;

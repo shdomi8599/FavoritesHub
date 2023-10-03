@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "src/constants";
 import { User } from "src/source/entity/User";
-import { UserService } from "src/user/user.service";
 
 interface UserAuth extends User {
   sub: string;
@@ -10,10 +9,7 @@ interface UserAuth extends User {
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private jwtService: JwtService) {}
 
   async getAccessToken(user: UserAuth) {
     const payload = { sub: user.sub }; // 이 부분 수정이 필요할 수도 있겠다.
