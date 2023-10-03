@@ -13,6 +13,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "src/auth/auth.service";
 import { FavoriteService } from "src/favorite/favorite.service";
 import { PresetService } from "src/preset/preset.service";
+import { Favorite } from "src/source/entity/Favorite";
 import { Preset } from "src/source/entity/Preset";
 import { UserService } from "src/user/user.service";
 
@@ -121,8 +122,9 @@ export class ApiController {
     @Body() dto: { presetData: Partial<Preset> },
   ) {
     const { mail } = req.user;
+    const user = await this.userService.findOne(mail);
     const { presetData } = dto;
-    await this.presetService.add(mail, presetData);
+    await this.presetService.add(user, presetData);
     return { message: "success" };
   }
 
@@ -141,6 +143,84 @@ export class ApiController {
     const { mail } = req.user;
     const { presetName, newPresetName } = req.query;
     await this.presetService.update(mail, presetName, newPresetName);
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("favorite/list")
+  async favoriteList(@Request() req) {
+    const preset = await this.preset(req);
+    const favorites = await this.favoriteService.findAll(preset);
+    return favorites;
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("favorite")
+  async favorite(@Request() req) {
+    const preset = await this.preset(req);
+    const { domain, route, favoriteName } = req.query;
+    const favorite = await this.favoriteService.findOne(
+      preset,
+      domain,
+      route,
+      favoriteName,
+    );
+    return favorite;
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Post("favorite")
+  async favoriteAdd(
+    @Request() req,
+    @Body() dto: { favoriteData: Partial<Favorite> },
+  ) {
+    const preset = await this.preset(req);
+    const { favoriteData } = dto;
+    await this.favoriteService.add(preset, favoriteData);
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Delete("favorite")
+  async favoriteDelete(@Request() req) {
+    const preset = await this.preset(req);
+    const { domain, route, favoriteName } = req.query;
+    await this.favoriteService.remove(preset, domain, route, favoriteName);
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Put("favorite")
+  async favoriteUpdate(@Request() req) {
+    const preset = await this.preset(req);
+    const { domain, route, favoriteName } = req.query;
+    await this.favoriteService.update(preset, domain, route, favoriteName);
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("favorite/visited")
+  async favoriteVisited(@Request() req) {
+    const preset = await this.preset(req);
+    const { domain, route, favoriteName } = req.query;
+    await this.favoriteService.updateVisitedTime(
+      preset,
+      domain,
+      route,
+      favoriteName,
+    );
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Post("favorite/star")
+  async favoriteHandleStar(
+    @Request() req,
+    @Body() dto: { favoriteData: Partial<Favorite> },
+  ) {
+    const preset = await this.preset(req);
+    const { favoriteData } = dto;
+    await this.favoriteService.handleStar(preset, favoriteData);
     return { message: "success" };
   }
 }
