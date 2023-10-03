@@ -1,0 +1,21 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "compile:launcher": "lerna run compile",
+    "api:dev": "lerna run dev --parallel --scope api",
+    "app:dev": "lerna run dev --parallel --scope api --scope app",
+    "clean": "lerna clean && rimraf node_modules"
+  },
+  "dependencies": {
+    "eslint": "8.50.0",
+    "typescript": "5.2.2",
+    "prettier": "^3.0.0"
+  },
+  "devDependencies": {
+    "lerna": "^7.3.0"
+  }
+}
