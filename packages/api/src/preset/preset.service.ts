@@ -36,15 +36,14 @@ export class PresetService {
     return preset;
   }
 
-  async add(user: User, presetData: Preset) {
+  async add(user: User, presetName: string) {
     const { mail } = user;
-    const { presetName } = presetData;
     const preset = await this.findOne(mail, presetName);
     if (preset) {
       throw new Error("같은 이름의 프리셋이 존재합니다.");
     }
     const newPreset = this.presetTable.create({
-      ...presetData,
+      presetName,
       user,
     });
     await this.presetTable.save(newPreset);
