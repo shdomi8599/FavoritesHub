@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Post,
+  Put,
   Request,
   Res,
   UseGuards,
@@ -12,6 +13,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "src/auth/auth.service";
 import { FavoriteService } from "src/favorite/favorite.service";
 import { PresetService } from "src/preset/preset.service";
+import { Preset } from "src/source/entity/Preset";
 import { UserService } from "src/user/user.service";
 
 @Controller("api")
@@ -92,6 +94,53 @@ export class ApiController {
   async userDelete(@Body() dto: { mail: string }) {
     const { mail } = dto;
     await this.userService.remove(mail);
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("preset/list")
+  async presetList(@Request() req) {
+    const { mail } = req.user;
+    const presets = await this.presetService.findAll(mail);
+    return presets;
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("preset")
+  async preset(@Request() req) {
+    const { mail } = req.user;
+    const { presetName } = req.query;
+    const preset = await this.presetService.findOne(mail, presetName);
+    return preset;
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Post("preset")
+  async presetAdd(
+    @Request() req,
+    @Body() dto: { presetData: Partial<Preset> },
+  ) {
+    const { mail } = req.user;
+    const { presetData } = dto;
+    await this.presetService.add(mail, presetData);
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Delete("preset")
+  async presetDelete(@Request() req) {
+    const { mail } = req.user;
+    const { presetName } = req.query;
+    await this.presetService.remove(mail, presetName);
+    return { message: "success" };
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Put("preset")
+  async presetUpdate(@Request() req) {
+    const { mail } = req.user;
+    const { presetName, newPresetName } = req.query;
+    await this.presetService.update(mail, presetName, newPresetName);
     return { message: "success" };
   }
 }
