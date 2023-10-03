@@ -11,7 +11,7 @@ export class FavoriteService {
     private favoriteTable: Repository<Favorite>,
   ) {}
 
-  async findAll(preset: Partial<Preset>): Promise<Favorite[]> {
+  async findAll(preset: Preset): Promise<Favorite[]> {
     const { favorites } = preset;
     if (!favorites) {
       throw new Error("즐겨찾기 리스트를 찾을 수 없습니다.");
@@ -20,7 +20,7 @@ export class FavoriteService {
   }
 
   async findOne(
-    preset: Partial<Preset>,
+    preset: Preset,
     domain: string,
     route: string,
     favoriteName: string,
@@ -40,7 +40,7 @@ export class FavoriteService {
     return favorite;
   }
 
-  async add(preset: Partial<Preset>, favoriteData: Partial<Favorite>) {
+  async add(preset: Preset, favoriteData: Favorite) {
     const { domain, route, favoriteName } = favoriteData;
     const favorite = await this.findOne(preset, domain, route, favoriteName);
     if (favorite) {
@@ -54,7 +54,7 @@ export class FavoriteService {
   }
 
   async remove(
-    preset: Partial<Preset>,
+    preset: Preset,
     domain: string,
     route: string,
     favoriteName: string,
@@ -64,7 +64,7 @@ export class FavoriteService {
   }
 
   async update(
-    preset: Partial<Preset>,
+    preset: Preset,
     domain: string,
     route: string,
     favoriteName: string,
@@ -77,7 +77,7 @@ export class FavoriteService {
   }
 
   async updateVisitedTime(
-    preset: Partial<Preset>,
+    preset: Preset,
     domain: string,
     route: string,
     favoriteName: string,
@@ -87,7 +87,7 @@ export class FavoriteService {
     await this.favoriteTable.save(favorite);
   }
 
-  async handleStar(preset: Partial<Preset>, favoriteData: Partial<Favorite>) {
+  async handleStar(preset: Preset, favoriteData: Favorite) {
     const { domain, route, favoriteName } = favoriteData;
     const favorite = await this.findOne(preset, domain, route, favoriteName);
     favorite.star = !favorite.star;

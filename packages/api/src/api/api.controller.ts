@@ -10,13 +10,16 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
 import { FavoriteService } from "src/favorite/favorite.service";
 import { PresetService } from "src/preset/preset.service";
 import { Favorite } from "src/source/entity/Favorite";
 import { Preset } from "src/source/entity/Preset";
+import { User } from "src/source/entity/User";
 import { UserService } from "src/user/user.service";
 
+@ApiTags("api")
 @Controller("api")
 export class ApiController {
   constructor(
@@ -28,6 +31,11 @@ export class ApiController {
 
   @UseGuards(AuthGuard("local"))
   @Post("auth/login")
+  @ApiResponse({
+    status: 201,
+    description: "유저 로그인에 사용되는 API입니다.",
+    type: User,
+  })
   async login(
     @Request() req,
     @Res({ passthrough: true }) res,
@@ -84,6 +92,11 @@ export class ApiController {
 
   // @UseGuards(AuthGuard("local"))
   @Post("user")
+  @ApiResponse({
+    status: 201,
+    description: "유저 회원가입에 사용되는 API입니다.",
+    type: User,
+  })
   async userSignUp(@Body() dto: { mail: string; password: string }) {
     const { mail, password } = dto;
     await this.userService.add(mail, password);
@@ -117,10 +130,12 @@ export class ApiController {
 
   @UseGuards(AuthGuard("jwt"))
   @Post("preset")
-  async presetAdd(
-    @Request() req,
-    @Body() dto: { presetData: Partial<Preset> },
-  ) {
+  @ApiResponse({
+    status: 201,
+    description: "프리셋 생성에 사용되는 API입니다.",
+    type: Preset,
+  })
+  async presetAdd(@Request() req, @Body() dto: { presetData: Preset }) {
     const { mail } = req.user;
     const user = await this.userService.findOne(mail);
     const { presetData } = dto;
@@ -170,12 +185,18 @@ export class ApiController {
 
   @UseGuards(AuthGuard("jwt"))
   @Post("favorite")
+  @ApiResponse({
+    status: 201,
+    description: "즐겨찾기 생성에 사용되는 API입니다.",
+    type: Favorite,
+  })
   async favoriteAdd(
     @Request() req,
-    @Body() dto: { favoriteData: Partial<Favorite> },
+    @Body() dto: { presetName: string; favoriteData: Favorite },
   ) {
-    const preset = await this.preset(req);
-    const { favoriteData } = dto;
+    const { mail } = req.user;
+    const { presetName, favoriteData } = dto;
+    const preset = await this.presetService.findOne(mail, presetName);
     await this.favoriteService.add(preset, favoriteData);
     return { message: "success" };
   }
@@ -216,10 +237,11 @@ export class ApiController {
   @Post("favorite/star")
   async favoriteHandleStar(
     @Request() req,
-    @Body() dto: { favoriteData: Partial<Favorite> },
+    @Body() dto: { presetName: string; favoriteData: Favorite },
   ) {
-    const preset = await this.preset(req);
-    const { favoriteData } = dto;
+    const { mail } = req.user;
+    const { presetName, favoriteData } = dto;
+    const preset = await this.presetService.findOne(mail, presetName);
     await this.favoriteService.handleStar(preset, favoriteData);
     return { message: "success" };
   }

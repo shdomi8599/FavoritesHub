@@ -36,7 +36,7 @@ export class PresetService {
     return preset;
   }
 
-  async add(user: User, presetData: Partial<Preset>) {
+  async add(user: User, presetData: Preset) {
     const { mail } = user;
     const { presetName } = presetData;
     const preset = await this.findOne(mail, presetName);
