@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "src/constants";
 import { User } from "src/source/entity/User";
 import { UserService } from "src/user/user.service";
@@ -30,10 +29,6 @@ export class AuthService {
       secret: JWT_REFRESH_SECRET,
       expiresIn: "7d",
     });
-
-    const hash = await bcrypt.hash(refreshToken, 10);
-    await this.userService.updateRefreshToken(mail, hash);
-
     return refreshToken;
   }
 
@@ -45,10 +40,5 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
-  }
-
-  async logout(user: UserAuth) {
-    await this.userService.updateRefreshToken(user.mail, "");
-    return true;
   }
 }

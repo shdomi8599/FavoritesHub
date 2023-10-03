@@ -37,11 +37,11 @@ export class UserService {
   }
 
   async remove(mail: string): Promise<void> {
-    await this.userTable.delete(mail);
+    const user = await this.findOne(mail);
+    await this.userTable.delete(user);
   }
 
-  async checkPassword(password: string, mail: string) {
-    const user = await this.findOne(mail);
+  async checkPassword(user: User, password: string) {
     return bcrypt.compare(password, user.password);
   }
 
@@ -50,7 +50,8 @@ export class UserService {
     await this.userTable.save(user);
   }
 
-  async updateRefreshToken(mail: string, hash: string) {
+  async updateRefreshToken(mail: string, refreshToken: string) {
+    const hash = await bcrypt.hash(refreshToken, 10);
     const user = await this.findOne(mail);
     user.refreshToken = hash;
     await this.userTable.save(user);
