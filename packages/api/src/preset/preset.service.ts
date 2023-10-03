@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Preset } from "src/source/entity/Preset";
-import { UserService } from "src/user/user.service";
+import { User } from "src/source/entity/User";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -9,7 +9,6 @@ export class PresetService {
   constructor(
     @InjectRepository(Preset)
     private presetTable: Repository<Preset>,
-    private readonly userService: UserService,
   ) {}
 
   async findAll(mail: string): Promise<Preset[]> {
@@ -37,8 +36,8 @@ export class PresetService {
     return preset;
   }
 
-  async add(mail: string, presetData: Partial<Preset>) {
-    const user = await this.userService.findOne(mail);
+  async add(user: User, presetData: Partial<Preset>) {
+    const { mail } = user;
     const { presetName } = presetData;
     const preset = await this.findOne(mail, presetName);
     if (preset) {

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { PresetService } from "src/preset/preset.service";
 import { Favorite } from "src/source/entity/Favorite";
+import { Preset } from "src/source/entity/Preset";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -9,11 +9,9 @@ export class FavoriteService {
   constructor(
     @InjectRepository(Favorite)
     private favoriteTable: Repository<Favorite>,
-    private readonly presetService: PresetService,
   ) {}
 
-  async findAll(mail: string, presetName: string): Promise<Favorite[]> {
-    const preset = await this.presetService.findOne(mail, presetName);
+  async findAll(preset: Partial<Preset>): Promise<Favorite[]> {
     const { favorites } = preset;
     if (!favorites) {
       throw new Error("즐겨찾기 리스트를 찾을 수 없습니다.");
@@ -22,12 +20,11 @@ export class FavoriteService {
   }
 
   async findOne(
-    mail: string,
-    presetName: string,
-    favoriteData: Partial<Favorite>,
+    preset: Partial<Preset>,
+    domain: string,
+    route: string,
+    favoriteName: string,
   ): Promise<Favorite> {
-    const preset = await this.presetService.findOne(mail, presetName);
-    const { domain, route, favoriteName } = favoriteData;
     const favorite = await this.favoriteTable.findOne({
       where: {
         preset,
@@ -43,9 +40,9 @@ export class FavoriteService {
     return favorite;
   }
 
-  async add(mail: string, presetName: string, favoriteData: Partial<Favorite>) {
-    const preset = await this.presetService.findOne(mail, presetName);
-    const favorite = await this.findOne(mail, presetName, favoriteData);
+  async add(preset: Partial<Preset>, favoriteData: Partial<Favorite>) {
+    const { domain, route, favoriteName } = favoriteData;
+    const favorite = await this.findOne(preset, domain, route, favoriteName);
     if (favorite) {
       throw new Error("같은 이름의 즐겨찾기가 존재합니다.");
     }
@@ -57,21 +54,22 @@ export class FavoriteService {
   }
 
   async remove(
-    mail: string,
-    presetName: string,
-    favoriteData: Partial<Favorite>,
+    preset: Partial<Preset>,
+    domain: string,
+    route: string,
+    favoriteName: string,
   ) {
-    const favorite = await this.findOne(mail, presetName, favoriteData);
+    const favorite = await this.findOne(preset, domain, route, favoriteName);
     await this.favoriteTable.delete(favorite);
   }
 
   async update(
-    mail: string,
-    presetName: string,
-    favoriteData: Partial<Favorite>,
+    preset: Partial<Preset>,
+    domain: string,
+    route: string,
+    favoriteName: string,
   ) {
-    const favorite = await this.findOne(mail, presetName, favoriteData);
-    const { domain, route, favoriteName } = favoriteData;
+    const favorite = await this.findOne(preset, domain, route, favoriteName);
     favorite.domain = domain;
     favorite.route = route;
     favorite.favoriteName = favoriteName;
@@ -79,21 +77,19 @@ export class FavoriteService {
   }
 
   async updateVisitedTime(
-    mail: string,
-    presetName: string,
-    favoriteData: Partial<Favorite>,
+    preset: Partial<Preset>,
+    domain: string,
+    route: string,
+    favoriteName: string,
   ) {
-    const favorite = await this.findOne(mail, presetName, favoriteData);
+    const favorite = await this.findOne(preset, domain, route, favoriteName);
     favorite.lastVisitedAt = new Date();
     await this.favoriteTable.save(favorite);
   }
 
-  async handleStar(
-    mail: string,
-    presetName: string,
-    favoriteData: Partial<Favorite>,
-  ) {
-    const favorite = await this.findOne(mail, presetName, favoriteData);
+  async handleStar(preset: Partial<Preset>, favoriteData: Partial<Favorite>) {
+    const { domain, route, favoriteName } = favoriteData;
+    const favorite = await this.findOne(preset, domain, route, favoriteName);
     favorite.star = !favorite.star;
     await this.favoriteTable.save(favorite);
   }
