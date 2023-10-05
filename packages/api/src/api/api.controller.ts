@@ -15,11 +15,15 @@ import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
+import { Favorite } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
-import { PostAuthLoginDto, PostAuthLogoutDto } from "./dto/auth";
-import { PostFavoriteAddDto, PostFavoriteHandleStarDto } from "./dto/favorite";
-import { PostPresetAddDto } from "./dto/preset";
-import { PostUserSignUpDto } from "./dto/user";
+import { ReqPostAuthLoginDto } from "./dto/req/auth";
+import {
+  ReqPostFavoriteAddDto,
+  ReqPostFavoriteHandleStarDto,
+} from "./dto/req/favorite";
+import { ReqPostPresetAddDto } from "./dto/req/preset";
+import { ReqPostUserSignUpDto } from "./dto/req/user";
 
 @ApiTags("api")
 @Controller("api")
@@ -36,12 +40,11 @@ export class ApiController {
   @ApiResponse({
     status: 201,
     description: "유저 로그인에 사용되는 API입니다.",
-    type: PostAuthLoginDto,
   })
   async postAuthLogin(
     @Request() req,
     @Res({ passthrough: true }) res,
-    @Body() dto: PostAuthLoginDto,
+    @Body() dto: ReqPostAuthLoginDto,
   ) {
     const cookieRefreshToken = req.cookies.refreshToken;
     const { mail, password } = dto;
@@ -85,13 +88,9 @@ export class ApiController {
   @ApiResponse({
     status: 201,
     description: "로그아웃 API입니다.",
-    type: PostAuthLogoutDto,
   })
-  async postAuthLogout(
-    @Res({ passthrough: true }) res,
-    @Body() dto: PostAuthLogoutDto,
-  ) {
-    const { mail } = dto;
+  async postAuthLogout(@Res({ passthrough: true }) res) {
+    const { mail } = res.user;
     res.clearCookie("refreshToken");
     await this.usersService.updateRefreshToken(mail, "");
     return { message: "success" };
@@ -109,7 +108,7 @@ export class ApiController {
   @ApiResponse({
     status: 201,
     description: "유저 회원가입에 사용되는 API입니다.",
-    type: PostUserSignUpDto,
+    type: ReqPostUserSignUpDto,
   })
   async postUserSignUp(@Body() dto: { mail: string; password: string }) {
     const { mail, password } = dto;
@@ -118,10 +117,9 @@ export class ApiController {
   }
 
   // @UseGuards(AuthGuard("jwt"))
-  @Delete("user")
-  async deleteUser(@Request() req) {
-    const { mail } = req.query;
-    await this.usersService.remove(mail);
+  @Delete("user/:userId")
+  async deleteUser(@Param("userId") userId: number) {
+    await this.usersService.remove(userId);
     return { message: "success" };
   }
 
@@ -145,11 +143,11 @@ export class ApiController {
   @ApiResponse({
     status: 201,
     description: "프리셋 생성에 사용되는 API입니다.",
-    type: PostPresetAddDto,
+    type: ReqPostPresetAddDto,
   })
   async postPresetAdd(
     @Param("userId") userId: number,
-    @Body() dto: PostPresetAddDto,
+    @Body() dto: ReqPostPresetAddDto,
   ) {
     const user = await this.usersService.findOneToId(userId);
     const { presetName } = dto;
@@ -195,11 +193,11 @@ export class ApiController {
   @ApiResponse({
     status: 201,
     description: "즐겨찾기 생성에 사용되는 API입니다.",
-    type: PostFavoriteAddDto,
+    type: ReqPostFavoriteAddDto,
   })
   async postFavoriteAdd(
     @Param("presetId") presetId: number,
-    @Body() dto: PostFavoriteAddDto,
+    @Body() dto: ReqPostFavoriteAddDto,
   ) {
     const { favoriteData } = dto;
     const preset = await this.presetsService.findOne(presetId);
@@ -218,7 +216,7 @@ export class ApiController {
   @Put("favorite/:favoriteId")
   async putFavorite(
     @Param("favoriteId") favoriteId: number,
-    @Body() dto: PostFavoriteAddDto,
+    @Body() dto: { favoriteData: Favorite },
   ) {
     const { favoriteData } = dto;
     await this.favoritesService.update(favoriteId, favoriteData);
@@ -237,7 +235,7 @@ export class ApiController {
   @ApiResponse({
     status: 201,
     description: "즐겨찾기 별표 핸들러 API입니다.",
-    type: PostFavoriteHandleStarDto,
+    type: ReqPostFavoriteHandleStarDto,
   })
   async postFavoriteHandleStar(@Param("favoriteId") favoriteId: number) {
     await this.favoritesService.handleStar(favoriteId);

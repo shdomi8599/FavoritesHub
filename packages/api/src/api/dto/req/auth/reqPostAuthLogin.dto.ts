@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
 
-export class PostAuthLoginDto {
+export class ReqPostAuthLoginDto {
   @ApiProperty({
     example: "favorites@gmail.com",
     description: "이메일을 전달해주세요.",
