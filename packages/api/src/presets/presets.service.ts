@@ -5,7 +5,7 @@ import { User } from "src/source/entity/User";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class PresetService {
+export class PresetsService {
   constructor(
     @InjectRepository(Preset)
     private presetTable: Repository<Preset>,

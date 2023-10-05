@@ -5,7 +5,7 @@ import { Preset } from "src/source/entity/Preset";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class FavoriteService {
+export class FavoritesService {
   constructor(
     @InjectRepository(Favorite)
     private favoriteTable: Repository<Favorite>,

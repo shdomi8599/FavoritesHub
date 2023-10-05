@@ -2,17 +2,17 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ApiController } from "./api/api.controller";
 import { AuthModule } from "./auth/auth.module";
-import { FavoriteModule } from "./favorite/favorite.module";
-import { PresetModule } from "./preset/preset.module";
+import { FavoritesModule } from "./favorites/favorites.module";
+import { PresetsModule } from "./presets/presets.module";
 import { dataSourceOptions } from "./source/data-source";
-import { UserModule } from "./user/user.module";
+import { UsersModule } from "./users/users.module";
 
 @Module({
   imports: [
     AuthModule,
-    UserModule,
-    PresetModule,
-    FavoriteModule,
+    UsersModule,
+    PresetsModule,
+    FavoritesModule,
     TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
   ],
   controllers: [ApiController],

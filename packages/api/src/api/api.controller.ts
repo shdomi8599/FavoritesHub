@@ -12,9 +12,9 @@ import {
 import { AuthGuard } from "@nestjs/passport";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
-import { FavoriteService } from "src/favorite/favorite.service";
-import { PresetService } from "src/preset/preset.service";
-import { UserService } from "src/user/user.service";
+import { FavoritesService } from "src/favorites/favorites.service";
+import { PresetsService } from "src/presets/presets.service";
+import { UsersService } from "src/users/users.service";
 import { PostAuthLoginDto, PostAuthLogoutDto } from "./dto/auth";
 import { PostFavoriteAddDto, PostFavoriteHandleStarDto } from "./dto/favorite";
 import { PostPresetAddDto } from "./dto/preset";
@@ -25,9 +25,9 @@ import { PostUserSignUpDto } from "./dto/user";
 export class ApiController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly presetService: PresetService,
-    private readonly favoriteService: FavoriteService,
+    private readonly usersService: UsersService,
+    private readonly presetsService: PresetsService,
+    private readonly favoritesService: FavoritesService,
   ) {}
 
   @UseGuards(AuthGuard("local"))
@@ -44,13 +44,13 @@ export class ApiController {
   ) {
     const cookieRefreshToken = req.cookies.refreshToken;
     const { mail, password } = dto;
-    const user = await this.userService.validRefreshToken(
+    const user = await this.usersService.validRefreshToken(
       mail,
       cookieRefreshToken,
     );
 
     if (!user) {
-      await this.userService.checkPassword(user, password);
+      await this.usersService.checkPassword(user, password);
     }
 
     const tokens = await this.authService.login(req.user);
@@ -61,7 +61,7 @@ export class ApiController {
       secure: process.env.NODE_ENV === "production" ? true : false,
     });
 
-    await this.userService.updateloginTime(req.user);
+    await this.usersService.updateloginTime(req.user);
 
     return { accessToken };
   }
@@ -75,7 +75,7 @@ export class ApiController {
   async getAuthRefreshToken(@Request() req) {
     const { mail } = req.user;
     const refreshToken = await this.authService.getRefreshToken(mail);
-    await this.userService.updateRefreshToken(mail, refreshToken);
+    await this.usersService.updateRefreshToken(mail, refreshToken);
     return { refreshToken };
   }
 
@@ -92,7 +92,7 @@ export class ApiController {
   ) {
     const { mail } = dto;
     res.clearCookie("refreshToken");
-    await this.userService.updateRefreshToken(mail, "");
+    await this.usersService.updateRefreshToken(mail, "");
     return { message: "success" };
   }
 
@@ -112,7 +112,7 @@ export class ApiController {
   })
   async postUserSignUp(@Body() dto: { mail: string; password: string }) {
     const { mail, password } = dto;
-    await this.userService.add(mail, password);
+    await this.usersService.add(mail, password);
     return { message: "success" };
   }
 
@@ -120,7 +120,7 @@ export class ApiController {
   @Delete("user")
   async deleteUser(@Request() req) {
     const { mail } = req.query;
-    await this.userService.remove(mail);
+    await this.usersService.remove(mail);
     return { message: "success" };
   }
 
@@ -128,7 +128,7 @@ export class ApiController {
   @Get("preset/list")
   async getPresetList(@Request() req) {
     const { mail } = req.user;
-    const presets = await this.presetService.findAll(mail);
+    const presets = await this.presetsService.findAll(mail);
     return presets;
   }
 
@@ -137,7 +137,7 @@ export class ApiController {
   async getPreset(@Request() req) {
     const { mail } = req.user;
     const { presetName } = req.query;
-    const preset = await this.presetService.findOne(mail, presetName);
+    const preset = await this.presetsService.findOne(mail, presetName);
     return preset;
   }
 
@@ -150,9 +150,9 @@ export class ApiController {
   })
   async postPresetAdd(@Request() req, @Body() dto: PostPresetAddDto) {
     const { mail } = req.user;
-    const user = await this.userService.findOne(mail);
+    const user = await this.usersService.findOne(mail);
     const { presetName } = dto;
-    await this.presetService.add(user, presetName);
+    await this.presetsService.add(user, presetName);
     return { message: "success" };
   }
 
@@ -161,7 +161,7 @@ export class ApiController {
   async deletePreset(@Request() req) {
     const { mail } = req.user;
     const { presetName } = req.query;
-    await this.presetService.remove(mail, presetName);
+    await this.presetsService.remove(mail, presetName);
     return { message: "success" };
   }
 
@@ -170,7 +170,7 @@ export class ApiController {
   async putPreset(@Request() req) {
     const { mail } = req.user;
     const { presetName, newPresetName } = req.query;
-    await this.presetService.update(mail, presetName, newPresetName);
+    await this.presetsService.update(mail, presetName, newPresetName);
     return { message: "success" };
   }
 
@@ -178,7 +178,7 @@ export class ApiController {
   @Get("favorite/list")
   async getFavoriteList(@Request() req) {
     const preset = await this.getPreset(req);
-    const favorites = await this.favoriteService.findAll(preset);
+    const favorites = await this.favoritesService.findAll(preset);
     return favorites;
   }
 
@@ -187,7 +187,7 @@ export class ApiController {
   async getFavorite(@Request() req) {
     const preset = await this.getPreset(req);
     const { domain, route, favoriteName } = req.query;
-    const favorite = await this.favoriteService.findOne(
+    const favorite = await this.favoritesService.findOne(
       preset,
       domain,
       route,
@@ -206,8 +206,8 @@ export class ApiController {
   async postFavoriteAdd(@Request() req, @Body() dto: PostFavoriteAddDto) {
     const { mail } = req.user;
     const { presetName, favoriteData } = dto;
-    const preset = await this.presetService.findOne(mail, presetName);
-    await this.favoriteService.add(preset, favoriteData);
+    const preset = await this.presetsService.findOne(mail, presetName);
+    await this.favoritesService.add(preset, favoriteData);
     return { message: "success" };
   }
 
@@ -216,7 +216,7 @@ export class ApiController {
   async deleteFavorite(@Request() req) {
     const preset = await this.getPreset(req);
     const { domain, route, favoriteName } = req.query;
-    await this.favoriteService.remove(preset, domain, route, favoriteName);
+    await this.favoritesService.remove(preset, domain, route, favoriteName);
     return { message: "success" };
   }
 
@@ -225,7 +225,7 @@ export class ApiController {
   async putFavorite(@Request() req) {
     const preset = await this.getPreset(req);
     const { domain, route, favoriteName } = req.query;
-    await this.favoriteService.update(preset, domain, route, favoriteName);
+    await this.favoritesService.update(preset, domain, route, favoriteName);
     return { message: "success" };
   }
 
@@ -234,7 +234,7 @@ export class ApiController {
   async getFavoriteVisited(@Request() req) {
     const preset = await this.getPreset(req);
     const { domain, route, favoriteName } = req.query;
-    await this.favoriteService.updateVisitedTime(
+    await this.favoritesService.updateVisitedTime(
       preset,
       domain,
       route,
@@ -256,8 +256,8 @@ export class ApiController {
   ) {
     const { mail } = req.user;
     const { presetName, favoriteData } = dto;
-    const preset = await this.presetService.findOne(mail, presetName);
-    await this.favoriteService.handleStar(preset, favoriteData);
+    const preset = await this.presetsService.findOne(mail, presetName);
+    await this.favoritesService.handleStar(preset, favoriteData);
     return { message: "success" };
   }
 }
