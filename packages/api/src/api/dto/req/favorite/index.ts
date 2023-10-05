@@ -1,4 +1,4 @@
 import { ReqPostFavoriteAddDto } from "./reqPostFavoriteAdd.dto";
-import { ReqPostFavoriteHandleStarDto } from "./reqPostFavoriteHandleStar.dto";
+import { ReqPutPavoriteDto } from "./reqPutPavorite.dto";
 
-export { ReqPostFavoriteAddDto, ReqPostFavoriteHandleStarDto };
+export { ReqPostFavoriteAddDto, ReqPutPavoriteDto };

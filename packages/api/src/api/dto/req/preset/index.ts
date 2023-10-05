@@ -1,3 +1,4 @@
 import { ReqPostPresetAddDto } from "./reqPostPresetAdd.dto";
+import { ReqPutPresetDto } from "./reqPutPreset.dto";
 
-export { ReqPostPresetAddDto };
+export { ReqPostPresetAddDto, ReqPutPresetDto };

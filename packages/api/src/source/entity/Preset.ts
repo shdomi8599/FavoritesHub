@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import {
   Column,
   Entity,
@@ -11,19 +12,44 @@ import { User } from "./User";
 
 @Entity("presets")
 export class Preset {
+  @ApiProperty({
+    example: 1,
+    description: "프리셋 고유 번호입니다.",
+    required: true,
+  })
   @PrimaryGeneratedColumn()
   id: number;
 
   @Index()
   @Column()
+  @ApiProperty({
+    example: "자주가는 사이트 모음",
+    description: "프리셋 이름입니다.",
+    required: true,
+  })
   presetName: string;
 
   @Column({ default: false })
+  @ApiProperty({
+    example: true,
+    description: "기본 프리셋 설정입니다.",
+    required: true,
+  })
   defaultPreset: boolean;
 
   @ManyToOne(() => User, (user) => user.presets)
+  @ApiProperty({
+    example: User,
+    description: "유저 데이터입니다.",
+    required: true,
+  })
   user: User;
 
   @OneToMany(() => Favorite, (favorite) => favorite.preset)
+  @ApiProperty({
+    example: [Favorite],
+    description: "즐겨찾기 데이터입니다.",
+    required: true,
+  })
   favorites: Favorite[];
 }
