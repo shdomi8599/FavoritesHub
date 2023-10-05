@@ -150,7 +150,7 @@ export class ApiController {
   })
   async postPresetAdd(@Request() req, @Body() dto: PostPresetAddDto) {
     const { mail } = req.user;
-    const user = await this.usersService.findOne(mail);
+    const user = await this.usersService.findOneToMail(mail);
     const { presetName } = dto;
     await this.presetsService.add(user, presetName);
     return { message: "success" };

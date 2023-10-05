@@ -19,20 +19,11 @@ export class FavoritesService {
     return favorites;
   }
 
-  async findOne(
-    preset: Preset,
-    domain: string,
-    route: string,
-    favoriteName: string,
-  ): Promise<Favorite> {
+  async findOne(favoriteId: number): Promise<Favorite> {
     const favorite = await this.favoriteTable.findOne({
       where: {
-        preset,
-        favoriteName,
-        domain,
-        route,
+        id: favoriteId,
       },
-      relations: ["preset"],
     });
     if (!favorite) {
       throw new Error("즐겨찾기를 찾을 수 없습니다.");
@@ -41,9 +32,13 @@ export class FavoritesService {
   }
 
   async add(preset: Preset, favoriteData: Favorite) {
-    const { domain, route, favoriteName } = favoriteData;
-    const favorite = await this.findOne(preset, domain, route, favoriteName);
-    if (favorite) {
+    const { favoriteName: newFavoriteName } = favoriteData;
+    const favorites = await this.findAll(preset);
+    if (
+      favorites
+        .map((favorite) => favorite.favoriteName)
+        .includes(newFavoriteName)
+    ) {
       throw new Error("같은 이름의 즐겨찾기가 존재합니다.");
     }
     const newFavorite = this.favoriteTable.create({
@@ -53,43 +48,28 @@ export class FavoritesService {
     await this.favoriteTable.save(newFavorite);
   }
 
-  async remove(
-    preset: Preset,
-    domain: string,
-    route: string,
-    favoriteName: string,
-  ) {
-    const favorite = await this.findOne(preset, domain, route, favoriteName);
+  async remove(favoriteId: number) {
+    const favorite = await this.findOne(favoriteId);
     await this.favoriteTable.delete(favorite);
   }
 
-  async update(
-    preset: Preset,
-    domain: string,
-    route: string,
-    favoriteName: string,
-  ) {
-    const favorite = await this.findOne(preset, domain, route, favoriteName);
+  async update(favoriteId: number, favoriteData: Favorite) {
+    const { domain, route, favoriteName } = favoriteData;
+    const favorite = await this.findOne(favoriteId);
     favorite.domain = domain;
     favorite.route = route;
     favorite.favoriteName = favoriteName;
     await this.favoriteTable.save(favorite);
   }
 
-  async updateVisitedTime(
-    preset: Preset,
-    domain: string,
-    route: string,
-    favoriteName: string,
-  ) {
-    const favorite = await this.findOne(preset, domain, route, favoriteName);
+  async updateVisitedTime(favoriteId: number) {
+    const favorite = await this.findOne(favoriteId);
     favorite.lastVisitedAt = new Date();
     await this.favoriteTable.save(favorite);
   }
 
-  async handleStar(preset: Preset, favoriteData: Favorite) {
-    const { domain, route, favoriteName } = favoriteData;
-    const favorite = await this.findOne(preset, domain, route, favoriteName);
+  async handleStar(favoriteId: number) {
+    const favorite = await this.findOne(favoriteId);
     favorite.star = !favorite.star;
     await this.favoriteTable.save(favorite);
   }

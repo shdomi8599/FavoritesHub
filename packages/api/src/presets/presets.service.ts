@@ -11,9 +11,9 @@ export class PresetsService {
     private presetTable: Repository<Preset>,
   ) {}
 
-  async findAll(mail: string): Promise<Preset[]> {
+  async findAll(userId: number): Promise<Preset[]> {
     const presets = await this.presetTable.find({
-      where: { user: { mail } },
+      where: { user: { id: userId } },
       relations: ["user"],
     });
     if (!presets) {
@@ -22,13 +22,11 @@ export class PresetsService {
     return presets;
   }
 
-  async findOne(mail: string, presetName: string): Promise<Preset> {
+  async findOne(presetId: number): Promise<Preset> {
     const preset = await this.presetTable.findOne({
       where: {
-        user: { mail },
-        presetName: presetName,
+        id: presetId,
       },
-      relations: ["user"],
     });
     if (!preset) {
       throw new Error("프리셋을 찾을 수 없습니다.");
@@ -37,9 +35,9 @@ export class PresetsService {
   }
 
   async add(user: User, presetName: string) {
-    const { mail } = user;
-    const preset = await this.findOne(mail, presetName);
-    if (preset) {
+    const { id: userId } = user;
+    const presets = await this.findAll(userId);
+    if (presets.map((preset) => preset.presetName).includes(presetName)) {
       throw new Error("같은 이름의 프리셋이 존재합니다.");
     }
     const newPreset = this.presetTable.create({
@@ -49,13 +47,13 @@ export class PresetsService {
     await this.presetTable.save(newPreset);
   }
 
-  async remove(mail: string, presetName: string) {
-    const preset = await this.findOne(mail, presetName);
+  async remove(presetId: number) {
+    const preset = await this.findOne(presetId);
     await this.presetTable.delete(preset);
   }
 
-  async update(mail: string, presetName: string, newPresetName: string) {
-    const preset = await this.findOne(mail, presetName);
+  async update(presetId: number, newPresetName: string) {
+    const preset = await this.findOne(presetId);
     preset.presetName = newPresetName;
     await this.presetTable.save(preset);
   }

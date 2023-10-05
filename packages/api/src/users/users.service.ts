@@ -19,7 +19,15 @@ export class UsersService {
     return users;
   }
 
-  async findOne(mail: string): Promise<User> {
+  async findOneToId(userId: number): Promise<User> {
+    const user = await this.userTable.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new Error("사용자를 찾을 수 없습니다.");
+    }
+    return user;
+  }
+
+  async findOneToMail(mail: string): Promise<User> {
     const user = await this.userTable.findOne({ where: { mail } });
     if (!user) {
       throw new Error("사용자를 찾을 수 없습니다.");
@@ -36,8 +44,8 @@ export class UsersService {
     await this.userTable.save(user);
   }
 
-  async remove(mail: string): Promise<void> {
-    const user = await this.findOne(mail);
+  async remove(userId: number): Promise<void> {
+    const user = await this.findOneToId(userId);
     await this.userTable.delete(user);
   }
 
@@ -52,13 +60,13 @@ export class UsersService {
 
   async updateRefreshToken(mail: string, refreshToken: string) {
     const hash = await bcrypt.hash(refreshToken, 10);
-    const user = await this.findOne(mail);
+    const user = await this.findOneToMail(mail);
     user.refreshToken = hash;
     await this.userTable.save(user);
   }
 
   async validRefreshToken(mail: string, refreshToken: string): Promise<User> {
-    const user = await this.findOne(mail);
+    const user = await this.findOneToMail(mail);
     if (!user || !user.refreshToken) {
       throw new ForbiddenException("Access Denied");
     }
