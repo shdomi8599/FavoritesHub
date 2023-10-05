@@ -18,6 +18,9 @@ export class Preset {
   @Column()
   presetName: string;
 
+  @Column({ default: false })
+  defaultPreset: boolean;
+
   @ManyToOne(() => User, (user) => user.presets)
   user: User;
 

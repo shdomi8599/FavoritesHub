@@ -37,11 +37,19 @@ export class PresetsService {
   async add(user: User, presetName: string) {
     const { id: userId } = user;
     const presets = await this.findAll(userId);
-    if (presets.map((preset) => preset.presetName).includes(presetName)) {
+    const isSamePreset = presets
+      .map((preset) => preset.presetName)
+      .includes(presetName);
+
+    if (isSamePreset) {
       throw new Error("같은 이름의 프리셋이 존재합니다.");
     }
+
+    const isFirstPreset = presets.length === 0;
+
     const newPreset = this.presetTable.create({
       presetName,
+      defaultPreset: isFirstPreset ? true : false,
       user,
     });
     await this.presetTable.save(newPreset);
