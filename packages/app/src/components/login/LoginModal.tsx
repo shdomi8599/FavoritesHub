@@ -1,20 +1,21 @@
 import { useModal } from "@/hooks";
-import { Box, Modal, Typography, styled } from "@mui/material";
+import { authModalState } from "@/states";
+import { Box, Modal, styled } from "@mui/material";
+import { useRecoilValue } from "recoil";
+import LoginForm from "./LoginForm";
 
 export default function LoginModal() {
   const { isModal, handleClose } = useModal();
 
+  const authModal = useRecoilValue(authModalState);
+  const modalData: { [key: string]: JSX.Element } = {
+    login: <LoginForm />,
+  };
+
   return (
     <Box>
       <Modal open={isModal} onClose={handleClose}>
-        <ContentBox>
-          <Typography variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </ContentBox>
+        <ContentBox sx={{ boxShadow: 3 }}>{modalData[authModal]}</ContentBox>
       </Modal>
     </Box>
   );
@@ -28,6 +29,6 @@ const ContentBox = styled(Box)(({}) => ({
   width: "30%",
   minWidth: "300px",
   backgroundColor: "white",
-  border: "2px solid #000",
   padding: "1.5rem",
+  borderRadius: "4px",
 }));

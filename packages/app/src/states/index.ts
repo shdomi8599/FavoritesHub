@@ -15,3 +15,8 @@ export const barHeightState = atom({
   key: "barHeightState",
   default: 0,
 });
+
+export const authModalState = atom({
+  key: "authModalState",
+  default: "login",
+});

@@ -1,5 +1,5 @@
 import Dashboard from "@/components/dashboard/Dashboard";
-import LoginModal from "@/components/LoginModal";
+import LoginModal from "@/components/login/LoginModal";
 import "@/styles/globals.css";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
     new QueryClient({
       defaultOptions: { queries: { staleTime: Infinity } },
-    })
+    }),
   );
 
   useEffect(() => {
