@@ -1,5 +1,4 @@
 import { AuthProps, LoginFormInput } from "@/types";
-import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -8,6 +7,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { SubmitHandler, useForm } from "react-hook-form";
+import AuthAlertMessage from "./AuthAlertMessage";
 import AuthFormInput from "./AuthFormInput";
 import AuthLink from "./AuthLink";
 
@@ -38,9 +38,7 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
           sx={{ mt: 1 }}
         >
           <AuthFormInput register={register} name="mail" />
-          {isSubmitted && (
-            <AlertMessage role="alert">{errors?.mail?.message}</AlertMessage>
-          )}
+          {isSubmitted && <AuthAlertMessage error={errors?.mail} />}
           <AuthFormInput register={register} name="password" />
           <FormControlLabel
             control={<Checkbox value="auto-login" color="primary" />}
@@ -67,11 +65,3 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
     </Container>
   );
 }
-
-const AlertMessage = styled("span")(({}) => ({
-  color: "red",
-}));
-
-const LinkStyle = {
-  cursor: "pointer",
-};
