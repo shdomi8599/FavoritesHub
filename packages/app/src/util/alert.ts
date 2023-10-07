@@ -56,14 +56,18 @@ export const confirmAlert = (text: string, title: string) => {
   });
 };
 
-export const signUpAlert = (callback: () => void) => {
+export const callbackSuccessAlert = (
+  title: string,
+  confirmButtonText: string,
+  callback: () => void,
+) => {
   return new Promise<void>((resolve) => {
     Swal.fire({
-      title: "회원가입을 축하합니다.",
+      title: title,
       icon: "success",
       confirmButtonColor: "rgb(165,220,134)",
       cancelButtonColor: "#F27474",
-      confirmButtonText: "로그인",
+      confirmButtonText: confirmButtonText,
     })
       .then((result) => {
         if (result.isConfirmed) {

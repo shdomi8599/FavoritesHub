@@ -1,6 +1,6 @@
 import { ApiResultMessage, AuthProps, SignUpFormInput } from "@/types";
 import { api, errorAlert } from "@/util";
-import { signUpAlert } from "@/util/alert";
+import { callbackSuccessAlert } from "@/util/alert";
 import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -35,7 +35,11 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
     }
 
     if (message === "success") {
-      signUpAlert(alertEvent);
+      callbackSuccessAlert(
+        "회원가입을 축하합니다.",
+        "로그인 하러가기",
+        alertEvent,
+      );
     }
   };
 

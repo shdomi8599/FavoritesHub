@@ -1,5 +1,17 @@
-import { confirmAlert, errorAlert, successAlert } from "./alert";
+import {
+  callbackSuccessAlert,
+  confirmAlert,
+  errorAlert,
+  successAlert,
+} from "./alert";
 import { api } from "./api";
 import { confettiRealisticLook } from "./confetti";
 
-export { api, confettiRealisticLook, confirmAlert, errorAlert, successAlert };
+export {
+  api,
+  callbackSuccessAlert,
+  confettiRealisticLook,
+  confirmAlert,
+  errorAlert,
+  successAlert,
+};
