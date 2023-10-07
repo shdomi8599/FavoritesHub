@@ -1,15 +1,13 @@
 import { AuthProps, LoginFormInput } from "@/types";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { SubmitHandler, useForm } from "react-hook-form";
 import AuthAlertMessage from "./AuthAlertMessage";
+import AuthButton from "./AuthButton";
 import AuthFormInput from "./AuthFormInput";
 import AuthLink from "./AuthLink";
+import AuthTitle from "./AuthTitle";
 
 export default function PasswordForm({ handleAuthModal }: AuthProps) {
   const {
@@ -28,9 +26,7 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
           alignItems: "center",
         }}
       >
-        <Typography component="h1" variant="h5">
-          PASSWORD
-        </Typography>
+        <AuthTitle name="password" />
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
@@ -40,18 +36,7 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
           <AuthFormInput register={register} name="mail" />
           {isSubmitted && <AuthAlertMessage error={errors?.mail} />}
           <AuthFormInput register={register} name="password" />
-          <FormControlLabel
-            control={<Checkbox value="auto-login" color="primary" />}
-            label="자동 로그인"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            로그인
-          </Button>
+          <AuthButton name="password" />
           <Grid container>
             <Grid item xs>
               <AuthLink handleAuthModal={handleAuthModal} linkName="login" />
