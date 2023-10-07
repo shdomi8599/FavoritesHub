@@ -1,5 +1,6 @@
 import { ApiResultMessage, AuthProps, SignUpFormInput } from "@/types";
-import { api } from "@/util";
+import { api, errorAlert } from "@/util";
+import { signUpAlert } from "@/util/alert";
 import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -19,6 +20,10 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
     getValues,
   } = useForm<SignUpFormInput>();
 
+  const alertEvent = () => {
+    handleAuthModal("login");
+  };
+
   const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
     const { mail, password } = data;
     const { message } = await api
@@ -26,11 +31,11 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
       .then((res) => res.data);
 
     if (message === "exist") {
-      return "이미 가입한 이메일입니다.";
+      return errorAlert("이미 가입된 이메일입니다.", "이메일 확인");
     }
 
     if (message === "success") {
-      handleAuthModal("congrats");
+      signUpAlert(alertEvent);
     }
   };
 

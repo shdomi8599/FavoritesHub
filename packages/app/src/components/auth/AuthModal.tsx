@@ -3,7 +3,6 @@ import { authModalState } from "@/states";
 import { AuthModalState } from "@/types";
 import { Box, Modal, styled } from "@mui/material";
 import { useRecoilState } from "recoil";
-import CongratsForm from "./CongratsForm";
 import LoginForm from "./LoginForm";
 import PasswordForm from "./PasswordForm";
 import SignUpForm from "./SignUpForm";
@@ -23,7 +22,6 @@ export default function AuthModal() {
     ),
     password: <PasswordForm handleAuthModal={handleAuthModal} />,
     signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
-    congrats: <CongratsForm handleAuthModal={handleAuthModal} />,
   };
 
   return (

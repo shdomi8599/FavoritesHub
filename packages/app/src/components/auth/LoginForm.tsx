@@ -1,6 +1,6 @@
 import { accessTokenState } from "@/states";
 import { ApiResultAccessToken, AuthProps, LoginFormInput } from "@/types";
-import { api } from "@/util";
+import { api, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
@@ -33,7 +33,7 @@ export default function LoginForm({ handleClose, handleAuthModal }: Props) {
       .then((res) => res.data);
 
     if (!user) {
-      return "가입되지 않은 이메일입니다.";
+      return errorAlert("가입되지 않은 이메일입니다.", "이메일 확인");
     }
 
     const { accessToken, message } = await api
@@ -41,7 +41,7 @@ export default function LoginForm({ handleClose, handleAuthModal }: Props) {
       .then((res) => res.data);
 
     if (message === "not exact") {
-      return "비밀번호가 일치하지 않습니다.";
+      return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");
     }
 
     setAccessToken(accessToken!);
