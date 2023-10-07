@@ -21,3 +21,8 @@ export const authModalState = atom<AuthModalState>({
   key: "authModalState",
   default: "login",
 });
+
+export const accessTokenState = atom({
+  key: "accessTokenState",
+  default: "",
+});

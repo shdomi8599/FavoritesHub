@@ -1,5 +1,3 @@
-import { api } from "./util";
-
 export const navItems = [
   { name: "Admin", route: "/" },
   { name: "Faucet", route: "/" },
@@ -17,14 +15,6 @@ export const authFormOptions = {
     pattern: {
       value: /\S+@\S+\.\S+/,
       message: "입력한 값이 이메일 형식과 일치하지 않습니다.",
-    },
-    validate: async (mail: string) => {
-      const user = await api
-        .post("/user/exist", { mail })
-        .then((res) => res.data);
-      if (user) {
-        return "이미 가입한 이메일입니다.";
-      }
     },
   },
   password: {

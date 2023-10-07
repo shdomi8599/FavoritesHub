@@ -1,4 +1,4 @@
-import { AuthProps, PostSignUpMessage, SignUpFormInput } from "@/types";
+import { ApiResultMessage, AuthProps, SignUpFormInput } from "@/types";
 import { api } from "@/util";
 import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -22,8 +22,12 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
   const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
     const { mail, password } = data;
     const { message } = await api
-      .post<PostSignUpMessage>("/user", { mail, password })
+      .post<ApiResultMessage>("/user", { mail, password })
       .then((res) => res.data);
+
+    if (message === "exist") {
+      return "이미 가입한 이메일입니다.";
+    }
 
     if (message === "success") {
       handleAuthModal("congrats");

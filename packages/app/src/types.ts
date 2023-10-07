@@ -12,6 +12,13 @@ export interface AuthProps {
   handleAuthModal: (auth: AuthModalState) => void;
 }
 
-export type PostSignUpMessage = {
-  message: "success" | "exist";
+type Message = "success" | "exist" | "not exact";
+
+export type ApiResultMessage = {
+  message: Message;
 };
+
+export interface ApiResultAccessToken {
+  accessToken?: string;
+  message?: Message;
+}

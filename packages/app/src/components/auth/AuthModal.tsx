@@ -18,7 +18,9 @@ export default function AuthModal() {
   };
 
   const modalData: { [key: string]: JSX.Element } = {
-    login: <LoginForm handleAuthModal={handleAuthModal} />,
+    login: (
+      <LoginForm handleAuthModal={handleAuthModal} handleClose={handleClose} />
+    ),
     password: <PasswordForm handleAuthModal={handleAuthModal} />,
     signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
     congrats: <CongratsForm handleAuthModal={handleAuthModal} />,
