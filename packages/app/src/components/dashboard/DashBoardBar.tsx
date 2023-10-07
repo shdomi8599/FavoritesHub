@@ -1,4 +1,4 @@
-import { useHandleOpen, useOutSideRef } from "@/hooks";
+import { useHandler, useOutSideRef } from "@/hooks";
 import {
   AccountCircle as AccountCircleIcon,
   Menu as MenuIcon,
@@ -34,7 +34,11 @@ export default function DashboardBar({
   isMinWidth600,
   isLogin,
 }: Props) {
-  const { isOpen, handleOpen, offContent } = useHandleOpen();
+  const {
+    isBoolean: isOpen,
+    handleBoolean: handleOpen,
+    offBoolean: offContent,
+  } = useHandler();
   const { ref } = useOutSideRef(offContent);
   const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
   return (

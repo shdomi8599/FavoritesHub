@@ -1,4 +1,5 @@
-import { AuthProps, LoginFormInput } from "@/types";
+import { AuthProps, PostSignUpMessage, SignUpFormInput } from "@/types";
+import { api } from "@/util";
 import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -16,8 +17,18 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
     handleSubmit,
     formState: { errors, isSubmitted },
     getValues,
-  } = useForm<LoginFormInput>();
-  const onSubmit: SubmitHandler<LoginFormInput> = (data) => console.log(data);
+  } = useForm<SignUpFormInput>();
+
+  const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
+    const { mail, password } = data;
+    const { message } = await api
+      .post<PostSignUpMessage>("/user", { mail, password })
+      .then((res) => res.data);
+
+    if (message === "success") {
+      handleAuthModal("congrats");
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">

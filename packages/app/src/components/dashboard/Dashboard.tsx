@@ -1,4 +1,4 @@
-import { useBarHeight, useHandleOpen, useHandleWidth, useModal } from "@/hooks";
+import { useBarHeight, useHandleWidth, useHandler, useModal } from "@/hooks";
 import { authModalState, isLoginState } from "@/states";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -15,10 +15,10 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const { width } = useHandleWidth();
   const { ref: barRef, barHeight } = useBarHeight();
   const {
-    isOpen: toolBarOpen,
-    setIsOpen: setToolBartoolBarOpen,
-    handleOpen: handleDrawer,
-  } = useHandleOpen();
+    isBoolean: toolBarOpen,
+    setisBoolean: setToolBartoolBarOpen,
+    handleBoolean: handleDrawer,
+  } = useHandler();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
   // 상태

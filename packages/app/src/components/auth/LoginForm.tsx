@@ -5,7 +5,6 @@ import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
-import AuthAlertMessage from "./AuthAlertMessage";
 import AuthButton from "./AuthButton";
 import AuthFormInput from "./AuthFormInput";
 import AuthLink from "./AuthLink";
@@ -35,10 +34,18 @@ export default function LoginForm({ handleAuthModal }: AuthProps) {
           noValidate
           sx={{ mt: 1 }}
         >
-          <AuthFormInput register={register} name="mail" />
-          {isSubmitted && <AuthAlertMessage error={errors?.mail} />}
-          <AuthFormInput register={register} name="password" />
-          {isSubmitted && <AuthAlertMessage error={errors?.password} />}
+          <AuthFormInput
+            register={register}
+            name="mail"
+            error={errors?.password}
+            isSubmitted={isSubmitted}
+          />
+          <AuthFormInput
+            register={register}
+            name="password"
+            error={errors?.password}
+            isSubmitted={isSubmitted}
+          />
           <FormControlLabel
             control={<Checkbox value="auto-login" color="primary" />}
             label="자동 로그인"
