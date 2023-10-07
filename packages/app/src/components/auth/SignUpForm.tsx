@@ -28,7 +28,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
           alignItems: "center",
         }}
       >
-        <AuthTitle name="sign up" />
+        <AuthTitle name="회원가입" />
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}

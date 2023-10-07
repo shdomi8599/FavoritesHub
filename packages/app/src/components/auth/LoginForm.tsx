@@ -28,7 +28,7 @@ export default function LoginForm({ handleAuthModal }: AuthProps) {
           alignItems: "center",
         }}
       >
-        <AuthTitle name="login" />
+        <AuthTitle name="로그인" />
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}

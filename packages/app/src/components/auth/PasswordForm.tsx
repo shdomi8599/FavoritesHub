@@ -26,7 +26,7 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
           alignItems: "center",
         }}
       >
-        <AuthTitle name="password" />
+        <AuthTitle name="비밀번호 찾기" />
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
