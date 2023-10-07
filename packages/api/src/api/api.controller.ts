@@ -66,6 +66,12 @@ export class ApiController {
       }
       await this.usersService.checkPassword(user, password);
 
+      const { verify } = user;
+
+      if (!verify) {
+        return { message: "not verify" };
+      }
+
       const tokens = await this.authService.login(user);
       const { accessToken, refreshToken } = tokens;
 
@@ -121,6 +127,17 @@ export class ApiController {
   })
   async getAuthAccessToken(@Request() req) {
     const accessToken = await this.authService.getAccessToken(req.user);
+    return { accessToken };
+  }
+
+  // @UseGuards(AuthGuard("jwt"))
+  @Get("auth/verify")
+  @ApiResponse({
+    status: 200,
+    description: "유저 이메일 인증에 사용되는 API입니다.",
+  })
+  async getAuthVerify(@Request() req) {
+    const accessToken = await this.authService.verify(req.user);
     return { accessToken };
   }
 
