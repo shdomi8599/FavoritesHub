@@ -1,12 +1,14 @@
 import { navItems } from "@/const";
 import {
   AccountCircle as AccountCircleIcon,
+  AddCircleOutline as AddCircleOutlineIcon,
   ChevronLeft as ChevronLeftIcon,
   Dashboard as DashboardIcon,
   DirectionsRun as DirectionsRunIcon,
 } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Divider,
   IconButton,
   List,
@@ -50,7 +52,18 @@ export default function DashboardDrawer({
         </IconButton>
       </Toolbar>
       <Divider />
-      <List component="nav" sx={{ height: "90%" }}>
+      <List component="nav" sx={{ height: "90%", pt: 0 }}>
+        <Button
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            padding: "12px",
+          }}
+        >
+          <AddCircleOutlineIcon />
+          프리셋 추가하기
+        </Button>
         {navItems.map(({ name, route }) => (
           <ListItemButton onClick={() => handlePage(route)} key={name}>
             <ListItemIcon>

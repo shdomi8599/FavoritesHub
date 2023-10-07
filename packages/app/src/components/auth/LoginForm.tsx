@@ -55,6 +55,8 @@ export default function LoginForm({
       return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");
     }
 
+    console.log(userId);
+
     setUserId(userId);
 
     if (message === "not verify") {
