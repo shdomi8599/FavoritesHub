@@ -123,9 +123,15 @@ export class ApiController {
     type: ResSuccessMessageDto,
   })
   async postUserSignUp(@Body() dto: ReqPostUserSignUpDto) {
-    const { mail, password } = dto;
-    await this.usersService.add(mail, password);
-    return { message: "success" };
+    try {
+      const { mail, password } = dto;
+      await this.usersService.add(mail, password);
+      return { message: "success" };
+    } catch (e) {
+      if (e.message === "exist") {
+        return { message: "exist" };
+      }
+    }
   }
 
   // @UseGuards(AuthGuard("jwt"))

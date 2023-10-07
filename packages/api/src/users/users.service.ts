@@ -29,14 +29,13 @@ export class UsersService {
 
   async findOneToMail(mail: string): Promise<User> {
     const user = await this.userTable.findOne({ where: { mail } });
-    if (!user) {
-      throw new Error("사용자를 찾을 수 없습니다.");
-    }
     return user;
   }
 
-  async add(mail: string, password: string): Promise<void> {
+  async add(mail: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
+    const isExistedUser = await this.findOneToMail(mail);
+    if (isExistedUser) throw new Error("exist");
     const user = new User();
     user.mail = mail;
     user.password = hashedPassword;
@@ -44,7 +43,7 @@ export class UsersService {
     await this.userTable.save(user);
   }
 
-  async remove(userId: number): Promise<void> {
+  async remove(userId: number) {
     const user = await this.findOneToId(userId);
     await this.userTable.delete(user);
   }
@@ -53,7 +52,7 @@ export class UsersService {
     return bcrypt.compare(password, user.password);
   }
 
-  async updateloginTime(user: User): Promise<void> {
+  async updateloginTime(user: User) {
     user.lastLogin = new Date();
     await this.userTable.save(user);
   }
