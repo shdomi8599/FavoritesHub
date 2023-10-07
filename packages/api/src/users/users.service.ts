@@ -84,4 +84,9 @@ export class UsersService {
     user.verifyCode = verifyCode;
     await this.userTable.save(user);
   }
+
+  async updateVerify(user: User) {
+    user.verify = true;
+    await this.userTable.save(user);
+  }
 }

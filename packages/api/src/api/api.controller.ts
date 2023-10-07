@@ -153,6 +153,7 @@ export class ApiController {
     const { code } = dto;
     const isVerify = await this.authService.verify(req.user, code);
     if (isVerify) {
+      await this.usersService.updateVerify(req.user);
       return { message: "success" };
     }
     return { message: "not verify" };
