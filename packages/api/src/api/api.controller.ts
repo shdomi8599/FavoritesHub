@@ -200,7 +200,6 @@ export class ApiController {
   })
   async postExistUser(@Body() dto: { mail: string }) {
     const { mail } = dto;
-    console.log(mail);
     const user = await this.usersService.findOneToMail(mail);
     return user;
   }
