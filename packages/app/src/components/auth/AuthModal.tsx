@@ -1,15 +1,25 @@
 import { useModal } from "@/hooks";
 import { authModalState } from "@/states";
+import { AuthModalState } from "@/types";
 import { Box, Modal, styled } from "@mui/material";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import LoginForm from "./LoginForm";
+import PasswordForm from "./PasswordForm";
+import SignUpForm from "./SignUpForm";
 
-export default function LoginModal() {
+export default function AuthModal() {
   const { isModal, handleClose } = useModal();
 
-  const authModal = useRecoilValue(authModalState);
+  const [authModal, setAuthModal] = useRecoilState(authModalState);
+
+  const handleAuthModal = (auth: AuthModalState) => {
+    setAuthModal(auth);
+  };
+
   const modalData: { [key: string]: JSX.Element } = {
-    login: <LoginForm />,
+    login: <LoginForm handleAuthModal={handleAuthModal} />,
+    password: <PasswordForm handleAuthModal={handleAuthModal} />,
+    signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
   };
 
   return (

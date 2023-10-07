@@ -1,3 +1,4 @@
+import { AuthModalState } from "@/types";
 import { atom } from "recoil";
 
 export const isLoginState = atom({
@@ -16,7 +17,7 @@ export const barHeightState = atom({
   default: 0,
 });
 
-export const authModalState = atom({
+export const authModalState = atom<AuthModalState>({
   key: "authModalState",
   default: "login",
 });

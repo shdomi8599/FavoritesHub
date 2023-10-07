@@ -1,4 +1,4 @@
-import { LoginFormInput } from "@/types";
+import { AuthProps, LoginFormInput } from "@/types";
 import { styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,12 +6,12 @@ import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { SubmitHandler, useForm } from "react-hook-form";
+import AuthLink from "./AuthLink";
 
-export default function LoginForm() {
+export default function PasswordForm({ handleAuthModal }: AuthProps) {
   const {
     register,
     handleSubmit,
@@ -29,7 +29,7 @@ export default function LoginForm() {
         }}
       >
         <Typography component="h1" variant="h5">
-          LOGIN
+          PASSWORD
         </Typography>
         <Box
           component="form"
@@ -78,14 +78,10 @@ export default function LoginForm() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                비밀번호 찾기
-              </Link>
+              <AuthLink handleAuthModal={handleAuthModal} linkName="login" />
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                회원가입
-              </Link>
+              <AuthLink handleAuthModal={handleAuthModal} linkName="signUp" />
             </Grid>
           </Grid>
         </Box>
@@ -97,3 +93,7 @@ export default function LoginForm() {
 const AlertMessage = styled("span")(({}) => ({
   color: "red",
 }));
+
+const LinkStyle = {
+  cursor: "pointer",
+};
