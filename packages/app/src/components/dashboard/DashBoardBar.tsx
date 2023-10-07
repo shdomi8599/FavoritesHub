@@ -83,6 +83,7 @@ export default function DashboardBar({
               handleOpen={handleOpen}
               contentBoxTop={contentBoxTop}
               handleModalOpen={handleModalOpen}
+              logoutEvent={logoutEvent}
             />
           )}
         </UserIconBox>
