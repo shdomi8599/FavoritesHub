@@ -83,7 +83,7 @@ export class ApiController {
 
       await this.usersService.updateloginTime(user);
 
-      return { accessToken };
+      return { accessToken, userId: user.id };
     } catch (e) {
       const { message } = e;
       return { message };
@@ -236,15 +236,14 @@ export class ApiController {
   }
 
   // @UseGuards(AuthGuard("jwt"))
-  @Get("preset/list")
+  @Get("preset/list/:userId")
   @ApiResponse({
     status: 200,
     description: "유저 프리셋 리스트 조회에 사용되는 API입니다.",
     type: [Preset],
   })
-  async getPresetList(@Request() req) {
-    const { mail } = req.user;
-    const presets = await this.presetsService.findAll(mail);
+  async getPresetList(@Param("userId") userId: number) {
+    const presets = await this.presetsService.findAll(userId);
     return presets;
   }
 

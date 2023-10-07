@@ -46,7 +46,7 @@ export class AuthService {
     const mailOptions = {
       from: "FavoritesHub@gmail.com",
       to: mail,
-      subject: "이메일을 인증해주세요.",
+      subject: "이메일 인증을 완료해주세요.",
       html: `<div>
       <h2>FavoritesHub 이메일 인증</h2>
       <div class="phone" style="font-size: 1.1em;">인증번호 : ${verifyCode}</div>
