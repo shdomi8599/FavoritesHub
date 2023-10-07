@@ -37,6 +37,8 @@ export class UsersService {
     user.mail = mail;
     user.password = hashedPassword;
     user.refreshToken = "";
+    user.verifyCode = "";
+    user.verify = false;
     await this.userTable.save(user);
   }
 
@@ -60,9 +62,8 @@ export class UsersService {
     await this.userTable.save(user);
   }
 
-  async updateRefreshToken(mail: string, refreshToken: string) {
+  async updateRefreshToken(user: User, refreshToken: string) {
     const hash = await bcrypt.hash(refreshToken, 10);
-    const user = await this.findOneToMail(mail);
     user.refreshToken = hash;
     await this.userTable.save(user);
   }
@@ -80,7 +81,7 @@ export class UsersService {
     return user;
   }
 
-  async updateVerifyCode(user: User, verifyCode: number) {
+  async updateVerifyCode(user: User, verifyCode: string) {
     user.verifyCode = verifyCode;
     await this.userTable.save(user);
   }

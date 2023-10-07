@@ -44,7 +44,7 @@ export class User {
   verify: boolean;
 
   @Column()
-  verifyCode: number;
+  verifyCode: string;
 
   @Column()
   @ApiProperty({

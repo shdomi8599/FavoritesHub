@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import nodemailer from "nodemailer";
+import * as nodemailer from "nodemailer";
 import {
   JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET,
@@ -39,7 +39,7 @@ export class AuthService {
     };
   }
 
-  async mail(user: User, verifyCode: number) {
+  async mail(user: User, verifyCode: string) {
     const transporter = nodemailer.createTransport(nodemailerOption);
 
     const { mail } = user;
@@ -48,18 +48,15 @@ export class AuthService {
       to: mail,
       subject: "이메일을 인증해주세요.",
       html: `<div>
-      <h2>Message Details</h2>
-      <div class="email" style="font-size: 1.1em;">Email : ${mail}</div>
-      <div class="phone" style="font-size: 1.1em;">code : ${verifyCode}</div>
-      <div class="message" style="font-size: 1.1em;">message : </div>
-      <pre class="message" style="font-size: 1.2em;"></pre>
+      <h2>FavoritesHub 이메일 인증</h2>
+      <div class="phone" style="font-size: 1.1em;">인증번호 : ${verifyCode}</div>
       </div>
       `,
     };
     await transporter.sendMail(mailOptions);
   }
 
-  async verify(user: User, verifyCode: number) {
+  async verify(user: User, verifyCode: string) {
     return user.verifyCode === verifyCode;
   }
 }

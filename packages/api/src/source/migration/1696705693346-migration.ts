@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Migration1696525557173 implements MigrationInterface {
-  name = "Migration1696525557173";
+export class Migration1696705693346 implements MigrationInterface {
+  name = "Migration1696705693346";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE \`users\` (\`id\` int NOT NULL AUTO_INCREMENT, \`mail\` varchar(255) NOT NULL, \`password\` varchar(255) NOT NULL, \`verify\` tinyint NOT NULL DEFAULT 0, \`refreshToken\` varchar(255) NOT NULL, \`lastLogin\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE INDEX \`IDX_2e5b50f4b7c081eceea476ad12\` (\`mail\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
+      `CREATE TABLE \`users\` (\`id\` int NOT NULL AUTO_INCREMENT, \`mail\` varchar(255) NOT NULL, \`password\` varchar(255) NOT NULL, \`verify\` tinyint NOT NULL DEFAULT 0, \`verifyCode\` varchar(255) NOT NULL, \`refreshToken\` varchar(255) NOT NULL, \`lastLogin\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE INDEX \`IDX_2e5b50f4b7c081eceea476ad12\` (\`mail\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     );
     await queryRunner.query(
       `CREATE TABLE \`presets\` (\`id\` int NOT NULL AUTO_INCREMENT, \`presetName\` varchar(255) NOT NULL, \`defaultPreset\` tinyint NOT NULL DEFAULT 0, \`userId\` int NULL, INDEX \`IDX_7bd663a558ec85144fe51d9c2f\` (\`presetName\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,

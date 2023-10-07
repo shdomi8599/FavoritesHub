@@ -8,15 +8,14 @@ import {
   Put,
   Request,
   Res,
-  UseGuards,
 } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
 import { Favorite, Preset, User } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
+import { generateRandomNumber } from "src/util";
 import { ReqPostAuthLoginDto } from "./dto/req/auth";
 import { ReqPostFavoriteAddDto, ReqPutPavoriteDto } from "./dto/req/favorite";
 import { ReqPostPresetAddDto, ReqPutPresetDto } from "./dto/req/preset";
@@ -75,6 +74,8 @@ export class ApiController {
       const tokens = await this.authService.login(user);
       const { accessToken, refreshToken } = tokens;
 
+      await this.usersService.updateRefreshToken(user, refreshToken);
+
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production" ? true : false,
@@ -89,7 +90,7 @@ export class ApiController {
     }
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Get("auth/refreshToken")
   @ApiResponse({
     status: 200,
@@ -103,21 +104,25 @@ export class ApiController {
     return { refreshToken };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Post("auth/logout")
   @ApiResponse({
     status: 201,
     description: "로그아웃 API입니다.",
     type: ResSuccessMessageDto,
   })
-  async postAuthLogout(@Res({ passthrough: true }) res) {
-    const { mail } = res.user;
+  async postAuthLogout(
+    @Res({ passthrough: true }) res,
+    @Body() dto: { mail: string },
+  ) {
+    const { mail } = dto;
     res.clearCookie("refreshToken");
-    await this.usersService.updateRefreshToken(mail, "");
+    const user = await this.usersService.findOneToMail(mail);
+    await this.usersService.updateRefreshToken(user, "");
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt-refresh"))
+  // @UseGuards(AuthGuard("jwt-refresh"))
   @Get("auth/accessToken")
   @ApiResponse({
     status: 200,
@@ -130,33 +135,61 @@ export class ApiController {
     return { accessToken };
   }
 
-  @UseGuards(AuthGuard("jwt"))
-  @Get("auth/mail")
+  // @UseGuards(AuthGuard("jwt"))
+  @Post("auth/mail")
   @ApiResponse({
     status: 200,
     description: "유저 이메일 보내기에 사용되는 API입니다.",
   })
-  async getAuthMail(@Request() req) {
-    console.log(req.user);
-    const verifyCode = 555555;
-    await this.authService.mail(req.user, verifyCode);
-    await this.usersService.updateVerifyCode(req.user, verifyCode);
+  async getAuthMail(@Body() dto: { mail: string }) {
+    const { mail } = dto;
+    const user = await this.usersService.findOneToMail(mail);
+    const verifyCode = generateRandomNumber();
+    await this.authService.mail(user, verifyCode);
+    await this.usersService.updateVerifyCode(user, verifyCode);
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Post("auth/verify")
   @ApiResponse({
     status: 200,
     description: "유저 이메일 인증에 사용되는 API입니다.",
   })
-  async postAuthVerify(@Request() req, @Body() dto: { code: number }) {
-    const { code } = dto;
-    const isVerify = await this.authService.verify(req.user, code);
+  async postAuthVerify(@Body() dto: { mail: string; verifyCode: string }) {
+    const { mail, verifyCode } = dto;
+    const user = await this.usersService.findOneToMail(mail);
+    const isVerify = await this.authService.verify(user, verifyCode);
     if (isVerify) {
-      await this.usersService.updateVerify(req.user);
+      await this.usersService.updateVerify(user);
       return { message: "success" };
     }
     return { message: "not verify" };
+  }
+
+  // @UseGuards(AuthGuard("jwt"))
+  @Post("auth/verify/login")
+  @ApiResponse({
+    status: 200,
+    description: "유저 이메일 인증 직후 로그인에 사용되는 API입니다.",
+  })
+  async postAuthVerifyLogin(
+    @Res({ passthrough: true }) res,
+    @Body() dto: { mail: string },
+  ) {
+    const { mail } = dto;
+    const user = await this.usersService.findOneToMail(mail);
+    const { accessToken, refreshToken } = await this.authService.login(user);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    });
+
+    await this.usersService.updateRefreshToken(user, refreshToken);
+
+    await this.usersService.updateloginTime(user);
+
+    return { accessToken };
   }
 
   // @UseGuards(AuthGuard("local"))
@@ -167,6 +200,7 @@ export class ApiController {
   })
   async postExistUser(@Body() dto: { mail: string }) {
     const { mail } = dto;
+    console.log(mail);
     const user = await this.usersService.findOneToMail(mail);
     return user;
   }
@@ -202,7 +236,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Get("preset/list")
   @ApiResponse({
     status: 200,
@@ -215,7 +249,7 @@ export class ApiController {
     return presets;
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Get("preset/:presetId")
   @ApiResponse({
     status: 200,
@@ -227,7 +261,7 @@ export class ApiController {
     return preset;
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Post("preset/:userId")
   @ApiResponse({
     status: 201,
@@ -244,7 +278,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Delete("preset/:presetId")
   @ApiResponse({
     status: 200,
@@ -256,7 +290,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Put("preset/:presetId")
   @ApiResponse({
     status: 200,
@@ -272,7 +306,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Get("favorite/:presetId")
   @ApiResponse({
     status: 200,
@@ -285,7 +319,7 @@ export class ApiController {
     return favorites;
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Get("favorite/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -297,7 +331,7 @@ export class ApiController {
     return favorite;
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Post("favorite/:presetId")
   @ApiResponse({
     status: 201,
@@ -314,7 +348,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Delete("favorite/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -326,7 +360,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Put("favorite/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -342,7 +376,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Get("favorite/visited/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -354,7 +388,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  // @UseGuards(AuthGuard("jwt"))
   @Post("favorite/star/:favoriteId")
   @ApiResponse({
     status: 201,
