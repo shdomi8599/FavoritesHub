@@ -1,10 +1,13 @@
 import { LoginFormInput } from "@/types";
 import { TextField } from "@mui/material";
-import { UseFormRegister } from "react-hook-form";
+import { FieldError, UseFormRegister } from "react-hook-form";
+import AuthAlertMessage from "./AuthAlertMessage";
 
 interface Props {
   register: UseFormRegister<LoginFormInput>;
   name: "mail" | "password";
+  isSubmitted: boolean;
+  error?: FieldError;
 }
 
 const options = {
@@ -30,17 +33,25 @@ const labelName = {
   password: "비밀번호",
 };
 
-export default function AuthFormInput({ register, name }: Props) {
+export default function AuthFormInput({
+  register,
+  name,
+  isSubmitted,
+  error,
+}: Props) {
   return (
-    <TextField
-      margin="normal"
-      required
-      fullWidth
-      {...register(name, options[name])}
-      label={labelName[name]}
-      autoComplete={name}
-      type={name}
-      autoFocus={name === "mail"}
-    />
+    <>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        {...register(name, options[name])}
+        label={labelName[name]}
+        autoComplete={name}
+        type={name}
+        autoFocus={name === "mail"}
+      />
+      {isSubmitted && <AuthAlertMessage error={error} />}
+    </>
   );
 }

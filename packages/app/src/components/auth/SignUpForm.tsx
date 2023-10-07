@@ -35,10 +35,18 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
           noValidate
           sx={{ mt: 1 }}
         >
-          <AuthFormInput register={register} name="mail" />
-          {isSubmitted && <AuthAlertMessage error={errors?.mail} />}
-          <AuthFormInput register={register} name="password" />
-          {isSubmitted && <AuthAlertMessage error={errors?.password} />}
+          <AuthFormInput
+            register={register}
+            name="mail"
+            error={errors?.mail}
+            isSubmitted={isSubmitted}
+          />
+          <AuthFormInput
+            register={register}
+            name="password"
+            error={errors?.password}
+            isSubmitted={isSubmitted}
+          />
           <TextField
             margin="normal"
             required
