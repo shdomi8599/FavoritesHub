@@ -37,7 +37,7 @@ export default function LoginForm({ handleAuthModal }: AuthProps) {
           <AuthFormInput
             register={register}
             name="mail"
-            error={errors?.password}
+            error={errors?.mail}
             isSubmitted={isSubmitted}
           />
           <AuthFormInput

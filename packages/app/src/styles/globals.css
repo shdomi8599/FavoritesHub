@@ -10,3 +10,7 @@
       font-size: 70%;
     } */
   }
+
+  canvas{
+    z-index: 999999 !important;
+  }
