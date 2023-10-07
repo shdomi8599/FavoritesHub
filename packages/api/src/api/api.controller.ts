@@ -68,7 +68,7 @@ export class ApiController {
       const { verify } = user;
 
       if (!verify) {
-        return { message: "not verify" };
+        return { message: "not verify", userId: user.id };
       }
 
       const tokens = await this.authService.login(user);
@@ -113,11 +113,11 @@ export class ApiController {
   })
   async postAuthLogout(
     @Res({ passthrough: true }) res,
-    @Body() dto: { mail: string },
+    @Body() dto: { userId: number },
   ) {
-    const { mail } = dto;
+    const { userId } = dto;
     res.clearCookie("refreshToken");
-    const user = await this.usersService.findOneToMail(mail);
+    const user = await this.usersService.findOneToId(userId);
     await this.usersService.updateRefreshToken(user, "");
     return { message: "success" };
   }
@@ -141,9 +141,9 @@ export class ApiController {
     status: 200,
     description: "유저 이메일 보내기에 사용되는 API입니다.",
   })
-  async getAuthMail(@Body() dto: { mail: string }) {
-    const { mail } = dto;
-    const user = await this.usersService.findOneToMail(mail);
+  async getAuthMail(@Body() dto: { userId: number }) {
+    const { userId } = dto;
+    const user = await this.usersService.findOneToId(userId);
     const verifyCode = generateRandomNumber();
     await this.authService.mail(user, verifyCode);
     await this.usersService.updateVerifyCode(user, verifyCode);
@@ -155,9 +155,9 @@ export class ApiController {
     status: 200,
     description: "유저 이메일 인증에 사용되는 API입니다.",
   })
-  async postAuthVerify(@Body() dto: { mail: string; verifyCode: string }) {
-    const { mail, verifyCode } = dto;
-    const user = await this.usersService.findOneToMail(mail);
+  async postAuthVerify(@Body() dto: { userId: number; verifyCode: string }) {
+    const { userId, verifyCode } = dto;
+    const user = await this.usersService.findOneToId(userId);
     const isVerify = await this.authService.verify(user, verifyCode);
     if (isVerify) {
       await this.usersService.updateVerify(user);
@@ -174,10 +174,10 @@ export class ApiController {
   })
   async postAuthVerifyLogin(
     @Res({ passthrough: true }) res,
-    @Body() dto: { mail: string },
+    @Body() dto: { userId: number },
   ) {
-    const { mail } = dto;
-    const user = await this.usersService.findOneToMail(mail);
+    const { userId } = dto;
+    const user = await this.usersService.findOneToId(userId);
     const { accessToken, refreshToken } = await this.authService.login(user);
 
     res.cookie("refreshToken", refreshToken, {
