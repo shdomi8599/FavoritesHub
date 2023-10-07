@@ -15,7 +15,7 @@ import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
-import { Favorite, Preset } from "src/source/entity";
+import { Favorite, Preset, User } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
 import { ReqPostAuthLoginDto } from "./dto/req/auth";
 import { ReqPostFavoriteAddDto, ReqPutPavoriteDto } from "./dto/req/favorite";
@@ -38,7 +38,7 @@ export class ApiController {
     private readonly favoritesService: FavoritesService,
   ) {}
 
-  @UseGuards(AuthGuard("local"))
+  // @UseGuards(AuthGuard("local"))
   @Post("auth/login")
   @ApiResponse({
     status: 201,
@@ -50,28 +50,37 @@ export class ApiController {
     @Res({ passthrough: true }) res,
     @Body() dto: ReqPostAuthLoginDto,
   ) {
-    const cookieRefreshToken = req.cookies.refreshToken;
-    const { mail, password } = dto;
-    const user = await this.usersService.validRefreshToken(
-      mail,
-      cookieRefreshToken,
-    );
+    try {
+      const cookieRefreshToken = req?.cookies?.refreshToken;
 
-    if (!user) {
+      const { mail, password } = dto;
+
+      let user: User;
+      if (cookieRefreshToken) {
+        user = await this.usersService.validRefreshToken(
+          mail,
+          cookieRefreshToken,
+        );
+      } else {
+        user = await this.usersService.findOneToMail(mail);
+      }
       await this.usersService.checkPassword(user, password);
+
+      const tokens = await this.authService.login(user);
+      const { accessToken, refreshToken } = tokens;
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+      });
+
+      await this.usersService.updateloginTime(user);
+
+      return { accessToken };
+    } catch (e) {
+      const { message } = e;
+      return { message };
     }
-
-    const tokens = await this.authService.login(req.user);
-    const { accessToken, refreshToken } = tokens;
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-    });
-
-    await this.usersService.updateloginTime(req.user);
-
-    return { accessToken };
   }
 
   @UseGuards(AuthGuard("jwt"))

@@ -49,7 +49,10 @@ export class UsersService {
   }
 
   async checkPassword(user: User, password: string) {
-    return bcrypt.compare(password, user.password);
+    const isExactPassword = await bcrypt.compare(password, user.password);
+    if (!isExactPassword) {
+      throw new Error("not exact");
+    }
   }
 
   async updateloginTime(user: User) {

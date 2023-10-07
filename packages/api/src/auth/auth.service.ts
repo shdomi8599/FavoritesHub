@@ -3,16 +3,12 @@ import { JwtService } from "@nestjs/jwt";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "src/constants";
 import { User } from "src/source/entity/User";
 
-interface UserAuth extends User {
-  sub: string;
-}
-
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  async getAccessToken(user: UserAuth) {
-    const payload = { sub: user.sub }; // 이 부분 수정이 필요할 수도 있겠다.
+  async getAccessToken(mail: string) {
+    const payload = { sub: mail };
     return await this.jwtService.signAsync(payload, {
       secret: JWT_ACCESS_SECRET,
       expiresIn: "15m",
@@ -28,8 +24,8 @@ export class AuthService {
     return refreshToken;
   }
 
-  async login(user: UserAuth) {
-    const accessToken = await this.getAccessToken(user);
+  async login(user: User) {
+    const accessToken = await this.getAccessToken(user.mail);
     const refreshToken = await this.getRefreshToken(user.mail);
 
     return {
