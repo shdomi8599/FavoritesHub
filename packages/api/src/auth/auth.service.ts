@@ -39,7 +39,7 @@ export class AuthService {
     };
   }
 
-  async verify(user: User) {
+  async mail(user: User, verifyCode: number) {
     const transporter = nodemailer.createTransport(nodemailerOption);
 
     const { mail } = user;
@@ -50,13 +50,16 @@ export class AuthService {
       html: `<div>
       <h2>Message Details</h2>
       <div class="email" style="font-size: 1.1em;">Email : ${mail}</div>
-      <div class="phone" style="font-size: 1.1em;">Title : </div>
+      <div class="phone" style="font-size: 1.1em;">code : ${verifyCode}</div>
       <div class="message" style="font-size: 1.1em;">message : </div>
       <pre class="message" style="font-size: 1.2em;"></pre>
       </div>
       `,
     };
-
     await transporter.sendMail(mailOptions);
+  }
+
+  async verify(user: User, verifyCode: number) {
+    return user.verifyCode === verifyCode;
   }
 }

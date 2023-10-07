@@ -38,15 +38,18 @@ export class User {
   @Column({ default: false })
   @ApiProperty({
     example: true,
-    description: "이메일 인증 확인 테이블입니다..",
+    description: "이메일 인증 확인 테이블입니다.",
     required: true,
   })
   verify: boolean;
 
   @Column()
+  verifyCode: number;
+
+  @Column()
   @ApiProperty({
     example: "dqwdwd1d1w322423dsw1e12d21d12",
-    description: "발급받은 리프레시 토큰입니다..",
+    description: "발급받은 리프레시 토큰입니다.",
     required: true,
   })
   refreshToken: string;

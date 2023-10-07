@@ -79,4 +79,9 @@ export class UsersService {
 
     return user;
   }
+
+  async updateVerifyCode(user: User, verifyCode: number) {
+    user.verifyCode = verifyCode;
+    await this.userTable.save(user);
+  }
 }

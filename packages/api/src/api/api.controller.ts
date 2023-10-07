@@ -130,15 +130,32 @@ export class ApiController {
     return { accessToken };
   }
 
-  // @UseGuards(AuthGuard("jwt"))
-  @Get("auth/verify")
+  @UseGuards(AuthGuard("jwt"))
+  @Get("auth/mail")
+  @ApiResponse({
+    status: 200,
+    description: "유저 이메일 보내기에 사용되는 API입니다.",
+  })
+  async getAuthMail(@Request() req) {
+    console.log(req.user);
+    const verifyCode = 555555;
+    await this.authService.mail(req.user, verifyCode);
+    await this.usersService.updateVerifyCode(req.user, verifyCode);
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Post("auth/verify")
   @ApiResponse({
     status: 200,
     description: "유저 이메일 인증에 사용되는 API입니다.",
   })
-  async getAuthVerify(@Request() req) {
-    const accessToken = await this.authService.verify(req.user);
-    return { accessToken };
+  async postAuthVerify(@Request() req, @Body() dto: { code: number }) {
+    const { code } = dto;
+    const isVerify = await this.authService.verify(req.user, code);
+    if (isVerify) {
+      return { message: "success" };
+    }
+    return { message: "not verify" };
   }
 
   // @UseGuards(AuthGuard("local"))
