@@ -1,3 +1,4 @@
 import { api } from "./api";
+import { confettiRealisticLook } from "./confetti";
 
-export { api };
+export { api, confettiRealisticLook };
