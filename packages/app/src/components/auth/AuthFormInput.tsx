@@ -15,7 +15,14 @@ const options = {
       message: "입력한 값이 이메일 형식과 일치하지 않습니다.",
     },
   },
-  password: { required: true, maxLength: 20 },
+  password: {
+    required: true,
+    pattern: {
+      value: /^(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+      message:
+        "비밀번호는 최소 8글자 이상이어야 하며, 대문자와 특수문자를 적어도 1개 이상 포함해야 합니다.",
+    },
+  },
 };
 
 const capitalize = (word: string) => {

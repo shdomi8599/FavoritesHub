@@ -38,6 +38,7 @@ export default function LoginForm({ handleAuthModal }: AuthProps) {
           <AuthFormInput register={register} name="mail" />
           {isSubmitted && <AuthAlertMessage error={errors?.mail} />}
           <AuthFormInput register={register} name="password" />
+          {isSubmitted && <AuthAlertMessage error={errors?.password} />}
           <FormControlLabel
             control={<Checkbox value="auto-login" color="primary" />}
             label="자동 로그인"

@@ -36,6 +36,7 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
           <AuthFormInput register={register} name="mail" />
           {isSubmitted && <AuthAlertMessage error={errors?.mail} />}
           <AuthFormInput register={register} name="password" />
+          {isSubmitted && <AuthAlertMessage error={errors?.password} />}
           <AuthButton name="password" />
           <Grid container>
             <Grid item xs>
