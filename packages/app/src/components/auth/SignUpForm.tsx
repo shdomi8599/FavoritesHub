@@ -1,5 +1,6 @@
+import { useApi } from "@/hooks";
 import { ApiResultMessage, AuthProps, SignUpFormInput } from "@/types";
-import { api, errorAlert } from "@/util";
+import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
 import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -13,6 +14,7 @@ import AuthLink from "./AuthLink";
 import AuthTitle from "./AuthTitle";
 
 export default function SignUpForm({ handleAuthModal }: AuthProps) {
+  const { api } = useApi();
   const {
     register,
     handleSubmit,

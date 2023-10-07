@@ -1,6 +1,7 @@
+import { useApi } from "@/hooks";
 import { accessTokenState } from "@/states";
 import { ApiResultAccessToken, AuthProps, LoginFormInput } from "@/types";
-import { api, errorAlert } from "@/util";
+import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
@@ -18,12 +19,17 @@ interface Props extends AuthProps {
 }
 
 export default function LoginForm({ handleClose, handleAuthModal }: Props) {
+  const { api } = useApi();
   const setAccessToken = useSetRecoilState(accessTokenState);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
   } = useForm<LoginFormInput>();
+
+  const alertEvent = () => {
+    handleAuthModal("verify");
+  };
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     const { mail, password } = data;
@@ -39,6 +45,14 @@ export default function LoginForm({ handleClose, handleAuthModal }: Props) {
     const { accessToken, message } = await api
       .post<ApiResultAccessToken>("/auth/login", { mail, password })
       .then((res) => res.data);
+
+    if (message === "not verify") {
+      return callbackSuccessAlert(
+        "이메일 인증을 부탁드려요.",
+        "인증 하러가기",
+        alertEvent,
+      );
+    }
 
     if (message === "not exact") {
       return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");
