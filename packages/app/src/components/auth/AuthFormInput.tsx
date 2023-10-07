@@ -25,8 +25,9 @@ const options = {
   },
 };
 
-const capitalize = (word: string) => {
-  return word.charAt(0).toUpperCase() + word.slice(1);
+const labelName = {
+  mail: "이메일",
+  password: "비밀번호",
 };
 
 export default function AuthFormInput({ register, name }: Props) {
@@ -36,7 +37,7 @@ export default function AuthFormInput({ register, name }: Props) {
       required
       fullWidth
       {...register(name, options[name])}
-      label={capitalize(name)}
+      label={labelName[name]}
       autoComplete={name}
       type={name}
       autoFocus={name === "mail"}

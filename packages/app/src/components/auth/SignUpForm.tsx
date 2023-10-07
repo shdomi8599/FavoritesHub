@@ -1,4 +1,5 @@
 import { AuthProps, LoginFormInput } from "@/types";
+import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -14,6 +15,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
+    getValues,
   } = useForm<LoginFormInput>();
   const onSubmit: SubmitHandler<LoginFormInput> = (data) => console.log(data);
 
@@ -37,6 +39,22 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
           {isSubmitted && <AuthAlertMessage error={errors?.mail} />}
           <AuthFormInput register={register} name="password" />
           {isSubmitted && <AuthAlertMessage error={errors?.password} />}
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            {...register("confirmPassword", {
+              required: true,
+              validate: (value) =>
+                value === getValues("password") ||
+                "입력하신 비밀번호와 일치하지 않습니다.",
+            })}
+            label={"비밀번호 확인"}
+            type="password"
+          />
+          {isSubmitted && errors.confirmPassword && (
+            <AuthAlertMessage error={errors.confirmPassword} />
+          )}
           <AuthButton name="signUp" />
           <Grid container>
             <Grid item xs>

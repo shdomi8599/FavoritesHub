@@ -1,10 +1,10 @@
 import { useBarHeight, useHandleOpen, useHandleWidth, useModal } from "@/hooks";
-import { isLoginState } from "@/states";
+import { authModalState, isLoginState } from "@/states";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import DashboardBar from "./DashBoardBar";
 import DashboardDrawer from "./DashBoardDrawer";
 
@@ -22,13 +22,20 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
   // 상태
+  const setAuthModal = useSetRecoilState(authModalState);
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
 
+  // 핸들러
   const handlePage = (route: string) => {
     if (route === router.asPath) {
       return;
     }
     router.push(route);
+  };
+
+  const handleLoginModal = () => {
+    setAuthModal("login");
+    handleOpen();
   };
 
   // 이펙트
@@ -47,11 +54,11 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         handleDrawer={handleDrawer}
         toolBarOpen={toolBarOpen}
         isMinWidth600={isMinWidth600}
-        handleModalOpen={handleOpen}
+        handleModalOpen={handleLoginModal}
       />
       <DashboardDrawer
         handleDrawer={handleDrawer}
-        handleModalOpen={handleOpen}
+        handleModalOpen={handleLoginModal}
         handlePage={handlePage}
         toolBarOpen={toolBarOpen}
         isLogin={isLogin}
