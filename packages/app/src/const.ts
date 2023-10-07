@@ -25,4 +25,11 @@ export const authFormOptions = {
         "비밀번호는 최소 8글자 이상이어야 하며, 대문자와 특수문자를 적어도 1개 이상 포함해야 합니다.",
     },
   },
+  verifyCode: {
+    required: true,
+    pattern: {
+      value: /^\d{6}$/,
+      message: "인증번호는 6자리의 숫자입니다.",
+    },
+  },
 };

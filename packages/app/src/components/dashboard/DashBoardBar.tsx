@@ -23,6 +23,7 @@ type Props = {
   isMinWidth600: boolean;
   isLogin: boolean;
   handleModalOpen: () => void;
+  logoutEvent: () => void;
 };
 
 export default function DashboardBar({
@@ -33,6 +34,7 @@ export default function DashboardBar({
   handleModalOpen,
   isMinWidth600,
   isLogin,
+  logoutEvent,
 }: Props) {
   const {
     isBoolean: isOpen,

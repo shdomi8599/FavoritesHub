@@ -1,5 +1,4 @@
 import { useApi } from "@/hooks";
-import { accessTokenState } from "@/states";
 import { ApiResultAccessToken, AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -8,7 +7,7 @@ import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
+import { SetterOrUpdater } from "recoil";
 import AuthButton from "./AuthButton";
 import AuthFormInput from "./AuthFormInput";
 import AuthLink from "./AuthLink";
@@ -16,11 +15,15 @@ import AuthTitle from "./AuthTitle";
 
 interface Props extends AuthProps {
   handleClose: () => void;
+  setAccessToken: SetterOrUpdater<string>;
 }
 
-export default function LoginForm({ handleClose, handleAuthModal }: Props) {
+export default function LoginForm({
+  handleClose,
+  handleAuthModal,
+  setAccessToken,
+}: Props) {
   const { api } = useApi();
-  const setAccessToken = useSetRecoilState(accessTokenState);
   const {
     register,
     handleSubmit,

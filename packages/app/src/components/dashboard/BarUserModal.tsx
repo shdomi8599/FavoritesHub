@@ -18,6 +18,7 @@ type Props = {
   handleModalOpen: () => void;
   isLogin: boolean;
   contentBoxTop: number;
+  logoutEvent: () => void;
 };
 
 export default function BarUserModal({
@@ -25,6 +26,7 @@ export default function BarUserModal({
   handleModalOpen,
   isLogin,
   contentBoxTop,
+  logoutEvent,
 }: Props) {
   return (
     <UserContentBox top={contentBoxTop}>
@@ -41,7 +43,7 @@ export default function BarUserModal({
             {isLogin ? (
               <>
                 <DirectionsRunIcon />
-                <span onClick={() => {}}>로그아웃</span>
+                <span onClick={logoutEvent}>로그아웃</span>
               </>
             ) : (
               <>

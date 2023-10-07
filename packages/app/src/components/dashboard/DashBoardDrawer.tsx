@@ -3,6 +3,7 @@ import {
   AccountCircle as AccountCircleIcon,
   ChevronLeft as ChevronLeftIcon,
   Dashboard as DashboardIcon,
+  DirectionsRun as DirectionsRunIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -23,6 +24,7 @@ type Props = {
   handlePage: (route: string) => void;
   isLogin: boolean;
   handleModalOpen: () => void;
+  logoutEvent: () => void;
 };
 
 export default function DashboardDrawer({
@@ -31,6 +33,7 @@ export default function DashboardDrawer({
   handleModalOpen,
   handlePage,
   isLogin,
+  logoutEvent,
 }: Props) {
   return (
     <Drawer variant="permanent" open={toolBarOpen}>
@@ -62,7 +65,10 @@ export default function DashboardDrawer({
           <Divider />
           <ToolBarLoginBox>
             {isLogin ? (
-              <></>
+              <>
+                <DirectionsRunIcon />
+                <span onClick={logoutEvent}>로그아웃</span>
+              </>
             ) : (
               <>
                 <AccountCircleIcon fontSize="large" />

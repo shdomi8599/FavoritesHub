@@ -9,6 +9,7 @@ const buttonData: { [key: string]: string } = {
   login: "로그인",
   password: "비밀번호 찾기",
   signUp: "회원가입",
+  verify: "인증하기",
 };
 
 export default function AuthButton({ name }: Props) {

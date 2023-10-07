@@ -1,5 +1,12 @@
-import { useBarHeight, useHandleWidth, useHandler, useModal } from "@/hooks";
-import { authModalState, isLoginState } from "@/states";
+import {
+  useApi,
+  useBarHeight,
+  useHandleWidth,
+  useHandler,
+  useModal,
+} from "@/hooks";
+import { accessTokenState, authModalState, isLoginState } from "@/states";
+import { ApiResultMessage } from "@/types";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
@@ -10,6 +17,7 @@ import DashboardDrawer from "./DashBoardDrawer";
 
 export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
+  const { api } = useApi();
   const router = useRouter();
   const { handleOpen } = useModal();
   const { width } = useHandleWidth();
@@ -24,6 +32,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   // 상태
   const setAuthModal = useSetRecoilState(authModalState);
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
+  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
 
   // 핸들러
   const handlePage = (route: string) => {
@@ -38,12 +47,32 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     handleOpen();
   };
 
+  const logoutEvent = async () => {
+    const { message } = await api
+      .post<ApiResultMessage>("/auth/logout", {
+        mail: "shdomi8599@gmail.com",
+      })
+      .then((res) => res.data);
+
+    if (message === "success") {
+      setAccessToken("");
+    }
+  };
+
   // 이펙트
   useEffect(() => {
     if (width < 1500) {
       setToolBartoolBarOpen(false);
     }
   }, [width, setToolBartoolBarOpen]);
+
+  useEffect(() => {
+    if (accessToken) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [accessToken, setIsLogin]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -55,6 +84,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         toolBarOpen={toolBarOpen}
         isMinWidth600={isMinWidth600}
         handleModalOpen={handleLoginModal}
+        logoutEvent={logoutEvent}
       />
       <DashboardDrawer
         handleDrawer={handleDrawer}
@@ -62,6 +92,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         handlePage={handlePage}
         toolBarOpen={toolBarOpen}
         isLogin={isLogin}
+        logoutEvent={logoutEvent}
       />
       <Main component="main" barheight={barHeight}>
         {children}
