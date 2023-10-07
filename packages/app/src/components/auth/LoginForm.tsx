@@ -6,9 +6,9 @@ import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { SubmitHandler, useForm } from "react-hook-form";
+import AuthFormInput from "./AuthFormInput";
 import AuthLink from "./AuthLink";
 
 export default function LoginForm({ handleAuthModal }: AuthProps) {
@@ -37,33 +37,11 @@ export default function LoginForm({ handleAuthModal }: AuthProps) {
           noValidate
           sx={{ mt: 1 }}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            {...register("mail", {
-              required: true,
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "입력한 값이 이메일 형식과 일치하지 않습니다.",
-              },
-            })}
-            label="Email"
-            autoComplete="email"
-            autoFocus
-          />
+          <AuthFormInput register={register} name="mail" />
           {isSubmitted && (
             <AlertMessage role="alert">{errors?.mail?.message}</AlertMessage>
           )}
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            {...register("password", { required: true, maxLength: 20 })}
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-          />
+          <AuthFormInput register={register} name="password" />
           <FormControlLabel
             control={<Checkbox value="auto-login" color="primary" />}
             label="자동 로그인"
