@@ -16,12 +16,14 @@ import AuthTitle from "./AuthTitle";
 interface Props extends AuthProps {
   handleClose: () => void;
   setAccessToken: SetterOrUpdater<string>;
+  setUserId: SetterOrUpdater<number>;
 }
 
 export default function LoginForm({
   handleClose,
   handleAuthModal,
   setAccessToken,
+  setUserId,
 }: Props) {
   const { api } = useApi();
   const {
@@ -45,9 +47,15 @@ export default function LoginForm({
       return errorAlert("가입되지 않은 이메일입니다.", "이메일 확인");
     }
 
-    const { accessToken, message } = await api
+    const { accessToken, message, userId } = await api
       .post<ApiResultAccessToken>("/auth/login", { mail, password })
       .then((res) => res.data);
+
+    if (message === "not exact") {
+      return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");
+    }
+
+    setUserId(userId);
 
     if (message === "not verify") {
       return callbackSuccessAlert(
@@ -55,10 +63,6 @@ export default function LoginForm({
         "인증 하러가기",
         alertEvent,
       );
-    }
-
-    if (message === "not exact") {
-      return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");
     }
 
     setAccessToken(accessToken!);

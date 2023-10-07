@@ -26,3 +26,8 @@ export const accessTokenState = atom({
   key: "accessTokenState",
   default: "",
 });
+
+export const userIdState = atom({
+  key: "userIdState",
+  default: 0,
+});

@@ -1,5 +1,5 @@
 import { useModal } from "@/hooks";
-import { accessTokenState, authModalState } from "@/states";
+import { accessTokenState, authModalState, userIdState } from "@/states";
 import { AuthModalState } from "@/types";
 import { Box, Modal, styled } from "@mui/material";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -11,6 +11,7 @@ import VerifyForm from "./VerifyForm";
 export default function AuthModal() {
   const { isModal, handleClose } = useModal();
 
+  const [userId, setUserId] = useRecoilState(userIdState);
   const setAccessToken = useSetRecoilState(accessTokenState);
   const [authModal, setAuthModal] = useRecoilState(authModalState);
 
@@ -24,12 +25,17 @@ export default function AuthModal() {
         handleAuthModal={handleAuthModal}
         handleClose={handleClose}
         setAccessToken={setAccessToken}
+        setUserId={setUserId}
       />
     ),
     password: <PasswordForm handleAuthModal={handleAuthModal} />,
     signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
     verify: (
-      <VerifyForm handleClose={handleClose} setAccessToken={setAccessToken} />
+      <VerifyForm
+        handleClose={handleClose}
+        setAccessToken={setAccessToken}
+        userId={userId}
+      />
     ),
   };
 

@@ -15,9 +15,14 @@ import AuthTitle from "./AuthTitle";
 type Props = {
   handleClose: () => void;
   setAccessToken: SetterOrUpdater<string>;
+  userId: number;
 };
 
-export default function VerifyForm({ handleClose, setAccessToken }: Props) {
+export default function VerifyForm({
+  handleClose,
+  setAccessToken,
+  userId,
+}: Props) {
   const { api } = useApi();
   const {
     register,
@@ -27,14 +32,14 @@ export default function VerifyForm({ handleClose, setAccessToken }: Props) {
 
   const onVerifyMail = async () => {
     successAlert("메일이 발송되었습니다.", "인증번호");
-    await api.post("/auth/mail", { mail: "shdomi8599@gmail.com" });
+    await api.post("/auth/mail", { userId });
   };
 
   const onSubmit: SubmitHandler<{ verifyCode: string }> = async (data) => {
     const { verifyCode } = data;
     const { message } = await api
       .post<ApiResultMessage>("/auth/verify", {
-        mail: "shdomi8599@gmail.com",
+        userId,
         verifyCode,
       })
       .then((res) => res.data);
@@ -47,7 +52,7 @@ export default function VerifyForm({ handleClose, setAccessToken }: Props) {
       successAlert("이메일 인증에 성공했습니다.", "이메일 인증");
       const { accessToken } = await api
         .post<ApiResultAccessToken>("/auth/verify/login", {
-          mail: "shdomi8599@gmail.com",
+          userId,
         })
         .then((res) => res.data);
 

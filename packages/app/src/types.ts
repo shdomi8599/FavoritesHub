@@ -16,9 +16,11 @@ type Message = "success" | "exist" | "not exact" | "not verify";
 
 export type ApiResultMessage = {
   message: Message;
+  userId: number;
 };
 
 export interface ApiResultAccessToken {
   accessToken?: string;
   message?: Message;
+  userId: number;
 }

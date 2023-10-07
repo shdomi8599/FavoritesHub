@@ -5,7 +5,12 @@ import {
   useHandler,
   useModal,
 } from "@/hooks";
-import { accessTokenState, authModalState, isLoginState } from "@/states";
+import {
+  accessTokenState,
+  authModalState,
+  isLoginState,
+  userIdState,
+} from "@/states";
 import { ApiResultMessage } from "@/types";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -31,6 +36,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   // 상태
   const setAuthModal = useSetRecoilState(authModalState);
+  const [userId, setUserId] = useRecoilState(userIdState);
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
   const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
 
@@ -50,7 +56,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const logoutEvent = async () => {
     const { message } = await api
       .post<ApiResultMessage>("/auth/logout", {
-        mail: "shdomi8599@gmail.com",
+        userId,
       })
       .then((res) => res.data);
 
@@ -70,9 +76,10 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     if (accessToken) {
       setIsLogin(true);
     } else {
+      setUserId(0);
       setIsLogin(false);
     }
-  }, [accessToken, setIsLogin]);
+  }, [accessToken, setIsLogin, setUserId]);
 
   return (
     <Box sx={{ display: "flex" }}>
