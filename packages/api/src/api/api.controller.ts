@@ -116,6 +116,18 @@ export class ApiController {
   }
 
   // @UseGuards(AuthGuard("local"))
+  @Post("user/exist")
+  @ApiResponse({
+    status: 200,
+    description: "유저 조회 API입니다.",
+  })
+  async postExistUser(@Body() dto: { mail: string }) {
+    const { mail } = dto;
+    const user = await this.usersService.findOneToMail(mail);
+    return user;
+  }
+
+  // @UseGuards(AuthGuard("local"))
   @Post("user")
   @ApiResponse({
     status: 201,

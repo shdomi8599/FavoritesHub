@@ -21,9 +21,6 @@ export class UsersService {
 
   async findOneToId(userId: number): Promise<User> {
     const user = await this.userTable.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new Error("사용자를 찾을 수 없습니다.");
-    }
     return user;
   }
 
@@ -45,6 +42,9 @@ export class UsersService {
 
   async remove(userId: number) {
     const user = await this.findOneToId(userId);
+    if (!user) {
+      throw new Error("사용자를 찾을 수 없습니다.");
+    }
     await this.userTable.delete(user);
   }
 
