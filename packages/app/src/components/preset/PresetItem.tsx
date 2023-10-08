@@ -36,10 +36,20 @@ export default function PresetItem({
       </ListItemIcon>
       <ListItemText sx={itemTextStyle} primary={presetName} />
       <IconContainer>
-        <IconBox onClick={() => editPresetModal(id)}>
+        <IconBox
+          onClick={(e) => {
+            e.stopPropagation();
+            editPresetModal(id);
+          }}
+        >
           <EditIcon />
         </IconBox>
-        <IconBox onClick={() => deletePresetEvent(id)}>
+        <IconBox
+          onClick={(e) => {
+            e.stopPropagation();
+            deletePresetEvent(id);
+          }}
+        >
           <DeleteIcon />
         </IconBox>
       </IconContainer>
