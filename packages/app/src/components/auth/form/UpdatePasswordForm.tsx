@@ -9,8 +9,7 @@ import { authFormOptions, authInputLabel } from "@/const";
 import { userMailState } from "@/states";
 import { updatePasswordFormInput } from "@/types";
 import { successAlert } from "@/util";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater, useRecoilValue } from "recoil";
 

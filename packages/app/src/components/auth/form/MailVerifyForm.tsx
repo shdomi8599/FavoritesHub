@@ -9,9 +9,7 @@ import {
 import { authFormOptions } from "@/const";
 import { AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";
-import { Grid, TextField } from "@mui/material";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import { Box, Container, Grid, TextField } from "@mui/material";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTimer } from "react-timer-hook";

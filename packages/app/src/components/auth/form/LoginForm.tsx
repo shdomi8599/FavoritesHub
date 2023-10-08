@@ -9,11 +9,13 @@ import {
 import { authFormOptions, authInputLabel } from "@/const";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
-import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import Container from "@mui/material/Container";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
+import {
+  Box,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  Grid,
+} from "@mui/material";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";

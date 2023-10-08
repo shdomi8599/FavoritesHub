@@ -10,9 +10,7 @@ import { authFormOptions, authInputLabel } from "@/const";
 import { AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import { Box, Container, Grid } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function SignUpForm({ handleAuthModal }: AuthProps) {

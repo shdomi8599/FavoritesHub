@@ -1,8 +1,6 @@
-import { ModalTitle } from "@/components/modal";
-import ModalForm from "@/components/modal/ModalForm";
+import { ModalForm, ModalTitle } from "@/components/modal";
 import { PresetProps, updatePasswordFormInput } from "@/types";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface Props extends PresetProps {}
