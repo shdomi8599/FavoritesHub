@@ -1,6 +1,12 @@
 import { postSignUp } from "@/api/auth";
-import { ModalButton, ModalLink, ModalTitle } from "@/components/modal";
-import ModalForm from "@/components/modal/ModalForm";
+import {
+  ModalButton,
+  ModalForm,
+  ModalFormInput,
+  ModalLink,
+  ModalTitle,
+} from "@/components/modal";
+import { authFormOptions, authInputLabel } from "@/const";
 import { AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
@@ -8,7 +14,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AuthFormInput } from "../common";
 
 export default function SignUpForm({ handleAuthModal }: AuthProps) {
   const {
@@ -57,24 +62,33 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
       >
         <ModalTitle name="회원가입" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="mail"
             error={errors?.mail}
             isSubmitted={isSubmitted}
+            option={authFormOptions["mail"]}
+            label={authInputLabel["mail"]}
+            autoFocus={true}
+            type="email"
           />
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="password"
             error={errors?.password}
             isSubmitted={isSubmitted}
+            option={authFormOptions["password"]}
+            label={authInputLabel["password"]}
+            type="password"
           />
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="confirmPassword"
             error={errors?.confirmPassword}
             isSubmitted={isSubmitted}
             option={confirmPasswordOption}
+            label={authInputLabel["confirmPassword"]}
+            type="password"
           />
           <ModalButton>회원가입</ModalButton>
           <Grid container>

@@ -2,9 +2,11 @@ import { postUserExist } from "@/api/auth";
 import {
   ModalButton,
   ModalForm,
+  ModalFormInput,
   ModalLink,
   ModalTitle,
 } from "@/components/modal";
+import { authFormOptions, authInputLabel } from "@/const";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -12,7 +14,6 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
-import { AuthFormInput } from "../common";
 
 interface Props extends AuthProps {
   setIsForgot: SetterOrUpdater<boolean>;
@@ -64,11 +65,15 @@ export default function ForgotPasswordForm({
       >
         <ModalTitle name="비밀번호 재설정" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="mail"
             error={errors?.mail}
             isSubmitted={isSubmitted}
+            option={authFormOptions["mail"]}
+            label={authInputLabel["mail"]}
+            autoFocus={true}
+            type="email"
           />
           <ModalButton>이메일 인증</ModalButton>
           <Grid container>

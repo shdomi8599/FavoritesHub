@@ -1,6 +1,12 @@
 import { postAuthLogin, postUserExist } from "@/api/auth";
-import { ModalButton, ModalLink, ModalTitle } from "@/components/modal";
-import ModalForm from "@/components/modal/ModalForm";
+import {
+  ModalButton,
+  ModalForm,
+  ModalFormInput,
+  ModalLink,
+  ModalTitle,
+} from "@/components/modal";
+import { authFormOptions, authInputLabel } from "@/const";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -11,7 +17,6 @@ import Grid from "@mui/material/Grid";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
-import { AuthFormInput } from "../common";
 
 interface Props extends AuthProps {
   handleClose: () => void;
@@ -87,17 +92,24 @@ export default function LoginForm({
       >
         <ModalTitle name="로그인" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="mail"
             error={errors?.mail}
             isSubmitted={isSubmitted}
+            option={authFormOptions["mail"]}
+            label={authInputLabel["mail"]}
+            autoFocus={true}
+            type="email"
           />
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="password"
             error={errors?.password}
             isSubmitted={isSubmitted}
+            option={authFormOptions["password"]}
+            label={authInputLabel["password"]}
+            type="password"
           />
           <FormControlLabel
             sx={{ display: "block" }}

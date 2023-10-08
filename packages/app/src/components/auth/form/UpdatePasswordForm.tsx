@@ -1,6 +1,11 @@
 import { putUpdatePassword } from "@/api/auth";
-import { ModalButton, ModalTitle } from "@/components/modal";
-import ModalForm from "@/components/modal/ModalForm";
+import {
+  ModalButton,
+  ModalForm,
+  ModalFormInput,
+  ModalTitle,
+} from "@/components/modal";
+import { authFormOptions, authInputLabel } from "@/const";
 import { userMailState } from "@/states";
 import { updatePasswordFormInput } from "@/types";
 import { successAlert } from "@/util";
@@ -8,7 +13,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater, useRecoilValue } from "recoil";
-import { AuthFormInput } from "../common";
 
 interface Props {
   handleClose: () => void;
@@ -56,18 +60,23 @@ export default function UpdatePasswordForm({
       >
         <ModalTitle name="비밀번호 재설정" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="password"
             error={errors?.password}
             isSubmitted={isSubmitted}
+            option={authFormOptions["password"]}
+            label={authInputLabel["password"]}
+            type="password"
           />
-          <AuthFormInput
+          <ModalFormInput
             register={register}
             name="confirmPassword"
             error={errors?.confirmPassword}
             isSubmitted={isSubmitted}
             option={confirmPasswordOption}
+            label={authInputLabel["confirmPassword"]}
+            type="password"
           />
           <ModalButton>재설정</ModalButton>
         </ModalForm>

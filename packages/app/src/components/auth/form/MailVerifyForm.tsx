@@ -2,10 +2,10 @@ import { postAuthMail, postAuthVerify, postAuthVerifyLogin } from "@/api/auth";
 import {
   ModalAlertMessage,
   ModalButton,
+  ModalForm,
   ModalLink,
   ModalTitle,
 } from "@/components/modal";
-import ModalForm from "@/components/modal/ModalForm";
 import { authFormOptions } from "@/const";
 import { AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";
