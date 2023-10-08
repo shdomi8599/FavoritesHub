@@ -1,4 +1,4 @@
-import { useApi, useModal } from "@/hooks";
+import { useApi, useAuthModal } from "@/hooks";
 import {
   accessTokenState,
   authModalState,
@@ -19,7 +19,7 @@ import {
 
 export default function AuthModal() {
   const { api } = useApi();
-  const { isModal, handleClose } = useModal();
+  const { isAuthModal, offAuthModal } = useAuthModal();
 
   const [isForgot, setIsForgot] = useState(false);
   const setUserId = useSetRecoilState(userIdState);
@@ -35,7 +35,7 @@ export default function AuthModal() {
     login: (
       <LoginForm
         handleAuthModal={handleAuthModal}
-        handleClose={handleClose}
+        handleClose={offAuthModal}
         setAccessToken={setAccessToken}
         setUserId={setUserId}
         setUserMail={setUserMail}
@@ -56,7 +56,7 @@ export default function AuthModal() {
       <MailVerifyForm
         api={api}
         handleAuthModal={handleAuthModal}
-        handleClose={handleClose}
+        handleClose={offAuthModal}
         setAccessToken={setAccessToken}
         userMail={userMail}
         isForgot={isForgot}
@@ -64,7 +64,7 @@ export default function AuthModal() {
     ),
     updatePassword: (
       <UpdatePasswordForm
-        handleClose={handleClose}
+        handleClose={offAuthModal}
         api={api}
         setUserMail={setUserMail}
       />
@@ -73,7 +73,7 @@ export default function AuthModal() {
 
   return (
     <Box>
-      <Modal open={isModal} onClose={handleClose}>
+      <Modal open={isAuthModal} onClose={offAuthModal}>
         <ContentBox sx={{ boxShadow: 3 }}>{modalData[authModal]}</ContentBox>
       </Modal>
     </Box>

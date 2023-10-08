@@ -1,15 +1,15 @@
 import { useApi } from "./useApi";
+import { useAuthModal } from "./useAuthModal";
 import { useBarHeight } from "./useBarHeight";
-import { useHandler } from "./useHandler";
 import { useHandleWidth } from "./useHandleWidth";
-import { useModal } from "./useModal";
+import { useHandler } from "./useHandler";
 import { useOutSideRef } from "./useOutSideRef";
 
 export {
   useApi,
+  useAuthModal,
   useBarHeight,
-  useHandler,
   useHandleWidth,
-  useModal,
+  useHandler,
   useOutSideRef,
 };

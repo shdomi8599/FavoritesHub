@@ -15,8 +15,6 @@ export default function SignUpForm({ handleAuthModal, api }: AuthProps) {
     getValues,
   } = useForm<SignUpFormInput>();
 
-  console.log(errors);
-
   const confirmPasswordOption = {
     required: true,
     validate: (value: string) =>

@@ -6,8 +6,8 @@ export const isLoginState = atom({
   default: false,
 });
 
-export const isModalState = atom({
-  key: "isModalState",
+export const isAuthModalState = atom({
+  key: "isAuthModalState",
   default: false,
 });
 

@@ -1,9 +1,9 @@
 import {
   useApi,
+  useAuthModal,
   useBarHeight,
   useHandleWidth,
   useHandler,
-  useModal,
 } from "@/hooks";
 import {
   accessTokenState,
@@ -24,7 +24,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
   const { api } = useApi();
   const router = useRouter();
-  const { handleOpen } = useModal();
+  const { openAuthModal } = useAuthModal();
   const { width } = useHandleWidth();
   const { ref: barRef, barHeight } = useBarHeight();
   const {
@@ -50,7 +50,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   const handleLoginModal = () => {
     setAuthModal("login");
-    handleOpen();
+    openAuthModal();
   };
 
   const logoutEvent = async () => {
