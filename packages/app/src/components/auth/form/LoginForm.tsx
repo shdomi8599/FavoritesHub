@@ -1,4 +1,5 @@
-import { ApiResultAccessToken, AuthProps, LoginFormInput } from "@/types";
+import { postAuthLogin, postUserExist } from "@/api/auth";
+import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -25,7 +26,6 @@ export default function LoginForm({
   setUserId,
   setUserMail,
   setIsForgot,
-  api,
 }: Props) {
   const {
     register,
@@ -40,17 +40,16 @@ export default function LoginForm({
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     const { mail, password } = data;
 
-    const user = await api
-      .post("/user/exist", { mail })
-      .then((res) => res.data);
+    const user = await postUserExist(mail);
 
     if (!user) {
       return errorAlert("가입되지 않은 이메일입니다.", "이메일 확인");
     }
 
-    const { accessToken, message, userId } = await api
-      .post<ApiResultAccessToken>("/auth/login", { mail, password })
-      .then((res) => res.data);
+    const { accessToken, message, userId } = await postAuthLogin(
+      mail,
+      password,
+    );
 
     if (message === "not exact") {
       return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");

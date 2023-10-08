@@ -1,5 +1,3 @@
-import { AxiosInstance } from "axios";
-
 export interface LoginFormInput {
   mail: string;
   password: string;
@@ -22,7 +20,6 @@ export type AuthModalState =
 
 export interface AuthProps {
   handleAuthModal: (auth: AuthModalState) => void;
-  api: AxiosInstance;
 }
 
 type Message = "success" | "exist" | "not exact" | "not verify";

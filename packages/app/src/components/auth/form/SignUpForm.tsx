@@ -1,4 +1,5 @@
-import { ApiResultMessage, AuthProps, SignUpFormInput } from "@/types";
+import { postSignUp } from "@/api/auth";
+import { AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
 import Box from "@mui/material/Box";
@@ -7,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AuthButton, AuthFormInput, AuthLink, AuthTitle } from "../common";
 
-export default function SignUpForm({ handleAuthModal, api }: AuthProps) {
+export default function SignUpForm({ handleAuthModal }: AuthProps) {
   const {
     register,
     handleSubmit,
@@ -28,9 +29,7 @@ export default function SignUpForm({ handleAuthModal, api }: AuthProps) {
 
   const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
     const { mail, password } = data;
-    const { message } = await api
-      .post<ApiResultMessage>("/user", { mail, password })
-      .then((res) => res.data);
+    const { message } = await postSignUp(mail, password);
 
     if (message === "exist") {
       return errorAlert("이미 가입된 이메일입니다.", "이메일 확인");

@@ -1,4 +1,4 @@
-import { useApi, useAuthModal } from "@/hooks";
+import { useAuthModal } from "@/hooks";
 import {
   accessTokenState,
   authModalState,
@@ -18,7 +18,6 @@ import {
 } from "./form";
 
 export default function AuthModal() {
-  const { api } = useApi();
   const { isAuthModal, offAuthModal } = useAuthModal();
 
   const [isForgot, setIsForgot] = useState(false);
@@ -40,21 +39,18 @@ export default function AuthModal() {
         setUserId={setUserId}
         setUserMail={setUserMail}
         setIsForgot={setIsForgot}
-        api={api}
       />
     ),
     password: (
       <ForgotPasswordForm
-        api={api}
         handleAuthModal={handleAuthModal}
         setIsForgot={setIsForgot}
         setUserMail={setUserMail}
       />
     ),
-    signUp: <SignUpForm api={api} handleAuthModal={handleAuthModal} />,
+    signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
     verify: (
       <MailVerifyForm
-        api={api}
         handleAuthModal={handleAuthModal}
         handleClose={offAuthModal}
         setAccessToken={setAccessToken}
@@ -65,7 +61,6 @@ export default function AuthModal() {
     updatePassword: (
       <UpdatePasswordForm
         handleClose={offAuthModal}
-        api={api}
         setUserMail={setUserMail}
       />
     ),

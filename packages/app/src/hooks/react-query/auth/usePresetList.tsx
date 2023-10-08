@@ -1,15 +1,13 @@
+import { getPresetList } from "@/api/preset";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosInstance } from "axios";
 
-export const usePresetList = (
-  api: AxiosInstance,
-  accessToken: string,
-  userId: number,
-) => {
+export const usePresetList = (userId: number, accessToken: string) => {
   const data = useQuery(
     ["presetList", userId],
-    () => api.post(`/preset/list/${userId}`).then((res) => res.data),
-    { enabled: !!accessToken },
+    () => getPresetList(userId, accessToken),
+    {
+      enabled: !!accessToken,
+    },
   );
   return data;
 };

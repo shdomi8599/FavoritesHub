@@ -1,5 +1,6 @@
+import { postAuthMail, postAuthVerify, postAuthVerifyLogin } from "@/api/auth";
 import { authFormOptions } from "@/const";
-import { ApiResultAccessToken, ApiResultMessage, AuthProps } from "@/types";
+import { AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";
 import { Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -23,7 +24,6 @@ export default function MailVerifyForm({
   userMail,
   isForgot,
   handleAuthModal,
-  api,
 }: Props) {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 180);
@@ -37,17 +37,12 @@ export default function MailVerifyForm({
   const onVerifyMail = async () => {
     restart(expiryTimestamp);
     successAlert("메일이 발송되었습니다.", "인증번호");
-    await api.post("/auth/mail", { userMail });
+    await postAuthMail(userMail);
   };
 
   const onSubmit: SubmitHandler<{ verifyCode: string }> = async (data) => {
     const { verifyCode } = data;
-    const { message } = await api
-      .post<ApiResultMessage>("/auth/verify", {
-        userMail,
-        verifyCode,
-      })
-      .then((res) => res.data);
+    const { message } = await postAuthVerify(userMail, verifyCode);
 
     if (message === "not verify") {
       return errorAlert("인증번호가 일치하지 않습니다.", "인증번호");
@@ -61,11 +56,7 @@ export default function MailVerifyForm({
       return handleAuthModal("updatePassword");
     }
 
-    const { accessToken } = await api
-      .post<ApiResultAccessToken>("/auth/verify/login", {
-        userMail,
-      })
-      .then((res) => res.data);
+    const { accessToken } = await postAuthVerifyLogin(userMail);
 
     setAccessToken(accessToken!);
     handleClose();

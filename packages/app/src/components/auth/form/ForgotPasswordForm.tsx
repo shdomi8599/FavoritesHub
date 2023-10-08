@@ -1,3 +1,4 @@
+import { postUserExist } from "@/api/auth";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -15,7 +16,6 @@ interface Props extends AuthProps {
 export default function ForgotPasswordForm({
   handleAuthModal,
   setIsForgot,
-  api,
   setUserMail,
 }: Props) {
   const {
@@ -31,9 +31,7 @@ export default function ForgotPasswordForm({
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     const { mail } = data;
 
-    const user = await api
-      .post("/user/exist", { mail })
-      .then((res) => res.data);
+    const user = await postUserExist(mail);
 
     if (!user) {
       return errorAlert("가입되지 않은 이메일입니다.", "이메일 확인");

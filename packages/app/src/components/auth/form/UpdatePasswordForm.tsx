@@ -1,22 +1,20 @@
+import { putUpdatePassword } from "@/api/auth";
 import { userMailState } from "@/states";
-import { ApiResultMessage, updatePasswordFormInput } from "@/types";
+import { updatePasswordFormInput } from "@/types";
 import { successAlert } from "@/util";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { AxiosInstance } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater, useRecoilValue } from "recoil";
 import { AuthButton, AuthFormInput, AuthTitle } from "../common";
 
 interface Props {
   handleClose: () => void;
-  api: AxiosInstance;
   setUserMail: SetterOrUpdater<string>;
 }
 
 export default function UpdatePasswordForm({
   handleClose,
-  api,
   setUserMail,
 }: Props) {
   const userMail = useRecoilValue(userMailState);
@@ -36,9 +34,7 @@ export default function UpdatePasswordForm({
 
   const onSubmit: SubmitHandler<updatePasswordFormInput> = async (data) => {
     const { password } = data;
-    const { message } = await api
-      .put<ApiResultMessage>("/user", { userMail, newPassword: password })
-      .then((res) => res.data);
+    const { message } = await putUpdatePassword(userMail, password);
 
     if (message === "success") {
       setUserMail("");
