@@ -1,5 +1,11 @@
-import { ModalForm, ModalTitle } from "@/components/modal";
-import { PresetProps, updatePasswordFormInput } from "@/types";
+import {
+  ModalButton,
+  ModalForm,
+  ModalFormInput,
+  ModalTitle,
+} from "@/components/modal";
+import { presetFormOptions } from "@/const";
+import { PresetAddFormInput, PresetProps } from "@/types";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -10,9 +16,11 @@ export default function AddForm({ offPresetModal }: Props) {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
-  } = useForm<updatePasswordFormInput>();
+  } = useForm<PresetAddFormInput>();
 
-  const onSubmit: SubmitHandler<updatePasswordFormInput> = async (data) => {};
+  const onSubmit: SubmitHandler<PresetAddFormInput> = async (data) => {
+    const { presetName } = data;
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -23,8 +31,18 @@ export default function AddForm({ offPresetModal }: Props) {
           alignItems: "center",
         }}
       >
+        <ModalTitle name="프리셋 추가" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <ModalTitle name="프리셋 추가" />
+          <ModalFormInput
+            register={register}
+            name="presetName"
+            error={errors?.presetName}
+            isSubmitted={isSubmitted}
+            option={presetFormOptions["presetName"]}
+            label={"프리셋 추가"}
+            autoFocus={true}
+          />
+          <ModalButton>추가하기</ModalButton>
         </ModalForm>
       </Box>
     </Container>

@@ -6,13 +6,13 @@ export const navItems = [
   { name: "Mintlist", route: "/" },
 ];
 
-export const authInputLabel: { [key: string]: string } = {
+export const authInputLabel: Record<string, string> = {
   mail: "이메일",
   password: "비밀번호",
   confirmPassword: "비밀번호 확인",
 };
 
-export const authFormOptions: { [key: string]: RegisterOptions } = {
+export const authFormOptions: Record<string, RegisterOptions> = {
   mail: {
     required: true,
     pattern: {
@@ -33,6 +33,17 @@ export const authFormOptions: { [key: string]: RegisterOptions } = {
     pattern: {
       value: /^\d{6}$/,
       message: "인증번호는 6자리의 숫자입니다.",
+    },
+  },
+};
+
+export const presetFormOptions: Record<string, RegisterOptions> = {
+  presetName: {
+    required: true,
+    pattern: {
+      value: /^[\p{L}0-9가-힣ㄱ-ㅎㅏ-ㅣ\x20]{1,20}$/iu,
+      message:
+        "프리셋 이름은 1~20글자 사이의 특수문자가 제외된 문자여야 합니다.",
     },
   },
 };

@@ -28,6 +28,10 @@ export interface PresetProps {
   offPresetModal: () => void;
 }
 
+export interface PresetAddFormInput {
+  presetName: string;
+}
+
 type Message = "success" | "exist" | "not exact" | "not verify";
 
 export type ApiResultMessage = {
