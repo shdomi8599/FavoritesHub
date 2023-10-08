@@ -20,6 +20,7 @@ export default function AddForm({
   offPresetModal,
   userId,
   accessToken,
+  queryClient,
 }: Props) {
   const {
     register,
@@ -38,6 +39,7 @@ export default function AddForm({
 
     if (message === "success") {
       offPresetModal();
+      queryClient.invalidateQueries(["presetList", userId]);
       successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
     }
   };

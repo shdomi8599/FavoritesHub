@@ -1,3 +1,5 @@
+import { QueryClient } from "@tanstack/react-query";
+
 export interface LoginFormInput {
   mail: string;
   password: string;
@@ -26,6 +28,7 @@ export type PresetModalState = "add";
 
 export interface PresetProps {
   offPresetModal: () => void;
+  queryClient: QueryClient;
 }
 
 export interface PresetAddFormInput {
