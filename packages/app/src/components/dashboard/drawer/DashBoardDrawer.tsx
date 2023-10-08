@@ -21,6 +21,7 @@ import { styled } from "@mui/material/styles";
 interface Props extends DashBoardChildProps {
   addPresetModal: () => void;
   editPresetModal: (id: number) => void;
+  deletePresetEvent: (id: number) => void;
   presets: Preset[];
 }
 
@@ -33,6 +34,7 @@ export default function DashboardDrawer({
   addPresetModal,
   editPresetModal,
   presets,
+  deletePresetEvent,
 }: Props) {
   return (
     <Drawer variant="permanent" open={toolBarOpen}>
@@ -85,6 +87,7 @@ export default function DashboardDrawer({
             key={preset.id}
             preset={preset}
             editPresetModal={editPresetModal}
+            deletePresetEvent={deletePresetEvent}
           />
         ))}
       </List>

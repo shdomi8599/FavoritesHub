@@ -34,17 +34,13 @@ export const postPresetDelete = async (
   presetId: number,
   accessToken: string,
 ) => {
-  const { message } = await api
+  await api
     .delete<ApiResultMessage>(`/preset/${presetId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     })
     .then((res) => res.data);
-
-  return {
-    message,
-  };
 };
 
 export const putPresetEdit = async (

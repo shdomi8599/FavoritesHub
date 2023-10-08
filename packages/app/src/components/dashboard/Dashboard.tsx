@@ -9,9 +9,10 @@ import {
   usePresetModal,
 } from "@/hooks";
 import { usePresetList } from "@/hooks/react-query";
-import { confirmAlert, errorAlert, successAlert } from "@/util";
+import { confirmAlert } from "@/util";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode, useEffect } from "react";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
@@ -34,6 +35,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     handleBoolean: handleDrawer,
   } = useHandler();
   const { width } = useHandleWidth();
+  const queryClient = useQueryClient();
   const { handleLoginModal } = useAuthModal();
   const { ref: barRef, barHeight } = useBarHeight();
   const { addPresetModal, editPresetModal } = usePresetModal();
@@ -53,17 +55,11 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   };
 
   const deletePresetEvent = async (id: number) => {
-    try {
-      await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제");
+    await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
 
-      const { message } = await postPresetDelete(id, accessToken);
+    await postPresetDelete(id, accessToken);
 
-      if (message === "success") {
-        successAlert("프리셋이 삭제되었습니다.", "프리셋 삭제");
-      }
-    } catch {
-      return errorAlert("잠시 후에 다시 시도해주세요.", "프리셋 삭제");
-    }
+    queryClient.invalidateQueries(["presetList", userId]);
   };
 
   // 이펙트
@@ -103,6 +99,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         logoutEvent={logoutEvent}
         addPresetModal={addPresetModal}
         editPresetModal={editPresetModal}
+        deletePresetEvent={deletePresetEvent}
         presets={presets!}
       />
       <Main component="main" barheight={barHeight}>

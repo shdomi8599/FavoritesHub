@@ -15,9 +15,14 @@ import {
 interface Props {
   preset: Preset;
   editPresetModal: (id: number) => void;
+  deletePresetEvent: (id: number) => void;
 }
 
-export default function PresetItem({ preset, editPresetModal }: Props) {
+export default function PresetItem({
+  preset,
+  editPresetModal,
+  deletePresetEvent,
+}: Props) {
   const { presetName, defaultPreset, id } = preset;
   return (
     <ListItemButton>
@@ -29,7 +34,7 @@ export default function PresetItem({ preset, editPresetModal }: Props) {
         <IconBox onClick={() => editPresetModal(id)}>
           <EditIcon />
         </IconBox>
-        <IconBox>
+        <IconBox onClick={() => deletePresetEvent(id)}>
           <DeleteIcon />
         </IconBox>
       </IconContainer>
