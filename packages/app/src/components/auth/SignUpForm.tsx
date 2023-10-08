@@ -18,6 +18,8 @@ export default function SignUpForm({ handleAuthModal, api }: AuthProps) {
     getValues,
   } = useForm<SignUpFormInput>();
 
+  console.log(errors);
+
   const confirmPasswordOption = {
     required: true,
     validate: (value: string) =>
@@ -79,7 +81,7 @@ export default function SignUpForm({ handleAuthModal, api }: AuthProps) {
           <AuthFormInput
             register={register}
             name="confirmPassword"
-            error={errors?.password}
+            error={errors?.confirmPassword}
             isSubmitted={isSubmitted}
             option={confirmPasswordOption}
           />

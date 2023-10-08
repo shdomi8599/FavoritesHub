@@ -74,7 +74,7 @@ export default function UpdatePasswordForm({
           <AuthFormInput
             register={register}
             name="confirmPassword"
-            error={errors?.password}
+            error={errors?.confirmPassword}
             isSubmitted={isSubmitted}
             option={confirmPasswordOption}
           />
