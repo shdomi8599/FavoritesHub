@@ -1,5 +1,4 @@
-import { navItems } from "@/const";
-import { DashBoardChildProps } from "@/types";
+import { DashBoardChildProps, Preset } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
   AddCircleOutline as AddCircleOutlineIcon,
@@ -23,18 +22,18 @@ import {
 import { styled } from "@mui/material/styles";
 
 interface Props extends DashBoardChildProps {
-  handlePage: (route: string) => void;
   addPresetModal: () => void;
+  presets: Preset[];
 }
 
 export default function DashboardDrawer({
   toolBarOpen,
   handleDrawer,
   handleModalOpen,
-  handlePage,
   isLogin,
   logoutEvent,
   addPresetModal,
+  presets,
 }: Props) {
   return (
     <Drawer variant="permanent" open={toolBarOpen}>
@@ -52,26 +51,42 @@ export default function DashboardDrawer({
       </Toolbar>
       <Divider />
       <List component="nav" sx={{ height: "90%", pt: 0 }}>
-        <Button
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            height: "5vh",
-          }}
-          onClick={addPresetModal}
-        >
-          <AddCircleOutlineIcon />
-          {toolBarOpen && (
-            <Typography sx={{ marginLeft: "1px" }}>프리셋 추가하기</Typography>
-          )}
-        </Button>
-        {navItems.map(({ name, route }) => (
-          <ListItemButton onClick={() => handlePage(route)} key={name}>
+        {isLogin ? (
+          <Button
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              height: "5vh",
+            }}
+            onClick={addPresetModal}
+          >
+            <AddCircleOutlineIcon />
+            {toolBarOpen && (
+              <Typography sx={{ marginLeft: "1px" }}>
+                프리셋 추가하기
+              </Typography>
+            )}
+          </Button>
+        ) : (
+          toolBarOpen && (
+            <Box
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                pt: 1,
+              }}
+            >
+              <Typography>로그인이 필요합니다.</Typography>
+            </Box>
+          )
+        )}
+        {presets?.map(({ presetName }) => (
+          <ListItemButton key={presetName}>
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
-            <ListItemText primary={name} />
+            <ListItemText primary={presetName} />
           </ListItemButton>
         ))}
       </List>

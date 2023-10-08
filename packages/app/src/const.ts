@@ -1,11 +1,5 @@
 import { RegisterOptions } from "react-hook-form";
 
-export const navItems = [
-  { name: "Admin", route: "/" },
-  { name: "Faucet", route: "/" },
-  { name: "Mintlist", route: "/" },
-];
-
 export const authInputLabel: Record<string, string> = {
   mail: "이메일",
   password: "비밀번호",

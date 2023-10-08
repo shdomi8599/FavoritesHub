@@ -52,3 +52,9 @@ export interface DashBoardChildProps {
   handleModalOpen: () => void;
   logoutEvent: () => void;
 }
+
+export interface Preset {
+  defaultPreset: boolean;
+  id: number;
+  presetName: string;
+}
