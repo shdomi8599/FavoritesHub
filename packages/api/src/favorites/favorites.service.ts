@@ -13,9 +13,6 @@ export class FavoritesService {
 
   async findAll(preset: Preset): Promise<Favorite[]> {
     const { favorites } = preset;
-    if (!favorites) {
-      throw new Error("즐겨찾기 리스트를 찾을 수 없습니다.");
-    }
     return favorites;
   }
 

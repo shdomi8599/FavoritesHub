@@ -16,9 +16,6 @@ export class PresetsService {
       where: { user: { id: userId } },
       relations: ["user"],
     });
-    if (!presets) {
-      throw new Error("프리셋 리스트를 찾을 수 없습니다.");
-    }
     return presets;
   }
 
