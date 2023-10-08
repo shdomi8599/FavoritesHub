@@ -17,8 +17,8 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import DashboardBar from "./DashBoardBar";
-import DashboardDrawer from "./DashBoardDrawer";
+import { DashboardBar } from "./bar";
+import { DashboardDrawer } from "./drawer";
 
 export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
