@@ -21,7 +21,7 @@ export class Preset {
   id: number;
 
   @Index()
-  @Column()
+  @Column({ charset: "utf8" })
   @ApiProperty({
     example: "자주가는 사이트 모음",
     description: "프리셋 이름입니다.",

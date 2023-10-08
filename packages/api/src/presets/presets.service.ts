@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "src/source/entity";
 import { Preset } from "src/source/entity/Preset";
-import { User } from "src/source/entity/User";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -32,23 +32,24 @@ export class PresetsService {
   }
 
   async add(user: User, presetName: string) {
-    const { id: userId } = user;
-    const presets = await this.findAll(userId);
+    const presets = await this.findAll(user.id);
+
     const isSamePreset = presets
-      .map((preset) => preset.presetName)
-      .includes(presetName);
+      ?.map((preset) => preset.presetName)
+      ?.includes(presetName);
 
     if (isSamePreset) {
-      throw new Error("같은 이름의 프리셋이 존재합니다.");
+      throw new Error("exist");
     }
 
     const isFirstPreset = presets.length === 0;
 
     const newPreset = this.presetTable.create({
       presetName,
-      defaultPreset: isFirstPreset ? true : false,
+      defaultPreset: isFirstPreset,
       user,
     });
+
     await this.presetTable.save(newPreset);
   }
 

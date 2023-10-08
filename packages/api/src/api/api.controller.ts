@@ -196,7 +196,7 @@ export class ApiController {
 
     await this.usersService.updateloginTime(user);
 
-    return { accessToken };
+    return { accessToken, userId: user.id };
   }
 
   // @UseGuards(AuthGuard("local"))
@@ -292,10 +292,18 @@ export class ApiController {
     @Param("userId") userId: number,
     @Body() dto: ReqPostPresetAddDto,
   ) {
-    const user = await this.usersService.findOneToId(userId);
-    const { presetName } = dto;
-    await this.presetsService.add(user, presetName);
-    return { message: "success" };
+    try {
+      const user = await this.usersService.findOneToId(userId);
+      const { presetName } = dto;
+      await this.presetsService.add(user, presetName);
+      return { message: "success" };
+    } catch (e) {
+      const { message } = e;
+
+      if (message === "exist") {
+        return { message: "exist" };
+      }
+    }
   }
 
   // @UseGuards(AuthGuard("jwt"))

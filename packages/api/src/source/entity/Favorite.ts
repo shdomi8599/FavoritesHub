@@ -14,7 +14,7 @@ export class Favorite {
   id: number;
 
   @Index()
-  @Column()
+  @Column({ charset: "utf8" })
   @ApiProperty({
     example: "백종원 레시피",
     description: "즐겨찾기의 별칭을 전달해주세요.",
@@ -22,7 +22,7 @@ export class Favorite {
   })
   favoriteName: string;
 
-  @Column()
+  @Column({ charset: "utf8" })
   @ApiProperty({
     example: "naver.com",
     description: "도메인을 전달해주세요.",
@@ -30,7 +30,7 @@ export class Favorite {
   })
   domain: string;
 
-  @Column()
+  @Column({ charset: "utf8" })
   @ApiProperty({
     example: "/",
     description: "도메인 뒤의 라우트 부분을 전달해주세요.",
