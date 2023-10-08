@@ -1,3 +1,4 @@
+import ModalAlertMessage from "@/components/modal/ModalAlertMessage";
 import { authFormOptions, authInputLabel } from "@/const";
 import { TextField } from "@mui/material";
 import {
@@ -7,9 +8,8 @@ import {
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
-import AuthAlertMessage from "./AuthAlertMessage";
 
-interface AuthFormInputProps<T extends FieldValues> {
+interface Props<T extends FieldValues> {
   register: UseFormRegister<T>;
   name: string;
   isSubmitted: boolean;
@@ -23,7 +23,7 @@ export default function AuthFormInput<T extends FieldValues>({
   isSubmitted,
   error,
   option,
-}: AuthFormInputProps<T>) {
+}: Props<T>) {
   return (
     <>
       {option ? (
@@ -47,7 +47,7 @@ export default function AuthFormInput<T extends FieldValues>({
           autoFocus={name === "mail"}
         />
       )}
-      {isSubmitted && <AuthAlertMessage error={error} />}
+      {isSubmitted && <ModalAlertMessage error={error} />}
     </>
   );
 }

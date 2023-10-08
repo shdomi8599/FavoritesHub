@@ -5,7 +5,7 @@ interface Props {
   children: ReactNode;
 }
 
-export default function AuthButton({ children }: Props) {
+export default function ModalButton({ children }: Props) {
   return (
     <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
       {children}

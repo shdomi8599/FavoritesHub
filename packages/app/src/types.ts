@@ -22,6 +22,8 @@ export interface AuthProps {
   handleAuthModal: (path: AuthModalState) => void;
 }
 
+export type PresetModalState = "add";
+
 type Message = "success" | "exist" | "not exact" | "not verify";
 
 export type ApiResultMessage = {

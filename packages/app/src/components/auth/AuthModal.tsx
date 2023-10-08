@@ -6,9 +6,10 @@ import {
   userMailState,
 } from "@/states";
 import { AuthModalState } from "@/types";
-import { Box, Modal, styled } from "@mui/material";
+import { Box, Modal } from "@mui/material";
 import { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { ModalContentBox } from "../modal";
 import {
   ForgotPasswordForm,
   LoginForm,
@@ -69,20 +70,8 @@ export default function AuthModal() {
   return (
     <Box>
       <Modal open={isAuthModal} onClose={offAuthModal}>
-        <ContentBox sx={{ boxShadow: 3 }}>{modalData[authModal]}</ContentBox>
+        <ModalContentBox>{modalData[authModal]}</ModalContentBox>
       </Modal>
     </Box>
   );
 }
-
-const ContentBox = styled(Box)(({}) => ({
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "30%",
-  minWidth: "300px",
-  backgroundColor: "white",
-  padding: "1.5rem",
-  borderRadius: "4px",
-}));

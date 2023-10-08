@@ -1,5 +1,6 @@
 import { postAuthLogin, postUserExist } from "@/api/auth";
-import ModalForm from "@/components/common/ModalForm";
+import { ModalButton, ModalLink, ModalTitle } from "@/components/modal";
+import ModalForm from "@/components/modal/ModalForm";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -10,7 +11,7 @@ import Grid from "@mui/material/Grid";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
-import { AuthButton, AuthFormInput, AuthLink, AuthTitle } from "../common";
+import { AuthFormInput } from "../common";
 
 interface Props extends AuthProps {
   handleClose: () => void;
@@ -84,7 +85,7 @@ export default function LoginForm({
           alignItems: "center",
         }}
       >
-        <AuthTitle name="로그인" />
+        <ModalTitle name="로그인" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <AuthFormInput
             register={register}
@@ -103,17 +104,17 @@ export default function LoginForm({
             control={<Checkbox value="auto-login" color="primary" />}
             label="자동 로그인"
           />
-          <AuthButton>로그인</AuthButton>
+          <ModalButton>로그인</ModalButton>
           <Grid container>
             <Grid item xs>
-              <AuthLink clickEvent={() => handleAuthModal("password")}>
+              <ModalLink clickEvent={() => handleAuthModal("password")}>
                 비밀번호 재설정
-              </AuthLink>
+              </ModalLink>
             </Grid>
             <Grid item>
-              <AuthLink clickEvent={() => handleAuthModal("signUp")}>
+              <ModalLink clickEvent={() => handleAuthModal("signUp")}>
                 회원가입
-              </AuthLink>
+              </ModalLink>
             </Grid>
           </Grid>
         </ModalForm>

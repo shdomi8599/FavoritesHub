@@ -5,7 +5,7 @@ interface Props {
   error?: FieldError;
 }
 
-export default function AuthAlertMessage({ error }: Props) {
+export default function ModalAlertMessage({ error }: Props) {
   return <AlertMessage role="alert">{error?.message}</AlertMessage>;
 }
 

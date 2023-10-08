@@ -1,5 +1,11 @@
 import { postAuthMail, postAuthVerify, postAuthVerifyLogin } from "@/api/auth";
-import ModalForm from "@/components/common/ModalForm";
+import {
+  ModalAlertMessage,
+  ModalButton,
+  ModalLink,
+  ModalTitle,
+} from "@/components/modal";
+import ModalForm from "@/components/modal/ModalForm";
 import { authFormOptions } from "@/const";
 import { AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";
@@ -10,7 +16,6 @@ import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTimer } from "react-timer-hook";
 import { SetterOrUpdater } from "recoil";
-import { AuthAlertMessage, AuthButton, AuthLink, AuthTitle } from "../common";
 
 interface Props extends AuthProps {
   handleClose: () => void;
@@ -77,7 +82,7 @@ export default function MailVerifyForm({
           alignItems: "center",
         }}
       >
-        <AuthTitle name="이메일 인증" />
+        <ModalTitle name="이메일 인증" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <TextField
             margin="normal"
@@ -87,14 +92,14 @@ export default function MailVerifyForm({
             label={"인증번호"}
             autoFocus={true}
           />
-          {isSubmitted && <AuthAlertMessage error={errors.verifyCode} />}
+          {isSubmitted && <ModalAlertMessage error={errors.verifyCode} />}
           <Grid container sx={{ mt: 1, justifyContent: "space-between" }}>
-            <AuthLink clickEvent={onVerifyMail}>이메일 재전송</AuthLink>
+            <ModalLink clickEvent={onVerifyMail}>이메일 재전송</ModalLink>
             <Box>
               남은 시간 {minutes}분:{seconds}초
             </Box>
           </Grid>
-          <AuthButton>인증하기</AuthButton>
+          <ModalButton>인증하기</ModalButton>
         </ModalForm>
       </Box>
     </Container>

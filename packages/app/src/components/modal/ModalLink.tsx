@@ -6,7 +6,7 @@ interface Props {
   children: ReactNode;
 }
 
-export default function AuthLink({ clickEvent, children }: Props) {
+export default function ModalLink({ clickEvent, children }: Props) {
   return (
     <Link onClick={clickEvent} sx={LinkStyle} variant="body2">
       {children}

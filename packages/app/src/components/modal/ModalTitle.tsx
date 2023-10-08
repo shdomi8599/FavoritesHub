@@ -4,7 +4,7 @@ interface Props {
   name: string;
 }
 
-export default function AuthTitle({ name }: Props) {
+export default function ModalTitle({ name }: Props) {
   return (
     <Typography component="h1" variant="h5" textTransform={"uppercase"}>
       {name}

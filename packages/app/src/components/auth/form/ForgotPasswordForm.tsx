@@ -1,5 +1,10 @@
 import { postUserExist } from "@/api/auth";
-import ModalForm from "@/components/common/ModalForm";
+import {
+  ModalButton,
+  ModalForm,
+  ModalLink,
+  ModalTitle,
+} from "@/components/modal";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -7,7 +12,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
-import { AuthButton, AuthFormInput, AuthLink, AuthTitle } from "../common";
+import { AuthFormInput } from "../common";
 
 interface Props extends AuthProps {
   setIsForgot: SetterOrUpdater<boolean>;
@@ -57,7 +62,7 @@ export default function ForgotPasswordForm({
           alignItems: "center",
         }}
       >
-        <AuthTitle name="비밀번호 재설정" />
+        <ModalTitle name="비밀번호 재설정" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <AuthFormInput
             register={register}
@@ -65,17 +70,17 @@ export default function ForgotPasswordForm({
             error={errors?.mail}
             isSubmitted={isSubmitted}
           />
-          <AuthButton>이메일 인증</AuthButton>
+          <ModalButton>이메일 인증</ModalButton>
           <Grid container>
             <Grid item xs>
-              <AuthLink clickEvent={() => handleAuthModal("login")}>
+              <ModalLink clickEvent={() => handleAuthModal("login")}>
                 로그인
-              </AuthLink>
+              </ModalLink>
             </Grid>
             <Grid item>
-              <AuthLink clickEvent={() => handleAuthModal("signUp")}>
+              <ModalLink clickEvent={() => handleAuthModal("signUp")}>
                 회원가입
-              </AuthLink>
+              </ModalLink>
             </Grid>
           </Grid>
         </ModalForm>

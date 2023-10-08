@@ -1,5 +1,6 @@
 import { postSignUp } from "@/api/auth";
-import ModalForm from "@/components/common/ModalForm";
+import { ModalButton, ModalLink, ModalTitle } from "@/components/modal";
+import ModalForm from "@/components/modal/ModalForm";
 import { AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
@@ -7,7 +8,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AuthButton, AuthFormInput, AuthLink, AuthTitle } from "../common";
+import { AuthFormInput } from "../common";
 
 export default function SignUpForm({ handleAuthModal }: AuthProps) {
   const {
@@ -54,7 +55,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
           alignItems: "center",
         }}
       >
-        <AuthTitle name="회원가입" />
+        <ModalTitle name="회원가입" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <AuthFormInput
             register={register}
@@ -75,17 +76,17 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
             isSubmitted={isSubmitted}
             option={confirmPasswordOption}
           />
-          <AuthButton>회원가입</AuthButton>
+          <ModalButton>회원가입</ModalButton>
           <Grid container>
             <Grid item xs>
-              <AuthLink clickEvent={() => handleAuthModal("login")}>
+              <ModalLink clickEvent={() => handleAuthModal("login")}>
                 로그인
-              </AuthLink>
+              </ModalLink>
             </Grid>
             <Grid item>
-              <AuthLink clickEvent={() => handleAuthModal("password")}>
+              <ModalLink clickEvent={() => handleAuthModal("password")}>
                 비밀번호 재설정
-              </AuthLink>
+              </ModalLink>
             </Grid>
           </Grid>
         </ModalForm>
