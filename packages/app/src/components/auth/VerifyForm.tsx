@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useTimer } from "react-timer-hook";
 import { SetterOrUpdater } from "recoil";
 import AuthAlertMessage from "./AuthAlertMessage";
 import AuthButton from "./AuthButton";
@@ -23,6 +24,9 @@ export default function VerifyForm({
   setAccessToken,
   userId,
 }: Props) {
+  const expiryTimestamp = new Date();
+  expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 180);
+  const { seconds, restart, minutes } = useTimer({ expiryTimestamp });
   const { api } = useApi();
   const {
     register,
@@ -31,6 +35,7 @@ export default function VerifyForm({
   } = useForm<{ verifyCode: string }>();
 
   const onVerifyMail = async () => {
+    restart(expiryTimestamp);
     successAlert("메일이 발송되었습니다.", "인증번호");
     await api.post("/auth/mail", { userId });
   };
@@ -90,10 +95,13 @@ export default function VerifyForm({
             autoFocus={true}
           />
           {isSubmitted && <AuthAlertMessage error={errors.verifyCode} />}
-          <Grid container sx={{ mt: 1 }}>
+          <Grid container sx={{ mt: 1, justifyContent: "space-between" }}>
             <Link onClick={onVerifyMail} sx={linkStyle} variant="body2">
               이메일 재전송
             </Link>
+            <Box>
+              남은 시간 {minutes}분:{seconds}초
+            </Box>
           </Grid>
           <AuthButton name="verify" />
         </Box>

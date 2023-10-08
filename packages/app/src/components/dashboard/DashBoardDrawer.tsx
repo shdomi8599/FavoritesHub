@@ -53,17 +53,19 @@ export default function DashboardDrawer({
       </Toolbar>
       <Divider />
       <List component="nav" sx={{ height: "90%", pt: 0 }}>
-        <Button
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            padding: "12px",
-          }}
-        >
-          <AddCircleOutlineIcon />
-          프리셋 추가하기
-        </Button>
+        {toolBarOpen && (
+          <Button
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              padding: "12px",
+            }}
+          >
+            <AddCircleOutlineIcon />
+            프리셋 추가하기
+          </Button>
+        )}
         {navItems.map(({ name, route }) => (
           <ListItemButton onClick={() => handlePage(route)} key={name}>
             <ListItemIcon>
@@ -79,7 +81,7 @@ export default function DashboardDrawer({
           <ToolBarLoginBox>
             {isLogin ? (
               <>
-                <DirectionsRunIcon />
+                <DirectionsRunIcon fontSize="large" />
                 <span onClick={logoutEvent}>로그아웃</span>
               </>
             ) : (
