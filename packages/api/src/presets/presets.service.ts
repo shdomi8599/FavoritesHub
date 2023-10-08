@@ -73,11 +73,11 @@ export class PresetsService {
 
     await this.exist(presets, presetName);
 
-    const isFirstPreset = presets.length === 0;
+    const defaultPreset = presets.find((preset) => preset.defaultPreset);
 
     const newPreset = this.presetTable.create({
       presetName,
-      defaultPreset: isFirstPreset,
+      defaultPreset: defaultPreset ? false : true,
       user,
     });
 
