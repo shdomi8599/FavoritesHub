@@ -38,6 +38,7 @@ export default function AuthModal() {
     signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
     verify: (
       <MailVerifyForm
+        setUserMail={setUserMail}
         handleAuthModal={handleAuthModal}
         handleClose={offAuthModal}
         setAccessToken={setAccessToken}

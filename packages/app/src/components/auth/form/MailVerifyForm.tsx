@@ -19,6 +19,7 @@ interface Props extends AuthProps {
   handleClose: () => void;
   setAccessToken: SetterOrUpdater<string>;
   setUserId: SetterOrUpdater<number>;
+  setUserMail: SetterOrUpdater<string>;
   userMail: string;
   isForgot: boolean;
 }
@@ -30,6 +31,7 @@ export default function MailVerifyForm({
   isForgot,
   handleAuthModal,
   setUserId,
+  setUserMail,
 }: Props) {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 180);
@@ -64,6 +66,7 @@ export default function MailVerifyForm({
 
     const { accessToken, userId } = await postAuthVerifyLogin(userMail);
 
+    setUserMail(userMail);
     setUserId(userId);
     setAccessToken(accessToken!);
     handleClose();

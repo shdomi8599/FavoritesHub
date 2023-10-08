@@ -64,8 +64,9 @@ export default function LoginForm({
       return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");
     }
 
+    setUserMail(mail);
+
     if (message === "not verify") {
-      setUserMail(mail);
       return callbackSuccessAlert(
         "이메일 인증을 부탁드려요.",
         "인증 하러가기",

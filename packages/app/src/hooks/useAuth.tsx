@@ -12,10 +12,6 @@ export const useAuth = () => {
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
   const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
 
-  const resetAccessToken = () => {
-    setAccessToken("");
-  };
-
   return {
     userId,
     userMail,
@@ -23,8 +19,7 @@ export const useAuth = () => {
     accessToken,
     setUserId,
     setIsLogin,
-    setAccessToken,
     setUserMail,
-    resetAccessToken,
+    setAccessToken,
   };
 };

@@ -7,16 +7,15 @@ import {
   useHandler,
   usePresetModal,
 } from "@/hooks";
+import { usePresetList } from "@/hooks/react-query";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
 export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
-  const router = useRouter();
   const {
     userId,
     userMail,
@@ -24,7 +23,8 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     accessToken,
     setIsLogin,
     setUserId,
-    resetAccessToken,
+    setUserMail,
+    setAccessToken,
   } = useAuth();
   const {
     isBoolean: toolBarOpen,
@@ -37,19 +37,15 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const { ref: barRef, barHeight } = useBarHeight();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
-  // 핸들러
-  const handlePage = (route: string) => {
-    if (route === router.asPath) {
-      return;
-    }
-    router.push(route);
-  };
+  // 데이터 훅
+  const { data: presets } = usePresetList(userId, accessToken);
 
   const logoutEvent = async () => {
     const { message } = await postAuthLogout(userId);
 
     if (message === "success") {
-      resetAccessToken();
+      setUserMail("");
+      setAccessToken("");
     }
   };
 
@@ -85,11 +81,11 @@ export default function Dashboard({ children }: { children: ReactNode }) {
       <DashboardDrawer
         handleDrawer={handleDrawer}
         handleModalOpen={handleLoginModal}
-        handlePage={handlePage}
         toolBarOpen={toolBarOpen}
         isLogin={isLogin}
         logoutEvent={logoutEvent}
         addPresetModal={addPresetModal}
+        presets={presets!}
       />
       <Main component="main" barheight={barHeight}>
         {children}
