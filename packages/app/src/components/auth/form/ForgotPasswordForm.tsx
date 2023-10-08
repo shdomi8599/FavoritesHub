@@ -1,5 +1,5 @@
 import { postUserExist } from "@/api/auth";
-import ModalForm from "@/components/ModalForm";
+import ModalForm from "@/components/common/ModalForm";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";

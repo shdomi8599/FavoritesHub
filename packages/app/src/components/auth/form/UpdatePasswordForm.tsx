@@ -1,5 +1,5 @@
 import { putUpdatePassword } from "@/api/auth";
-import ModalForm from "@/components/ModalForm";
+import ModalForm from "@/components/common/ModalForm";
 import { userMailState } from "@/states";
 import { updatePasswordFormInput } from "@/types";
 import { successAlert } from "@/util";

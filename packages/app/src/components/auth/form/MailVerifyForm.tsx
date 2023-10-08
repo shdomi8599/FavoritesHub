@@ -1,5 +1,5 @@
 import { postAuthMail, postAuthVerify, postAuthVerifyLogin } from "@/api/auth";
-import ModalForm from "@/components/ModalForm";
+import ModalForm from "@/components/common/ModalForm";
 import { authFormOptions } from "@/const";
 import { AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";

@@ -1,5 +1,5 @@
 import { postSignUp } from "@/api/auth";
-import ModalForm from "@/components/ModalForm";
+import ModalForm from "@/components/common/ModalForm";
 import { AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
