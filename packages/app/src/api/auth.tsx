@@ -18,6 +18,18 @@ export const postAuthLogin = async (mail: string, password: string) => {
   };
 };
 
+export const postAuthLogout = async (userId: number) => {
+  const { message } = await api
+    .post<ApiResultMessage>("/auth/logout", {
+      userId,
+    })
+    .then((res) => res.data);
+
+  return {
+    message,
+  };
+};
+
 export const postAuthMail = async (userMail: string) => {
   await api.post("/auth/mail", { userMail });
 };

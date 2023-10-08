@@ -1,9 +1,9 @@
 import { authModalState, isAuthModalState } from "@/states";
 import { AuthModalState } from "@/types";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 export const useAuthModal = () => {
-  const setAuthModal = useSetRecoilState(authModalState);
+  const [authModal, setAuthModal] = useRecoilState(authModalState);
   const [isAuthModal, setIsAuthModal] = useRecoilState(isAuthModalState);
   const openAuthModal = () => setIsAuthModal(true);
   const offAuthModal = () => setIsAuthModal(false);
@@ -18,6 +18,7 @@ export const useAuthModal = () => {
   };
 
   return {
+    authModal,
     isAuthModal,
     offAuthModal,
     openAuthModal,

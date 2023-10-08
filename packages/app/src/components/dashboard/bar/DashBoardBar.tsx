@@ -20,6 +20,7 @@ interface Props extends DashBoardChildProps {
   barHeight: number;
   barRef: MutableRefObject<HTMLDivElement>;
   isMinWidth600: boolean;
+  userMail: string;
 }
 
 export default function DashboardBar({
@@ -31,6 +32,7 @@ export default function DashboardBar({
   isMinWidth600,
   isLogin,
   logoutEvent,
+  userMail,
 }: Props) {
   const {
     isBoolean: isOpen,
@@ -75,6 +77,7 @@ export default function DashboardBar({
           />
           {isOpen && (
             <BarUserModal
+              userMail={userMail}
               isLogin={isLogin}
               handleOpen={handleOpen}
               contentBoxTop={contentBoxTop}

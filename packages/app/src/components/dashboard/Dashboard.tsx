@@ -1,25 +1,23 @@
+import { postAuthLogout } from "@/api/auth";
 import {
-  useApi,
+  useAuth,
   useAuthModal,
   useBarHeight,
   useHandleWidth,
   useHandler,
   usePresetModal,
 } from "@/hooks";
-import { accessTokenState, isLoginState, userIdState } from "@/states";
-import { ApiResultMessage } from "@/types";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
-import { useRecoilState } from "recoil";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
 export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
-  const { api } = useApi();
   const router = useRouter();
+  const { userId, userMail, isLogin, resetAccessToken } = useAuth();
   const { handleLoginModal } = useAuthModal();
   const { addPresetModal } = usePresetModal();
   const { width } = useHandleWidth();
@@ -31,11 +29,6 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   } = useHandler();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
-  // 상태
-  const [userId, setUserId] = useRecoilState(userIdState);
-  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
-  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
-
   // 핸들러
   const handlePage = (route: string) => {
     if (route === router.asPath) {
@@ -45,14 +38,10 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   };
 
   const logoutEvent = async () => {
-    const { message } = await api
-      .post<ApiResultMessage>("/auth/logout", {
-        userId,
-      })
-      .then((res) => res.data);
+    const { message } = await postAuthLogout(userId);
 
     if (message === "success") {
-      setAccessToken("");
+      resetAccessToken();
     }
   };
 
@@ -62,15 +51,6 @@ export default function Dashboard({ children }: { children: ReactNode }) {
       setToolBartoolBarOpen(false);
     }
   }, [width, setToolBartoolBarOpen]);
-
-  useEffect(() => {
-    if (accessToken) {
-      setIsLogin(true);
-    } else {
-      setUserId(0);
-      setIsLogin(false);
-    }
-  }, [accessToken, setIsLogin, setUserId]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -83,6 +63,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         isMinWidth600={isMinWidth600}
         handleModalOpen={handleLoginModal}
         logoutEvent={logoutEvent}
+        userMail={userMail}
       />
       <DashboardDrawer
         handleDrawer={handleDrawer}

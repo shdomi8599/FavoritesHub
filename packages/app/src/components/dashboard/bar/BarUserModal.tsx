@@ -18,6 +18,7 @@ type Props = {
   handleModalOpen: () => void;
   isLogin: boolean;
   contentBoxTop: number;
+  userMail: string;
   logoutEvent: () => void;
 };
 
@@ -27,13 +28,14 @@ export default function BarUserModal({
   isLogin,
   contentBoxTop,
   logoutEvent,
+  userMail,
 }: Props) {
   return (
     <UserContentBox top={contentBoxTop}>
       <CloseBox>
         <CloseIcon fontSize="large" onClick={handleOpen} />
       </CloseBox>
-      <MailBox>shdomi8599@gmail.com</MailBox>
+      <MailBox>{userMail}</MailBox>
       <AccordionBox disableGutters={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <AccordionTypography>계정 관리</AccordionTypography>

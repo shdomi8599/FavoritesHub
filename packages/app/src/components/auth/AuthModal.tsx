@@ -1,10 +1,5 @@
 import { useAuthModal } from "@/hooks";
-import {
-  accessTokenState,
-  authModalState,
-  userIdState,
-  userMailState,
-} from "@/states";
+import { accessTokenState, userIdState, userMailState } from "@/states";
 import { Box, Modal } from "@mui/material";
 import { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -18,13 +13,13 @@ import {
 } from "./form";
 
 export default function AuthModal() {
-  const { isAuthModal, offAuthModal, handleAuthModal } = useAuthModal();
+  const { isAuthModal, offAuthModal, handleAuthModal, authModal } =
+    useAuthModal();
 
   const [isForgot, setIsForgot] = useState(false);
   const setUserId = useSetRecoilState(userIdState);
   const setAccessToken = useSetRecoilState(accessTokenState);
   const [userMail, setUserMail] = useRecoilState(userMailState);
-  const [authModal, setAuthModal] = useRecoilState(authModalState);
 
   const modalData: { [key: string]: JSX.Element } = {
     login: (
