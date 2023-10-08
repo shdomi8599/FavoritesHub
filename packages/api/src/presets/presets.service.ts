@@ -105,4 +105,16 @@ export class PresetsService {
     preset.presetName = newPresetName;
     await this.presetTable.save(preset);
   }
+
+  async updateDefault(userId: number, presetId: number) {
+    const presets = await this.findAll(userId);
+
+    const currentDefaultPreset = presets.find((preset) => preset.defaultPreset);
+    currentDefaultPreset.defaultPreset = false;
+    await this.presetTable.save(currentDefaultPreset);
+
+    const preset = await this.findOne(presetId);
+    preset.defaultPreset = true;
+    await this.presetTable.save(preset);
+  }
 }
