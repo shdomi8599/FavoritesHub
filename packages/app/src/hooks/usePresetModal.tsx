@@ -1,5 +1,4 @@
 import { isPresetModalState, presetModalState } from "@/states";
-import { PresetModalState } from "@/types";
 import { useRecoilState } from "recoil";
 
 export const usePresetModal = () => {
@@ -13,17 +12,12 @@ export const usePresetModal = () => {
     openPresetModal();
   };
 
-  const handlePresetModal = (path: PresetModalState) => {
-    setPresetModal(path);
-  };
-
   return {
     presetModal,
     isPresetModal,
     offPresetModal,
     openPresetModal,
     setPresetModal,
-    handlePresetModal,
     addPresetModal,
   };
 };

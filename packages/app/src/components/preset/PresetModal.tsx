@@ -4,8 +4,7 @@ import { ModalContentBox } from "../modal";
 import { AddForm } from "./form";
 
 export default function PresetModal() {
-  const { isPresetModal, offPresetModal, handlePresetModal, presetModal } =
-    usePresetModal();
+  const { isPresetModal, offPresetModal, presetModal } = usePresetModal();
 
   const modalData: { [key: string]: JSX.Element } = {
     add: <AddForm offPresetModal={offPresetModal} />,

@@ -51,20 +51,18 @@ export default function DashboardDrawer({
       </Toolbar>
       <Divider />
       <List component="nav" sx={{ height: "90%", pt: 0 }}>
-        {toolBarOpen && (
-          <Button
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              padding: "12px",
-            }}
-            onClick={addPresetModal}
-          >
-            <AddCircleOutlineIcon />
-            프리셋 추가하기
-          </Button>
-        )}
+        <Button
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            height: "5vh",
+          }}
+          onClick={addPresetModal}
+        >
+          <AddCircleOutlineIcon />
+          {toolBarOpen && <span>프리셋 추가하기</span>}
+        </Button>
         {navItems.map(({ name, route }) => (
           <ListItemButton onClick={() => handlePage(route)} key={name}>
             <ListItemIcon>

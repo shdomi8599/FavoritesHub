@@ -17,16 +17,24 @@ import { DashboardDrawer } from "./drawer";
 export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
   const router = useRouter();
-  const { userId, userMail, isLogin, resetAccessToken } = useAuth();
-  const { handleLoginModal } = useAuthModal();
-  const { addPresetModal } = usePresetModal();
-  const { width } = useHandleWidth();
-  const { ref: barRef, barHeight } = useBarHeight();
+  const {
+    userId,
+    userMail,
+    isLogin,
+    accessToken,
+    setIsLogin,
+    setUserId,
+    resetAccessToken,
+  } = useAuth();
   const {
     isBoolean: toolBarOpen,
     setisBoolean: setToolBartoolBarOpen,
     handleBoolean: handleDrawer,
   } = useHandler();
+  const { width } = useHandleWidth();
+  const { handleLoginModal } = useAuthModal();
+  const { addPresetModal } = usePresetModal();
+  const { ref: barRef, barHeight } = useBarHeight();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
   // 핸들러
@@ -51,6 +59,15 @@ export default function Dashboard({ children }: { children: ReactNode }) {
       setToolBartoolBarOpen(false);
     }
   }, [width, setToolBartoolBarOpen]);
+
+  useEffect(() => {
+    if (accessToken) {
+      setIsLogin(true);
+    } else {
+      setUserId(0);
+      setIsLogin(false);
+    }
+  }, [accessToken, setIsLogin, setUserId]);
 
   return (
     <Box sx={{ display: "flex" }}>
