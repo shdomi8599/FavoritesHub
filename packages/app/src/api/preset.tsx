@@ -62,3 +62,17 @@ export const putPresetEdit = async (
     message,
   };
 };
+
+export const postPresetDefault = async (
+  userId: number,
+  presetId: number,
+  accessToken: string,
+) => {
+  await api
+    .post(`/preset/${userId}/${presetId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.data);
+};

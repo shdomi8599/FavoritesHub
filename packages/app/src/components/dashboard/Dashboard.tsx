@@ -46,6 +46,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
+  console.log(presets);
 
   // 이벤트
   const logoutEvent = async () => {

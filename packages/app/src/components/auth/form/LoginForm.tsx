@@ -7,6 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
+import { isPasswordForgotState } from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import {
@@ -18,7 +19,7 @@ import {
 } from "@mui/material";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SetterOrUpdater } from "recoil";
+import { SetterOrUpdater, useSetRecoilState } from "recoil";
 
 interface Props {
   openAuthModal: () => void;
@@ -26,7 +27,6 @@ interface Props {
   setAccessToken: SetterOrUpdater<string>;
   setUserId: SetterOrUpdater<number>;
   setUserMail: SetterOrUpdater<string>;
-  setIsForgot: SetterOrUpdater<boolean>;
 }
 
 export default function LoginForm({
@@ -35,8 +35,9 @@ export default function LoginForm({
   setAccessToken,
   setUserId,
   setUserMail,
-  setIsForgot,
 }: Props) {
+  const setIsForgot = useSetRecoilState(isPasswordForgotState);
+
   const {
     register,
     handleSubmit,
