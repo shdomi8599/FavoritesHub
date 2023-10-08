@@ -11,12 +11,27 @@ export class PresetsService {
     private presetTable: Repository<Preset>,
   ) {}
 
-  async findAll(userId: number): Promise<Preset[]> {
+  async findAll(
+    userId: number,
+  ): Promise<{ presetName: string; defaultPreset: boolean }[]> {
     const presets = await this.presetTable.find({
       where: { user: { id: userId } },
       relations: ["user"],
     });
-    return presets;
+
+    const presetsData = presets?.map(
+      ({ favorites, presetName, id, defaultPreset }) => {
+        const data = {
+          favorites,
+          presetName,
+          id,
+          defaultPreset,
+        };
+        return data;
+      },
+    );
+
+    return presetsData;
   }
 
   async findOne(presetId: number): Promise<Preset> {
@@ -35,7 +50,7 @@ export class PresetsService {
     const presets = await this.findAll(user.id);
 
     const isSamePreset = presets
-      ?.map((preset) => preset.presetName)
+      ?.map(({ presetName }) => presetName)
       ?.includes(presetName);
 
     if (isSamePreset) {
