@@ -17,20 +17,25 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { SetterOrUpdater } from "recoil";
 
 interface Props extends DashBoardChildProps {
+  setViewPreset: SetterOrUpdater<Preset>;
   addPresetModal: () => void;
   editPresetModal: (id: number) => void;
   deletePresetEvent: (id: number) => void;
+  viewPreset: Preset;
   presets: Preset[];
 }
 
 export default function DashboardDrawer({
   presets,
   isLogin,
+  viewPreset,
   toolBarOpen,
   logoutEvent,
   handleDrawer,
+  setViewPreset,
   addPresetModal,
   editPresetModal,
   handleModalOpen,
@@ -86,6 +91,8 @@ export default function DashboardDrawer({
           <PresetItem
             key={preset.id}
             preset={preset}
+            viewPreset={viewPreset}
+            setViewPreset={setViewPreset}
             editPresetModal={editPresetModal}
             deletePresetEvent={deletePresetEvent}
           />

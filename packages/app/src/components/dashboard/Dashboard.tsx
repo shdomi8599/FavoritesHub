@@ -100,11 +100,13 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         handleModalOpen={handleLoginModal}
       />
       <DashboardDrawer
-        presets={presets!}
         isLogin={isLogin}
+        presets={presets!}
+        viewPreset={viewPreset}
         toolBarOpen={toolBarOpen}
         logoutEvent={logoutEvent}
         handleDrawer={handleDrawer}
+        setViewPreset={setViewPreset}
         addPresetModal={addPresetModal}
         editPresetModal={editPresetModal}
         handleModalOpen={handleLoginModal}

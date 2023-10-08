@@ -11,23 +11,28 @@ import {
   ListItemText,
   styled,
 } from "@mui/material";
+import { SetterOrUpdater } from "recoil";
 
 interface Props {
   preset: Preset;
+  viewPreset: Preset;
+  setViewPreset: SetterOrUpdater<Preset>;
   editPresetModal: (id: number) => void;
   deletePresetEvent: (id: number) => void;
 }
 
 export default function PresetItem({
   preset,
+  viewPreset,
+  setViewPreset,
   editPresetModal,
   deletePresetEvent,
 }: Props) {
-  const { presetName, defaultPreset, id } = preset;
+  const { presetName, id } = preset;
   return (
-    <ListItemButton>
+    <ListItemButton onClick={() => setViewPreset(preset)}>
       <ListItemIcon>
-        <DashboardIcon sx={{ color: defaultPreset ? "#1976d2" : "" }} />
+        <DashboardIcon sx={{ color: viewPreset?.id === id ? "#1976d2" : "" }} />
       </ListItemIcon>
       <ListItemText sx={itemTextStyle} primary={presetName} />
       <IconContainer>
