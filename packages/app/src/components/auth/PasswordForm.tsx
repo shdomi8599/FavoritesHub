@@ -47,10 +47,14 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
           <AuthButton name="password" />
           <Grid container>
             <Grid item xs>
-              <AuthLink handleAuthModal={handleAuthModal} linkName="login" />
+              <AuthLink clickEvent={() => handleAuthModal("login")}>
+                로그인
+              </AuthLink>
             </Grid>
             <Grid item>
-              <AuthLink handleAuthModal={handleAuthModal} linkName="signUp" />
+              <AuthLink clickEvent={() => handleAuthModal("signUp")}>
+                회원가입
+              </AuthLink>
             </Grid>
           </Grid>
         </Box>

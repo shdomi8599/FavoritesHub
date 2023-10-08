@@ -92,10 +92,14 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
           <AuthButton name="signUp" />
           <Grid container>
             <Grid item xs>
-              <AuthLink handleAuthModal={handleAuthModal} linkName="login" />
+              <AuthLink clickEvent={() => handleAuthModal("login")}>
+                로그인
+              </AuthLink>
             </Grid>
             <Grid item>
-              <AuthLink handleAuthModal={handleAuthModal} linkName="password" />
+              <AuthLink clickEvent={() => handleAuthModal("password")}>
+                비밀번호 찾기
+              </AuthLink>
             </Grid>
           </Grid>
         </Box>

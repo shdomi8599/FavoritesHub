@@ -4,9 +4,9 @@ import { AuthModalState } from "@/types";
 import { Box, Modal, styled } from "@mui/material";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import LoginForm from "./LoginForm";
+import MailVerifyForm from "./MailVerifyForm";
 import PasswordForm from "./PasswordForm";
 import SignUpForm from "./SignUpForm";
-import VerifyForm from "./VerifyForm";
 
 export default function AuthModal() {
   const { isModal, handleClose } = useModal();
@@ -31,7 +31,7 @@ export default function AuthModal() {
     password: <PasswordForm handleAuthModal={handleAuthModal} />,
     signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
     verify: (
-      <VerifyForm
+      <MailVerifyForm
         handleClose={handleClose}
         setAccessToken={setAccessToken}
         userId={userId}

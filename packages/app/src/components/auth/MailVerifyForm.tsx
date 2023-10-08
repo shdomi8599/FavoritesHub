@@ -2,7 +2,7 @@ import { authFormOptions } from "@/const";
 import { useApi } from "@/hooks";
 import { ApiResultAccessToken, ApiResultMessage } from "@/types";
 import { errorAlert, successAlert } from "@/util";
-import { Grid, Link, TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useEffect } from "react";
@@ -11,6 +11,7 @@ import { useTimer } from "react-timer-hook";
 import { SetterOrUpdater } from "recoil";
 import AuthAlertMessage from "./AuthAlertMessage";
 import AuthButton from "./AuthButton";
+import AuthLink from "./AuthLink";
 import AuthTitle from "./AuthTitle";
 
 type Props = {
@@ -68,6 +69,7 @@ export default function VerifyForm({
 
   useEffect(() => {
     onVerifyMail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -96,9 +98,7 @@ export default function VerifyForm({
           />
           {isSubmitted && <AuthAlertMessage error={errors.verifyCode} />}
           <Grid container sx={{ mt: 1, justifyContent: "space-between" }}>
-            <Link onClick={onVerifyMail} sx={linkStyle} variant="body2">
-              이메일 재전송
-            </Link>
+            <AuthLink clickEvent={onVerifyMail}>이메일 재전송</AuthLink>
             <Box>
               남은 시간 {minutes}분:{seconds}초
             </Box>
@@ -109,7 +109,3 @@ export default function VerifyForm({
     </Container>
   );
 }
-
-const linkStyle = {
-  cursor: "pointer",
-};

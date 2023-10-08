@@ -6,7 +6,12 @@ export interface SignUpFormInput extends LoginFormInput {
   confirmPassword?: string;
 }
 
-export type AuthModalState = "login" | "signUp" | "password" | "verify";
+export type AuthModalState =
+  | "login"
+  | "signUp"
+  | "password"
+  | "verify"
+  | "forgotPassword";
 
 export interface AuthProps {
   handleAuthModal: (auth: AuthModalState) => void;

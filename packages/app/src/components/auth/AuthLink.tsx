@@ -1,24 +1,15 @@
-import { AuthModalState, AuthProps } from "@/types";
 import Link from "@mui/material/Link";
+import { ReactNode } from "react";
 
-interface Props extends AuthProps {
-  linkName: AuthModalState;
+interface Props {
+  clickEvent: () => void;
+  children: ReactNode;
 }
 
-const linkData: { [key: string]: string } = {
-  login: "로그인",
-  password: "비밀번호 찾기",
-  signUp: "회원가입",
-};
-
-export default function AuthLink({ handleAuthModal, linkName }: Props) {
+export default function AuthLink({ clickEvent, children }: Props) {
   return (
-    <Link
-      onClick={() => handleAuthModal(linkName)}
-      sx={LinkStyle}
-      variant="body2"
-    >
-      {linkData[linkName]}
+    <Link onClick={clickEvent} sx={LinkStyle} variant="body2">
+      {children}
     </Link>
   );
 }
