@@ -4,6 +4,7 @@ import { useBarHeight } from "./useBarHeight";
 import { useHandleWidth } from "./useHandleWidth";
 import { useHandler } from "./useHandler";
 import { useOutSideRef } from "./useOutSideRef";
+import { usePresetModal } from "./usePresetModal";
 
 export {
   useApi,
@@ -12,4 +13,5 @@ export {
   useHandleWidth,
   useHandler,
   useOutSideRef,
+  usePresetModal,
 };
