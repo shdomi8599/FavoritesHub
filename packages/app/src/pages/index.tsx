@@ -1,11 +1,25 @@
+import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
-import { viewPresetState } from "@/states";
-import { Grid } from "@mui/material";
-import { useRecoilValue } from "recoil";
+import { useAuth, useAuthModal } from "@/hooks";
+import { isPasswordForgotState, viewPresetState } from "@/states";
+import { Box, Grid } from "@mui/material";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 export default function Main() {
+  const {
+    userId,
+    userMail,
+    isLogin,
+    accessToken,
+    setIsLogin,
+    setUserId,
+    setUserMail,
+    setAccessToken,
+  } = useAuth();
   const viewPreset = useRecoilValue(viewPresetState);
-  return (
+  const setIsForgot = useSetRecoilState(isPasswordForgotState);
+  const { handleAuthModal, openAuthModal } = useAuthModal();
+  return isLogin ? (
     <Grid
       container
       spacing={4}
@@ -18,5 +32,23 @@ export default function Main() {
       <FavoriteCard />
       <FavoriteCard />
     </Grid>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "90%",
+      }}
+    >
+      <LoginForm
+        setUserId={setUserId}
+        setUserMail={setUserMail}
+        setIsForgot={setIsForgot}
+        openAuthModal={openAuthModal}
+        setAccessToken={setAccessToken}
+        handleAuthModal={handleAuthModal}
+      />
+    </Box>
   );
 }

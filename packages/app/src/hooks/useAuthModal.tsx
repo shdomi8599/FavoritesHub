@@ -8,8 +8,8 @@ export const useAuthModal = () => {
   const openAuthModal = () => setIsAuthModal(true);
   const offAuthModal = () => setIsAuthModal(false);
 
-  const handleLoginModal = () => {
-    setAuthModal("login");
+  const handleSignUpModal = () => {
+    setAuthModal("signUp");
     openAuthModal();
   };
 
@@ -23,7 +23,7 @@ export const useAuthModal = () => {
     offAuthModal,
     openAuthModal,
     setAuthModal,
-    handleLoginModal,
     handleAuthModal,
+    handleSignUpModal,
   };
 };

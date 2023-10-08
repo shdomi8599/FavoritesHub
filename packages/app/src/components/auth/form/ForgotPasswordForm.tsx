@@ -22,6 +22,7 @@ export default function ForgotPasswordForm({
   handleAuthModal,
   setIsForgot,
   setUserMail,
+  handleClose,
 }: Props) {
   const {
     register,
@@ -76,9 +77,7 @@ export default function ForgotPasswordForm({
           <ModalButton>이메일 인증</ModalButton>
           <Grid container>
             <Grid item xs>
-              <ModalLink clickEvent={() => handleAuthModal("login")}>
-                로그인
-              </ModalLink>
+              <ModalLink clickEvent={handleClose}>로그인</ModalLink>
             </Grid>
             <Grid item>
               <ModalLink clickEvent={() => handleAuthModal("signUp")}>

@@ -17,9 +17,14 @@ export const isAuthModalState = atom({
   default: false,
 });
 
+export const isPasswordForgotState = atom({
+  key: "isPasswordForgotState",
+  default: false,
+});
+
 export const authModalState = atom<AuthModalState>({
   key: "authModalState",
-  default: "login",
+  default: "signUp",
 });
 
 export const isPresetModalState = atom({

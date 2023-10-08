@@ -1,10 +1,10 @@
 import { useAuth, useAuthModal } from "@/hooks";
+import { isPasswordForgotState } from "@/states";
 import { Box, Modal } from "@mui/material";
-import { useState } from "react";
+import { useRecoilState } from "recoil";
 import { ModalContentBox } from "../modal";
 import {
   ForgotPasswordForm,
-  LoginForm,
   MailVerifyForm,
   SignUpForm,
   UpdatePasswordForm,
@@ -15,27 +15,23 @@ export default function AuthModal() {
   const { isAuthModal, offAuthModal, handleAuthModal, authModal } =
     useAuthModal();
 
-  const [isForgot, setIsForgot] = useState(false);
+  const [isForgot, setIsForgot] = useRecoilState(isPasswordForgotState);
 
-  const modalData: { [key: string]: JSX.Element } = {
-    login: (
-      <LoginForm
-        handleAuthModal={handleAuthModal}
-        handleClose={offAuthModal}
-        setAccessToken={setAccessToken}
-        setUserId={setUserId}
-        setUserMail={setUserMail}
-        setIsForgot={setIsForgot}
-      />
-    ),
+  const modalData: Record<string, JSX.Element> = {
     password: (
       <ForgotPasswordForm
+        handleClose={offAuthModal}
         handleAuthModal={handleAuthModal}
         setIsForgot={setIsForgot}
         setUserMail={setUserMail}
       />
     ),
-    signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
+    signUp: (
+      <SignUpForm
+        handleAuthModal={handleAuthModal}
+        handleClose={offAuthModal}
+      />
+    ),
     verify: (
       <MailVerifyForm
         setUserMail={setUserMail}

@@ -50,7 +50,7 @@ export default function BarUserModal({
             ) : (
               <>
                 <AccountCircleIcon />
-                <span onClick={handleModalOpen}>로그인</span>
+                <span onClick={handleModalOpen}>회원가입</span>
               </>
             )}
           </AccordionTypography>

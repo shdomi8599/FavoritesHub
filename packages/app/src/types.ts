@@ -12,7 +12,6 @@ export interface updatePasswordFormInput {
 }
 
 export type AuthModalState =
-  | "login"
   | "signUp"
   | "password"
   | "verify"
@@ -20,6 +19,7 @@ export type AuthModalState =
 
 export interface AuthProps {
   handleAuthModal: (path: AuthModalState) => void;
+  handleClose: () => void;
 }
 
 export type PresetModalState = "add" | "edit" | "delete";

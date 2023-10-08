@@ -7,7 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
-import { AuthProps, LoginFormInput } from "@/types";
+import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import {
   Box,
@@ -20,8 +20,9 @@ import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
 
-interface Props extends AuthProps {
-  handleClose: () => void;
+interface Props {
+  openAuthModal: () => void;
+  handleAuthModal: (path: AuthModalState) => void;
   setAccessToken: SetterOrUpdater<string>;
   setUserId: SetterOrUpdater<number>;
   setUserMail: SetterOrUpdater<string>;
@@ -29,7 +30,7 @@ interface Props extends AuthProps {
 }
 
 export default function LoginForm({
-  handleClose,
+  openAuthModal,
   handleAuthModal,
   setAccessToken,
   setUserId,
@@ -42,8 +43,19 @@ export default function LoginForm({
     formState: { errors, isSubmitted },
   } = useForm<LoginFormInput>();
 
+  const passwordEvent = () => {
+    handleAuthModal("password");
+    openAuthModal();
+  };
+
+  const signUpEvent = () => {
+    handleAuthModal("signUp");
+    openAuthModal();
+  };
+
   const alertEvent = () => {
     handleAuthModal("verify");
+    openAuthModal();
   };
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
@@ -76,7 +88,6 @@ export default function LoginForm({
 
     setUserId(userId);
     setAccessToken(accessToken!);
-    handleClose();
   };
 
   useEffect(() => {
@@ -122,14 +133,10 @@ export default function LoginForm({
           <ModalButton>로그인</ModalButton>
           <Grid container>
             <Grid item xs>
-              <ModalLink clickEvent={() => handleAuthModal("password")}>
-                비밀번호 재설정
-              </ModalLink>
+              <ModalLink clickEvent={passwordEvent}>비밀번호 재설정</ModalLink>
             </Grid>
             <Grid item>
-              <ModalLink clickEvent={() => handleAuthModal("signUp")}>
-                회원가입
-              </ModalLink>
+              <ModalLink clickEvent={signUpEvent}>회원가입</ModalLink>
             </Grid>
           </Grid>
         </ModalForm>

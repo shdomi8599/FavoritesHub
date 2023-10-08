@@ -110,7 +110,7 @@ export default function DashboardDrawer({
             ) : (
               <>
                 <AccountCircleIcon fontSize="large" />
-                <span onClick={handleModalOpen}>로그인</span>
+                <span onClick={handleModalOpen}>회원가입</span>
               </>
             )}
           </ToolBarLoginBox>

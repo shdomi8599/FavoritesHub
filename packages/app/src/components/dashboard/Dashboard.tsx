@@ -38,7 +38,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   } = useHandler();
   const { width } = useHandleWidth();
   const queryClient = useQueryClient();
-  const { handleLoginModal } = useAuthModal();
+  const { handleSignUpModal } = useAuthModal();
   const { ref: barRef, barHeight } = useBarHeight();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
   const { addPresetModal, editPresetModal } = usePresetModal();
@@ -97,7 +97,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         isMinWidth600={isMinWidth600}
         logoutEvent={logoutEvent}
         handleDrawer={handleDrawer}
-        handleModalOpen={handleLoginModal}
+        handleModalOpen={handleSignUpModal}
       />
       <DashboardDrawer
         isLogin={isLogin}
@@ -109,7 +109,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         setViewPreset={setViewPreset}
         addPresetModal={addPresetModal}
         editPresetModal={editPresetModal}
-        handleModalOpen={handleLoginModal}
+        handleModalOpen={handleSignUpModal}
         deletePresetEvent={deletePresetEvent}
       />
       <Main component="main" barheight={barHeight}>

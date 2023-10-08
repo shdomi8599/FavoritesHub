@@ -13,7 +13,10 @@ import { callbackSuccessAlert } from "@/util/alert";
 import { Box, Container, Grid } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-export default function SignUpForm({ handleAuthModal }: AuthProps) {
+export default function SignUpForm({
+  handleAuthModal,
+  handleClose,
+}: AuthProps) {
   const {
     register,
     handleSubmit,
@@ -28,10 +31,6 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
       "입력하신 비밀번호와 일치하지 않습니다.",
   };
 
-  const alertEvent = () => {
-    handleAuthModal("login");
-  };
-
   const onSubmit: SubmitHandler<SignUpFormInput> = async (data) => {
     const { mail, password } = data;
     const { message } = await postSignUp(mail, password);
@@ -44,7 +43,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
       callbackSuccessAlert(
         "회원가입을 축하합니다.",
         "로그인 하러가기",
-        alertEvent,
+        handleClose,
       );
     }
   };
@@ -91,9 +90,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
           <ModalButton>회원가입</ModalButton>
           <Grid container>
             <Grid item xs>
-              <ModalLink clickEvent={() => handleAuthModal("login")}>
-                로그인
-              </ModalLink>
+              <ModalLink clickEvent={handleClose}>로그인</ModalLink>
             </Grid>
             <Grid item>
               <ModalLink clickEvent={() => handleAuthModal("password")}>
