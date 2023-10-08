@@ -1,4 +1,5 @@
 import { useHandler, useOutSideRef } from "@/hooks";
+import { DashBoardChildProps } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
   Menu as MenuIcon,
@@ -15,16 +16,11 @@ import { styled } from "@mui/material/styles";
 import { MutableRefObject } from "react";
 import BarUserModal from "./BarUserModal";
 
-type Props = {
-  toolBarOpen: boolean;
-  handleDrawer: () => void;
+interface Props extends DashBoardChildProps {
   barHeight: number;
   barRef: MutableRefObject<HTMLDivElement>;
   isMinWidth600: boolean;
-  isLogin: boolean;
-  handleModalOpen: () => void;
-  logoutEvent: () => void;
-};
+}
 
 export default function DashboardBar({
   barRef,

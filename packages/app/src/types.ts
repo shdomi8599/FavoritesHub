@@ -34,3 +34,11 @@ export interface ApiResultAccessToken {
   message?: Message;
   userId: number;
 }
+
+export interface DashBoardChildProps {
+  handleDrawer: () => void;
+  isLogin: boolean;
+  toolBarOpen: boolean;
+  handleModalOpen: () => void;
+  logoutEvent: () => void;
+}

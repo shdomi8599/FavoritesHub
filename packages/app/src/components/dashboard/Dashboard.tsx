@@ -5,6 +5,7 @@ import {
   useHandleWidth,
   useHandler,
 } from "@/hooks";
+import { usePresetModal } from "@/hooks/usePresetModal";
 import {
   accessTokenState,
   authModalState,
@@ -25,6 +26,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const { api } = useApi();
   const router = useRouter();
   const { openAuthModal } = useAuthModal();
+  const { openPresetModal } = usePresetModal();
   const { width } = useHandleWidth();
   const { ref: barRef, barHeight } = useBarHeight();
   const {
@@ -100,6 +102,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         toolBarOpen={toolBarOpen}
         isLogin={isLogin}
         logoutEvent={logoutEvent}
+        openPresetModal={openPresetModal}
       />
       <Main component="main" barheight={barHeight}>
         {children}

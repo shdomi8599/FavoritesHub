@@ -1,4 +1,5 @@
 import { navItems } from "@/const";
+import { DashBoardChildProps } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
   AddCircleOutline as AddCircleOutlineIcon,
@@ -20,14 +21,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-type Props = {
-  toolBarOpen: boolean;
-  handleDrawer: () => void;
+interface Props extends DashBoardChildProps {
   handlePage: (route: string) => void;
-  isLogin: boolean;
-  handleModalOpen: () => void;
-  logoutEvent: () => void;
-};
+  openPresetModal: () => void;
+}
 
 export default function DashboardDrawer({
   toolBarOpen,
@@ -36,6 +33,7 @@ export default function DashboardDrawer({
   handlePage,
   isLogin,
   logoutEvent,
+  openPresetModal,
 }: Props) {
   return (
     <Drawer variant="permanent" open={toolBarOpen}>
@@ -61,6 +59,7 @@ export default function DashboardDrawer({
               width: "100%",
               padding: "12px",
             }}
+            onClick={openPresetModal}
           >
             <AddCircleOutlineIcon />
             프리셋 추가하기
