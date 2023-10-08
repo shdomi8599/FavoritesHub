@@ -6,20 +6,30 @@ export const isLoginState = atom({
   default: false,
 });
 
-export const isAuthModalState = atom({
-  key: "isAuthModalState",
-  default: false,
-});
-
 // 대시보드 바 높이 상태
 export const barHeightState = atom({
   key: "barHeightState",
   default: 0,
 });
 
+export const isAuthModalState = atom({
+  key: "isAuthModalState",
+  default: false,
+});
+
 export const authModalState = atom<AuthModalState>({
   key: "authModalState",
   default: "login",
+});
+
+export const isPresetModalState = atom({
+  key: "isPresetModalState",
+  default: false,
+});
+
+export const presetModalState = atom({
+  key: "authModalState",
+  default: "",
 });
 
 export const accessTokenState = atom({
