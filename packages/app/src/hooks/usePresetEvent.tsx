@@ -1,4 +1,4 @@
-import { postPresetAdd, postPresetDelete, putPresetEdit } from "@/api/preset";
+import { postPresetAdd, putPresetEdit } from "@/api/preset";
 import { errorAlert, successAlert } from "@/util";
 
 type Props = {
@@ -18,6 +18,10 @@ export const usePresetEvent = ({
 }: Props) => {
   const presetAdd = async (presetName: string) => {
     const { message } = await postPresetAdd(userId, accessToken, presetName);
+
+    if (message === "max") {
+      return errorAlert("프리셋은 15개가 최대입니다.", "프리셋 추가");
+    }
 
     if (message === "exist") {
       return errorAlert("이미 존재하는 이름입니다.", "프리셋 추가");
@@ -56,15 +60,5 @@ export const usePresetEvent = ({
     }
   };
 
-  const presetDelete = async (presetId: number) => {
-    const { message } = await postPresetDelete(presetId, accessToken);
-
-    if (message === "success") {
-      offPresetModal();
-      resetPresetList();
-      successAlert("프리셋이 삭제되었습니다.", "프리셋 삭제");
-    }
-  };
-
-  return { presetAdd, presetEdit, presetDelete };
+  return { presetAdd, presetEdit };
 };

@@ -28,7 +28,13 @@ export interface PresetAddFormInput {
   presetName: string;
 }
 
-type Message = "success" | "exist" | "not exact" | "not verify" | "same";
+type Message =
+  | "success"
+  | "exist"
+  | "not exact"
+  | "not verify"
+  | "same"
+  | "max";
 
 export type ApiResultMessage = {
   message: Message;
