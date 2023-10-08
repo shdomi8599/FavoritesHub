@@ -9,11 +9,13 @@ import {
   usePresetModal,
 } from "@/hooks";
 import { usePresetList } from "@/hooks/react-query";
+import { viewPresetState } from "@/states";
 import { confirmAlert } from "@/util";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
@@ -38,8 +40,9 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const { handleLoginModal } = useAuthModal();
   const { ref: barRef, barHeight } = useBarHeight();
-  const { addPresetModal, editPresetModal } = usePresetModal();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
+  const { addPresetModal, editPresetModal } = usePresetModal();
+  const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
@@ -78,29 +81,34 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     }
   }, [accessToken, setIsLogin, setUserId]);
 
+  useEffect(() => {
+    const defaultPreset = presets?.find((preset) => preset.defaultPreset)!;
+    setViewPreset(defaultPreset);
+  }, [presets, setViewPreset]);
+
   return (
     <Box sx={{ display: "flex" }}>
       <DashboardBar
-        isLogin={isLogin}
         barRef={barRef}
+        isLogin={isLogin}
+        userMail={userMail}
         barHeight={barHeight}
-        handleDrawer={handleDrawer}
         toolBarOpen={toolBarOpen}
         isMinWidth600={isMinWidth600}
-        handleModalOpen={handleLoginModal}
         logoutEvent={logoutEvent}
-        userMail={userMail}
-      />
-      <DashboardDrawer
         handleDrawer={handleDrawer}
         handleModalOpen={handleLoginModal}
-        toolBarOpen={toolBarOpen}
+      />
+      <DashboardDrawer
+        presets={presets!}
         isLogin={isLogin}
+        toolBarOpen={toolBarOpen}
         logoutEvent={logoutEvent}
+        handleDrawer={handleDrawer}
         addPresetModal={addPresetModal}
         editPresetModal={editPresetModal}
+        handleModalOpen={handleLoginModal}
         deletePresetEvent={deletePresetEvent}
-        presets={presets!}
       />
       <Main component="main" barheight={barHeight}>
         {children}

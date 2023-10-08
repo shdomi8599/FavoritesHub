@@ -1,4 +1,4 @@
-import { AuthModalState, PresetModalState } from "@/types";
+import { AuthModalState, Preset, PresetModalState } from "@/types";
 import { atom } from "recoil";
 
 export const isLoginState = atom({
@@ -35,6 +35,11 @@ export const presetModalState = atom<PresetModalState>({
 export const selectedPresetIdState = atom({
   key: "selectedPresetState",
   default: 0,
+});
+
+export const viewPresetState = atom<Preset>({
+  key: "viewPresetState",
+  default: null!,
 });
 
 export const accessTokenState = atom({

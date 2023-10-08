@@ -26,14 +26,14 @@ interface Props extends DashBoardChildProps {
 }
 
 export default function DashboardDrawer({
-  toolBarOpen,
-  handleDrawer,
-  handleModalOpen,
+  presets,
   isLogin,
+  toolBarOpen,
   logoutEvent,
+  handleDrawer,
   addPresetModal,
   editPresetModal,
-  presets,
+  handleModalOpen,
   deletePresetEvent,
 }: Props) {
   return (

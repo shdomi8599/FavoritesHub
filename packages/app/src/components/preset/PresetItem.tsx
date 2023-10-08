@@ -27,7 +27,7 @@ export default function PresetItem({
   return (
     <ListItemButton>
       <ListItemIcon>
-        <DashboardIcon />
+        <DashboardIcon sx={{ color: defaultPreset ? "#1976d2" : "" }} />
       </ListItemIcon>
       <ListItemText sx={itemTextStyle} primary={presetName} />
       <IconContainer>

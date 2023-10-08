@@ -25,14 +25,14 @@ interface Props extends DashBoardChildProps {
 
 export default function DashboardBar({
   barRef,
+  isLogin,
+  userMail,
   barHeight,
   toolBarOpen,
+  isMinWidth600,
+  logoutEvent,
   handleDrawer,
   handleModalOpen,
-  isMinWidth600,
-  isLogin,
-  logoutEvent,
-  userMail,
 }: Props) {
   const {
     isBoolean: isOpen,
@@ -67,7 +67,7 @@ export default function DashboardBar({
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          Project
+          Favorites Hub
         </Typography>
         <UserIconBox ref={ref}>
           <AccountCircleIcon
