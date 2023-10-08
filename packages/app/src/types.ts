@@ -1,3 +1,5 @@
+import { AxiosInstance } from "axios";
+
 export interface LoginFormInput {
   mail: string;
   password: string;
@@ -6,15 +8,21 @@ export interface SignUpFormInput extends LoginFormInput {
   confirmPassword?: string;
 }
 
+export interface updatePasswordFormInput {
+  password: string;
+  confirmPassword: string;
+}
+
 export type AuthModalState =
   | "login"
   | "signUp"
   | "password"
   | "verify"
-  | "forgotPassword";
+  | "updatePassword";
 
 export interface AuthProps {
   handleAuthModal: (auth: AuthModalState) => void;
+  api: AxiosInstance;
 }
 
 type Message = "success" | "exist" | "not exact" | "not verify";

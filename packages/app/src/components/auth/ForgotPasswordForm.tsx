@@ -1,20 +1,56 @@
 import { AuthProps, LoginFormInput } from "@/types";
+import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { SetterOrUpdater } from "recoil";
 import AuthButton from "./AuthButton";
 import AuthFormInput from "./AuthFormInput";
 import AuthLink from "./AuthLink";
 import AuthTitle from "./AuthTitle";
 
-export default function PasswordForm({ handleAuthModal }: AuthProps) {
+interface Props extends AuthProps {
+  setIsForgot: SetterOrUpdater<boolean>;
+  setUserMail: SetterOrUpdater<string>;
+}
+
+export default function PasswordForm({
+  handleAuthModal,
+  setIsForgot,
+  api,
+  setUserMail,
+}: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
   } = useForm<LoginFormInput>();
-  const onSubmit: SubmitHandler<LoginFormInput> = (data) => console.log(data);
+
+  const alertEvent = () => {
+    handleAuthModal("verify");
+  };
+
+  const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
+    const { mail } = data;
+
+    const user = await api
+      .post("/user/exist", { mail })
+      .then((res) => res.data);
+
+    if (!user) {
+      return errorAlert("가입되지 않은 이메일입니다.", "이메일 확인");
+    }
+
+    setUserMail(mail);
+    setIsForgot(true);
+
+    return callbackSuccessAlert(
+      "이메일 인증을 부탁드려요.",
+      "인증 하러가기",
+      alertEvent,
+    );
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -25,12 +61,12 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
           alignItems: "center",
         }}
       >
-        <AuthTitle name="비밀번호 찾기" />
+        <AuthTitle name="비밀번호 재설정" />
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          sx={{ mt: 1 }}
+          sx={{ mt: 1, width: "90%" }}
         >
           <AuthFormInput
             register={register}
@@ -38,13 +74,7 @@ export default function PasswordForm({ handleAuthModal }: AuthProps) {
             error={errors?.mail}
             isSubmitted={isSubmitted}
           />
-          <AuthFormInput
-            register={register}
-            name="password"
-            error={errors?.password}
-            isSubmitted={isSubmitted}
-          />
-          <AuthButton name="password" />
+          <AuthButton>이메일 인증</AuthButton>
           <Grid container>
             <Grid item xs>
               <AuthLink clickEvent={() => handleAuthModal("login")}>

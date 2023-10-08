@@ -1,6 +1,5 @@
 import { authFormOptions } from "@/const";
-import { useApi } from "@/hooks";
-import { ApiResultAccessToken, ApiResultMessage } from "@/types";
+import { ApiResultAccessToken, ApiResultMessage, AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";
 import { Grid, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -14,21 +13,24 @@ import AuthButton from "./AuthButton";
 import AuthLink from "./AuthLink";
 import AuthTitle from "./AuthTitle";
 
-type Props = {
+interface Props extends AuthProps {
   handleClose: () => void;
   setAccessToken: SetterOrUpdater<string>;
-  userId: number;
-};
+  userMail: string;
+  isForgot: boolean;
+}
 
 export default function VerifyForm({
   handleClose,
   setAccessToken,
-  userId,
+  userMail,
+  isForgot,
+  handleAuthModal,
+  api,
 }: Props) {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 180);
   const { seconds, restart, minutes } = useTimer({ expiryTimestamp });
-  const { api } = useApi();
   const {
     register,
     handleSubmit,
@@ -38,14 +40,14 @@ export default function VerifyForm({
   const onVerifyMail = async () => {
     restart(expiryTimestamp);
     successAlert("메일이 발송되었습니다.", "인증번호");
-    await api.post("/auth/mail", { userId });
+    await api.post("/auth/mail", { userMail });
   };
 
   const onSubmit: SubmitHandler<{ verifyCode: string }> = async (data) => {
     const { verifyCode } = data;
     const { message } = await api
       .post<ApiResultMessage>("/auth/verify", {
-        userId,
+        userMail,
         verifyCode,
       })
       .then((res) => res.data);
@@ -56,15 +58,20 @@ export default function VerifyForm({
 
     if (message === "success") {
       successAlert("이메일 인증에 성공했습니다.", "이메일 인증");
-      const { accessToken } = await api
-        .post<ApiResultAccessToken>("/auth/verify/login", {
-          userId,
-        })
-        .then((res) => res.data);
-
-      setAccessToken(accessToken!);
-      handleClose();
     }
+
+    if (isForgot) {
+      return handleAuthModal("updatePassword");
+    }
+
+    const { accessToken } = await api
+      .post<ApiResultAccessToken>("/auth/verify/login", {
+        userMail,
+      })
+      .then((res) => res.data);
+
+    setAccessToken(accessToken!);
+    handleClose();
   };
 
   useEffect(() => {
@@ -86,7 +93,7 @@ export default function VerifyForm({
           component="form"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          sx={{ mt: 1, width: "80%" }}
+          sx={{ mt: 1, width: "90%" }}
         >
           <TextField
             margin="normal"
@@ -103,7 +110,7 @@ export default function VerifyForm({
               남은 시간 {minutes}분:{seconds}초
             </Box>
           </Grid>
-          <AuthButton name="verify" />
+          <AuthButton>인증하기</AuthButton>
         </Box>
       </Box>
     </Container>

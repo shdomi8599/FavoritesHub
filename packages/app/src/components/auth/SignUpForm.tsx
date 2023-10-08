@@ -1,26 +1,29 @@
-import { useApi } from "@/hooks";
 import { ApiResultMessage, AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
-import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
-import AuthAlertMessage from "./AuthAlertMessage";
 import AuthButton from "./AuthButton";
 import AuthFormInput from "./AuthFormInput";
 import AuthLink from "./AuthLink";
 import AuthTitle from "./AuthTitle";
 
-export default function SignUpForm({ handleAuthModal }: AuthProps) {
-  const { api } = useApi();
+export default function SignUpForm({ handleAuthModal, api }: AuthProps) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
     getValues,
   } = useForm<SignUpFormInput>();
+
+  const confirmPasswordOption = {
+    required: true,
+    validate: (value: string) =>
+      value === getValues("password") ||
+      "입력하신 비밀번호와 일치하지 않습니다.",
+  };
 
   const alertEvent = () => {
     handleAuthModal("login");
@@ -59,7 +62,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
           component="form"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          sx={{ mt: 1 }}
+          sx={{ mt: 1, width: "90%" }}
         >
           <AuthFormInput
             register={register}
@@ -73,23 +76,14 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
             error={errors?.password}
             isSubmitted={isSubmitted}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            {...register("confirmPassword", {
-              required: true,
-              validate: (value) =>
-                value === getValues("password") ||
-                "입력하신 비밀번호와 일치하지 않습니다.",
-            })}
-            label={"비밀번호 확인"}
-            type="password"
+          <AuthFormInput
+            register={register}
+            name="confirmPassword"
+            error={errors?.password}
+            isSubmitted={isSubmitted}
+            option={confirmPasswordOption}
           />
-          {isSubmitted && errors.confirmPassword && (
-            <AuthAlertMessage error={errors.confirmPassword} />
-          )}
-          <AuthButton name="signUp" />
+          <AuthButton>회원가입</AuthButton>
           <Grid container>
             <Grid item xs>
               <AuthLink clickEvent={() => handleAuthModal("login")}>
@@ -98,7 +92,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
             </Grid>
             <Grid item>
               <AuthLink clickEvent={() => handleAuthModal("password")}>
-                비밀번호 찾기
+                비밀번호 재설정
               </AuthLink>
             </Grid>
           </Grid>

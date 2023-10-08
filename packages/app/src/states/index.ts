@@ -31,3 +31,8 @@ export const userIdState = atom({
   key: "userIdState",
   default: 0,
 });
+
+export const userMailState = atom({
+  key: "userMailState",
+  default: "",
+});

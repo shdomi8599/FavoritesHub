@@ -1,18 +1,28 @@
-import { useModal } from "@/hooks";
-import { accessTokenState, authModalState, userIdState } from "@/states";
+import { useApi, useModal } from "@/hooks";
+import {
+  accessTokenState,
+  authModalState,
+  userIdState,
+  userMailState,
+} from "@/states";
 import { AuthModalState } from "@/types";
 import { Box, Modal, styled } from "@mui/material";
+import { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 import LoginForm from "./LoginForm";
 import MailVerifyForm from "./MailVerifyForm";
-import PasswordForm from "./PasswordForm";
 import SignUpForm from "./SignUpForm";
+import UpdatePasswordForm from "./UpdatePasswordForm";
 
 export default function AuthModal() {
+  const { api } = useApi();
   const { isModal, handleClose } = useModal();
 
-  const [userId, setUserId] = useRecoilState(userIdState);
+  const [isForgot, setIsForgot] = useState(false);
+  const setUserId = useSetRecoilState(userIdState);
   const setAccessToken = useSetRecoilState(accessTokenState);
+  const [userMail, setUserMail] = useRecoilState(userMailState);
   const [authModal, setAuthModal] = useRecoilState(authModalState);
 
   const handleAuthModal = (auth: AuthModalState) => {
@@ -26,15 +36,35 @@ export default function AuthModal() {
         handleClose={handleClose}
         setAccessToken={setAccessToken}
         setUserId={setUserId}
+        setUserMail={setUserMail}
+        setIsForgot={setIsForgot}
+        api={api}
       />
     ),
-    password: <PasswordForm handleAuthModal={handleAuthModal} />,
-    signUp: <SignUpForm handleAuthModal={handleAuthModal} />,
+    password: (
+      <ForgotPasswordForm
+        api={api}
+        handleAuthModal={handleAuthModal}
+        setIsForgot={setIsForgot}
+        setUserMail={setUserMail}
+      />
+    ),
+    signUp: <SignUpForm api={api} handleAuthModal={handleAuthModal} />,
     verify: (
       <MailVerifyForm
+        api={api}
+        handleAuthModal={handleAuthModal}
         handleClose={handleClose}
         setAccessToken={setAccessToken}
-        userId={userId}
+        userMail={userMail}
+        isForgot={isForgot}
+      />
+    ),
+    updatePassword: (
+      <UpdatePasswordForm
+        handleClose={handleClose}
+        api={api}
+        setUserMail={setUserMail}
       />
     ),
   };

@@ -1,21 +1,14 @@
-import { AuthModalState } from "@/types";
 import { Button } from "@mui/material";
+import { ReactNode } from "react";
 
 interface Props {
-  name: AuthModalState;
+  children: ReactNode;
 }
 
-const buttonData: { [key: string]: string } = {
-  login: "로그인",
-  password: "비밀번호 찾기",
-  signUp: "회원가입",
-  verify: "인증하기",
-};
-
-export default function AuthButton({ name }: Props) {
+export default function AuthButton({ children }: Props) {
   return (
     <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-      {buttonData[name]}
+      {children}
     </Button>
   );
 }
