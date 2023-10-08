@@ -84,4 +84,10 @@ export class UsersService {
     user.verify = true;
     await this.userTable.save(user);
   }
+
+  async updatePassword(user: User, newPassword: string) {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await this.userTable.save(user);
+  }
 }
