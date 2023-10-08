@@ -315,7 +315,6 @@ export class ApiController {
   })
   async deletePreset(@Param("presetId") presetId: number) {
     await this.presetsService.remove(presetId);
-    return { message: "success" };
   }
 
   // @UseGuards(AuthGuard("jwt"))
