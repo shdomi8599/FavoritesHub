@@ -44,9 +44,6 @@ export class User {
   verify: boolean;
 
   @Column()
-  verifyCode: string;
-
-  @Column()
   @ApiProperty({
     example: "dqwdwd1d1w322423dsw1e12d21d12",
     description: "발급받은 리프레시 토큰입니다.",

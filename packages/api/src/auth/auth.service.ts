@@ -56,7 +56,7 @@ export class AuthService {
     await transporter.sendMail(mailOptions);
   }
 
-  async verify(user: User, verifyCode: string) {
-    return user.verifyCode === verifyCode;
+  async verify(cashingVerifyCode: string, verifyCode: string) {
+    return cashingVerifyCode === verifyCode;
   }
 }

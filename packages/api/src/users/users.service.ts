@@ -37,7 +37,6 @@ export class UsersService {
     user.mail = mail;
     user.password = hashedPassword;
     user.refreshToken = "";
-    user.verifyCode = "";
     user.verify = false;
     await this.userTable.save(user);
   }
@@ -79,11 +78,6 @@ export class UsersService {
     }
 
     return user;
-  }
-
-  async updateVerifyCode(user: User, verifyCode: string) {
-    user.verifyCode = verifyCode;
-    await this.userTable.save(user);
   }
 
   async updateVerify(user: User) {

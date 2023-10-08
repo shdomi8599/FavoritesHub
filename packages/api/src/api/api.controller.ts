@@ -10,6 +10,7 @@ import {
   Res,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import * as NodeCache from "node-cache";
 import { AuthService } from "src/auth/auth.service";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
@@ -26,6 +27,8 @@ import {
   ResPostAuthLoginDto,
 } from "./dto/res/auth";
 import { ResSuccessMessageDto } from "./dto/res/resSuccessMessage.dto";
+
+const myCache = new NodeCache({ checkperiod: 120 });
 
 @ApiTags("api")
 @Controller("api")
@@ -145,8 +148,8 @@ export class ApiController {
     const { userId } = dto;
     const user = await this.usersService.findOneToId(userId);
     const verifyCode = generateRandomNumber();
+    myCache.set(user.id, verifyCode, 180);
     await this.authService.mail(user, verifyCode);
-    await this.usersService.updateVerifyCode(user, verifyCode);
   }
 
   // @UseGuards(AuthGuard("jwt"))
@@ -158,7 +161,11 @@ export class ApiController {
   async postAuthVerify(@Body() dto: { userId: number; verifyCode: string }) {
     const { userId, verifyCode } = dto;
     const user = await this.usersService.findOneToId(userId);
-    const isVerify = await this.authService.verify(user, verifyCode);
+    const cashingVerifyCode = myCache.get(user.id) as string;
+    const isVerify = await this.authService.verify(
+      cashingVerifyCode,
+      verifyCode,
+    );
     if (isVerify) {
       await this.usersService.updateVerify(user);
       return { message: "success" };
