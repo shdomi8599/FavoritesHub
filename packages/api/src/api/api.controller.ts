@@ -300,6 +300,10 @@ export class ApiController {
     } catch (e) {
       const { message } = e;
 
+      if (message === "max") {
+        return { message: "max" };
+      }
+
       if (message === "exist") {
         return { message: "exist" };
       }

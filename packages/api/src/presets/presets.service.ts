@@ -65,6 +65,12 @@ export class PresetsService {
   async add(user: User, presetName: string) {
     const presets = await this.findAll(user.id);
 
+    const isMaxPreset = presets.length === 15;
+
+    if (isMaxPreset) {
+      throw new Error("max");
+    }
+
     await this.exist(presets, presetName);
 
     const isFirstPreset = presets.length === 0;
