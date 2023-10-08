@@ -9,11 +9,13 @@ import { AuthModalState } from "@/types";
 import { Box, Modal, styled } from "@mui/material";
 import { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import ForgotPasswordForm from "./ForgotPasswordForm";
-import LoginForm from "./LoginForm";
-import MailVerifyForm from "./MailVerifyForm";
-import SignUpForm from "./SignUpForm";
-import UpdatePasswordForm from "./UpdatePasswordForm";
+import {
+  ForgotPasswordForm,
+  LoginForm,
+  MailVerifyForm,
+  SignUpForm,
+  UpdatePasswordForm,
+} from "./form";
 
 export default function AuthModal() {
   const { api } = useApi();

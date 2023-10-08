@@ -5,10 +5,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
-import AuthButton from "./AuthButton";
-import AuthFormInput from "./AuthFormInput";
-import AuthLink from "./AuthLink";
-import AuthTitle from "./AuthTitle";
+import { AuthButton, AuthFormInput, AuthLink, AuthTitle } from "../common";
 
 export default function SignUpForm({ handleAuthModal, api }: AuthProps) {
   const {

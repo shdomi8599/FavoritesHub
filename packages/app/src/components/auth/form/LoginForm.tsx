@@ -8,10 +8,7 @@ import Grid from "@mui/material/Grid";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
-import AuthButton from "./AuthButton";
-import AuthFormInput from "./AuthFormInput";
-import AuthLink from "./AuthLink";
-import AuthTitle from "./AuthTitle";
+import { AuthButton, AuthFormInput, AuthLink, AuthTitle } from "../common";
 
 interface Props extends AuthProps {
   handleClose: () => void;

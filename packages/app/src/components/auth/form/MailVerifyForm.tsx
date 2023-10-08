@@ -8,10 +8,7 @@ import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTimer } from "react-timer-hook";
 import { SetterOrUpdater } from "recoil";
-import AuthAlertMessage from "./AuthAlertMessage";
-import AuthButton from "./AuthButton";
-import AuthLink from "./AuthLink";
-import AuthTitle from "./AuthTitle";
+import { AuthAlertMessage, AuthButton, AuthLink, AuthTitle } from "../common";
 
 interface Props extends AuthProps {
   handleClose: () => void;
@@ -20,7 +17,7 @@ interface Props extends AuthProps {
   isForgot: boolean;
 }
 
-export default function VerifyForm({
+export default function MailVerifyForm({
   handleClose,
   setAccessToken,
   userMail,

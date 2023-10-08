@@ -5,17 +5,14 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
-import AuthButton from "./AuthButton";
-import AuthFormInput from "./AuthFormInput";
-import AuthLink from "./AuthLink";
-import AuthTitle from "./AuthTitle";
+import { AuthButton, AuthFormInput, AuthLink, AuthTitle } from "../common";
 
 interface Props extends AuthProps {
   setIsForgot: SetterOrUpdater<boolean>;
   setUserMail: SetterOrUpdater<string>;
 }
 
-export default function PasswordForm({
+export default function ForgotPasswordForm({
   handleAuthModal,
   setIsForgot,
   api,

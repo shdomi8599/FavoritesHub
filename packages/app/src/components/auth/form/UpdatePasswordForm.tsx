@@ -6,9 +6,7 @@ import Container from "@mui/material/Container";
 import { AxiosInstance } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater, useRecoilValue } from "recoil";
-import AuthButton from "./AuthButton";
-import AuthFormInput from "./AuthFormInput";
-import AuthTitle from "./AuthTitle";
+import { AuthButton, AuthFormInput, AuthTitle } from "../common";
 
 interface Props {
   handleClose: () => void;
