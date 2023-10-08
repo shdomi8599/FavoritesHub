@@ -26,8 +26,8 @@ export default function AuthModal() {
   const [userMail, setUserMail] = useRecoilState(userMailState);
   const [authModal, setAuthModal] = useRecoilState(authModalState);
 
-  const handleAuthModal = (auth: AuthModalState) => {
-    setAuthModal(auth);
+  const handleAuthModal = (path: AuthModalState) => {
+    setAuthModal(path);
   };
 
   const modalData: { [key: string]: JSX.Element } = {

@@ -19,7 +19,7 @@ export type AuthModalState =
   | "updatePassword";
 
 export interface AuthProps {
-  handleAuthModal: (auth: AuthModalState) => void;
+  handleAuthModal: (path: AuthModalState) => void;
 }
 
 type Message = "success" | "exist" | "not exact" | "not verify";
