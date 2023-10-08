@@ -1,13 +1,21 @@
 import { Box, styled } from "@mui/material";
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 
 type Props = {
   children: ReactNode;
 };
 
-export default function ModalContentBox({ children }: Props) {
-  return <ContentBox sx={{ boxShadow: 3 }}>{children}</ContentBox>;
-}
+const ModalContentBox = forwardRef(({ children }: Props, ref) => {
+  return (
+    <ContentBox ref={ref} sx={{ boxShadow: 3 }}>
+      {children}
+    </ContentBox>
+  );
+});
+
+ModalContentBox.displayName = "ModalContentBox";
+
+export default ModalContentBox;
 
 const ContentBox = styled(Box)(({}) => ({
   position: "absolute",
