@@ -46,7 +46,7 @@ export const postAuthVerify = async (userMail: string, verifyCode: string) => {
 };
 
 export const postAuthVerifyLogin = async (userMail: string) => {
-  const { accessToken } = await api
+  const { accessToken, userId } = await api
     .post<ApiResultAccessToken>("/auth/verify/login", {
       userMail,
     })
@@ -54,6 +54,7 @@ export const postAuthVerifyLogin = async (userMail: string) => {
 
   return {
     accessToken,
+    userId,
   };
 };
 

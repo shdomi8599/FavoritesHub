@@ -41,6 +41,7 @@ export default function AuthModal() {
         handleAuthModal={handleAuthModal}
         handleClose={offAuthModal}
         setAccessToken={setAccessToken}
+        setUserId={setUserId}
         userMail={userMail}
         isForgot={isForgot}
       />

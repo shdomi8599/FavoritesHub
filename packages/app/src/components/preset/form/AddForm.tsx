@@ -1,3 +1,4 @@
+import { postPresetAdd } from "@/api/preset";
 import {
   ModalButton,
   ModalForm,
@@ -6,12 +7,20 @@ import {
 } from "@/components/modal";
 import { presetFormOptions } from "@/const";
 import { PresetAddFormInput, PresetProps } from "@/types";
+import { errorAlert, successAlert } from "@/util";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface Props extends PresetProps {}
+interface Props extends PresetProps {
+  userId: number;
+  accessToken: string;
+}
 
-export default function AddForm({ offPresetModal }: Props) {
+export default function AddForm({
+  offPresetModal,
+  userId,
+  accessToken,
+}: Props) {
   const {
     register,
     handleSubmit,
@@ -20,6 +29,17 @@ export default function AddForm({ offPresetModal }: Props) {
 
   const onSubmit: SubmitHandler<PresetAddFormInput> = async (data) => {
     const { presetName } = data;
+
+    const { message } = await postPresetAdd(userId, accessToken, presetName);
+
+    if (message === "exist") {
+      return errorAlert("이미 존재하는 이름입니다.", "프리셋 추가");
+    }
+
+    if (message === "success") {
+      offPresetModal();
+      successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
+    }
   };
 
   return (

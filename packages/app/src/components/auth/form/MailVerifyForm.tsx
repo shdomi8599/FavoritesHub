@@ -18,6 +18,7 @@ import { SetterOrUpdater } from "recoil";
 interface Props extends AuthProps {
   handleClose: () => void;
   setAccessToken: SetterOrUpdater<string>;
+  setUserId: SetterOrUpdater<number>;
   userMail: string;
   isForgot: boolean;
 }
@@ -28,6 +29,7 @@ export default function MailVerifyForm({
   userMail,
   isForgot,
   handleAuthModal,
+  setUserId,
 }: Props) {
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 180);
@@ -60,8 +62,9 @@ export default function MailVerifyForm({
       return handleAuthModal("updatePassword");
     }
 
-    const { accessToken } = await postAuthVerifyLogin(userMail);
+    const { accessToken, userId } = await postAuthVerifyLogin(userMail);
 
+    setUserId(userId);
     setAccessToken(accessToken!);
     handleClose();
   };

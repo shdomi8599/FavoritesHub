@@ -36,7 +36,7 @@ type Message = "success" | "exist" | "not exact" | "not verify";
 
 export type ApiResultMessage = {
   message: Message;
-  userId: number;
+  userId?: number;
 };
 
 export interface ApiResultAccessToken {

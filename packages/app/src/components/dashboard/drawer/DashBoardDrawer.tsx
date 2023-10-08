@@ -18,6 +18,7 @@ import {
   ListItemText,
   Drawer as MuiDrawer,
   Toolbar,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -61,7 +62,9 @@ export default function DashboardDrawer({
           onClick={addPresetModal}
         >
           <AddCircleOutlineIcon />
-          {toolBarOpen && <span>프리셋 추가하기</span>}
+          {toolBarOpen && (
+            <Typography sx={{ marginLeft: "1px" }}>프리셋 추가하기</Typography>
+          )}
         </Button>
         {navItems.map(({ name, route }) => (
           <ListItemButton onClick={() => handlePage(route)} key={name}>
