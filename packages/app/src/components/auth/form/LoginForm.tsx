@@ -1,4 +1,5 @@
 import { postAuthLogin, postUserExist } from "@/api/auth";
+import ModalForm from "@/components/ModalForm";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -84,12 +85,7 @@ export default function LoginForm({
         }}
       >
         <AuthTitle name="로그인" />
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          sx={{ mt: 1, width: "90%" }}
-        >
+        <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <AuthFormInput
             register={register}
             name="mail"
@@ -120,7 +116,7 @@ export default function LoginForm({
               </AuthLink>
             </Grid>
           </Grid>
-        </Box>
+        </ModalForm>
       </Box>
     </Container>
   );

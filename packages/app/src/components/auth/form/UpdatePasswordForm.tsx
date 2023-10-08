@@ -1,4 +1,5 @@
 import { putUpdatePassword } from "@/api/auth";
+import ModalForm from "@/components/ModalForm";
 import { userMailState } from "@/states";
 import { updatePasswordFormInput } from "@/types";
 import { successAlert } from "@/util";
@@ -53,12 +54,7 @@ export default function UpdatePasswordForm({
         }}
       >
         <AuthTitle name="비밀번호 재설정" />
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          sx={{ mt: 1, width: "90%" }}
-        >
+        <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <AuthFormInput
             register={register}
             name="password"
@@ -73,7 +69,7 @@ export default function UpdatePasswordForm({
             option={confirmPasswordOption}
           />
           <AuthButton>재설정</AuthButton>
-        </Box>
+        </ModalForm>
       </Box>
     </Container>
   );

@@ -1,4 +1,5 @@
 import { postAuthMail, postAuthVerify, postAuthVerifyLogin } from "@/api/auth";
+import ModalForm from "@/components/ModalForm";
 import { authFormOptions } from "@/const";
 import { AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";
@@ -77,12 +78,7 @@ export default function MailVerifyForm({
         }}
       >
         <AuthTitle name="이메일 인증" />
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          sx={{ mt: 1, width: "90%" }}
-        >
+        <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <TextField
             margin="normal"
             required
@@ -99,7 +95,7 @@ export default function MailVerifyForm({
             </Box>
           </Grid>
           <AuthButton>인증하기</AuthButton>
-        </Box>
+        </ModalForm>
       </Box>
     </Container>
   );

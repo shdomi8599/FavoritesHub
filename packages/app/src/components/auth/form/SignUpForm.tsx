@@ -1,4 +1,5 @@
 import { postSignUp } from "@/api/auth";
+import ModalForm from "@/components/ModalForm";
 import { AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
@@ -54,12 +55,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
         }}
       >
         <AuthTitle name="회원가입" />
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          sx={{ mt: 1, width: "90%" }}
-        >
+        <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <AuthFormInput
             register={register}
             name="mail"
@@ -92,7 +88,7 @@ export default function SignUpForm({ handleAuthModal }: AuthProps) {
               </AuthLink>
             </Grid>
           </Grid>
-        </Box>
+        </ModalForm>
       </Box>
     </Container>
   );

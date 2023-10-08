@@ -1,4 +1,5 @@
 import { postUserExist } from "@/api/auth";
+import ModalForm from "@/components/ModalForm";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import Box from "@mui/material/Box";
@@ -57,12 +58,7 @@ export default function ForgotPasswordForm({
         }}
       >
         <AuthTitle name="비밀번호 재설정" />
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          sx={{ mt: 1, width: "90%" }}
-        >
+        <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <AuthFormInput
             register={register}
             name="mail"
@@ -82,7 +78,7 @@ export default function ForgotPasswordForm({
               </AuthLink>
             </Grid>
           </Grid>
-        </Box>
+        </ModalForm>
       </Box>
     </Container>
   );
