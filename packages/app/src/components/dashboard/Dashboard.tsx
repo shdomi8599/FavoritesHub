@@ -1,4 +1,5 @@
 import { postAuthLogout } from "@/api/auth";
+import { postPresetDelete } from "@/api/preset";
 import {
   useAuth,
   useAuthModal,
@@ -8,6 +9,7 @@ import {
   usePresetModal,
 } from "@/hooks";
 import { usePresetList } from "@/hooks/react-query";
+import { confirmAlert, errorAlert, successAlert } from "@/util";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useEffect } from "react";
@@ -47,6 +49,20 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     if (message === "success") {
       setUserMail("");
       setAccessToken("");
+    }
+  };
+
+  const deletePresetEvent = async (id: number) => {
+    try {
+      await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제");
+
+      const { message } = await postPresetDelete(id, accessToken);
+
+      if (message === "success") {
+        successAlert("프리셋이 삭제되었습니다.", "프리셋 삭제");
+      }
+    } catch {
+      return errorAlert("잠시 후에 다시 시도해주세요.", "프리셋 삭제");
     }
   };
 
