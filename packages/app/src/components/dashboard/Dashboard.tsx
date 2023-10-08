@@ -33,13 +33,14 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   } = useHandler();
   const { width } = useHandleWidth();
   const { handleLoginModal } = useAuthModal();
-  const { addPresetModal } = usePresetModal();
   const { ref: barRef, barHeight } = useBarHeight();
+  const { addPresetModal, editPresetModal } = usePresetModal();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
 
+  // 이벤트
   const logoutEvent = async () => {
     const { message } = await postAuthLogout(userId);
 
@@ -85,6 +86,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         isLogin={isLogin}
         logoutEvent={logoutEvent}
         addPresetModal={addPresetModal}
+        editPresetModal={editPresetModal}
         presets={presets!}
       />
       <Main component="main" barheight={barHeight}>

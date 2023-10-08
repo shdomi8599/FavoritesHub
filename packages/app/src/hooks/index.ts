@@ -5,6 +5,7 @@ import { useBarHeight } from "./useBarHeight";
 import { useHandleWidth } from "./useHandleWidth";
 import { useHandler } from "./useHandler";
 import { useOutSideRef } from "./useOutSideRef";
+import { usePresetEvent } from "./usePresetEvent";
 import { usePresetModal } from "./usePresetModal";
 
 export {
@@ -15,5 +16,6 @@ export {
   useHandleWidth,
   useHandler,
   useOutSideRef,
+  usePresetEvent,
   usePresetModal,
 };

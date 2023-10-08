@@ -1,5 +1,3 @@
-import { QueryClient } from "@tanstack/react-query";
-
 export interface LoginFormInput {
   mail: string;
   password: string;
@@ -24,18 +22,13 @@ export interface AuthProps {
   handleAuthModal: (path: AuthModalState) => void;
 }
 
-export type PresetModalState = "add";
-
-export interface PresetProps {
-  offPresetModal: () => void;
-  queryClient: QueryClient;
-}
+export type PresetModalState = "add" | "edit" | "delete";
 
 export interface PresetAddFormInput {
   presetName: string;
 }
 
-type Message = "success" | "exist" | "not exact" | "not verify";
+type Message = "success" | "exist" | "not exact" | "not verify" | "same";
 
 export type ApiResultMessage = {
   message: Message;

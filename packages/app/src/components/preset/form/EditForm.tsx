@@ -10,10 +10,10 @@ import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
-  presetAdd: (presetName: string) => void;
+  presetEdit: (presetName: string) => void;
 }
 
-export default function AddForm({ presetAdd }: Props) {
+export default function EditForm({ presetEdit }: Props) {
   const {
     register,
     handleSubmit,
@@ -22,7 +22,7 @@ export default function AddForm({ presetAdd }: Props) {
 
   const onSubmit: SubmitHandler<PresetAddFormInput> = async (data) => {
     const { presetName } = data;
-    presetAdd(presetName);
+    presetEdit(presetName);
   };
 
   return (
@@ -34,7 +34,7 @@ export default function AddForm({ presetAdd }: Props) {
           alignItems: "center",
         }}
       >
-        <ModalTitle name="프리셋 추가" />
+        <ModalTitle name="프리셋 수정" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <ModalFormInput
             register={register}
@@ -42,7 +42,7 @@ export default function AddForm({ presetAdd }: Props) {
             error={errors?.presetName}
             isSubmitted={isSubmitted}
             option={presetFormOptions["presetName"]}
-            label={"프리셋 추가"}
+            label={"프리셋 수정"}
             autoFocus={true}
           />
           <ModalButton>추가하기</ModalButton>

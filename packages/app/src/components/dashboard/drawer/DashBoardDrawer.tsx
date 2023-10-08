@@ -1,9 +1,9 @@
+import PresetItem from "@/components/preset/PresetItem";
 import { DashBoardChildProps, Preset } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
   AddCircleOutline as AddCircleOutlineIcon,
   ChevronLeft as ChevronLeftIcon,
-  Dashboard as DashboardIcon,
   DirectionsRun as DirectionsRunIcon,
 } from "@mui/icons-material";
 import {
@@ -12,9 +12,6 @@ import {
   Divider,
   IconButton,
   List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Drawer as MuiDrawer,
   Toolbar,
   Typography,
@@ -23,6 +20,7 @@ import { styled } from "@mui/material/styles";
 
 interface Props extends DashBoardChildProps {
   addPresetModal: () => void;
+  editPresetModal: (id: number) => void;
   presets: Preset[];
 }
 
@@ -33,6 +31,7 @@ export default function DashboardDrawer({
   isLogin,
   logoutEvent,
   addPresetModal,
+  editPresetModal,
   presets,
 }: Props) {
   return (
@@ -81,13 +80,12 @@ export default function DashboardDrawer({
             </Box>
           )
         )}
-        {presets?.map(({ presetName }) => (
-          <ListItemButton key={presetName}>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary={presetName} />
-          </ListItemButton>
+        {presets?.map((preset) => (
+          <PresetItem
+            key={preset.id}
+            preset={preset}
+            editPresetModal={editPresetModal}
+          />
         ))}
       </List>
       {toolBarOpen && (

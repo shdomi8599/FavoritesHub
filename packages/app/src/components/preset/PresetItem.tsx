@@ -1,0 +1,67 @@
+import { Preset } from "@/types";
+import {
+  Dashboard as DashboardIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+} from "@mui/icons-material";
+import {
+  Box,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+} from "@mui/material";
+
+interface Props {
+  preset: Preset;
+  editPresetModal: (id: number) => void;
+}
+
+export default function PresetItem({ preset, editPresetModal }: Props) {
+  const { presetName, defaultPreset, id } = preset;
+  return (
+    <ListItemButton>
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText sx={itemTextStyle} primary={presetName} />
+      <IconContainer>
+        <IconBox onClick={() => editPresetModal(id)}>
+          <EditIcon />
+        </IconBox>
+        <IconBox>
+          <DeleteIcon />
+        </IconBox>
+      </IconContainer>
+    </ListItemButton>
+  );
+}
+
+const IconContainer = styled(Box)(({}) => ({
+  display: "flex",
+  gap: "0.9rem",
+}));
+
+const IconBox = styled(Box)(({}) => ({
+  position: "relative",
+  "&:hover": {
+    "&:before": {
+      content: '""',
+      position: "absolute",
+      left: "-25%",
+      top: "-25%",
+      background: "#666666",
+      transition: "all 0.2s",
+      opacity: "0.5",
+      padding: "1.2rem",
+      borderRadius: "10px",
+    },
+  },
+}));
+
+const itemTextStyle = {
+  "& > span": {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+};

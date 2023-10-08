@@ -29,3 +29,40 @@ export const postPresetAdd = async (
     message,
   };
 };
+
+export const postPresetDelete = async (
+  presetId: number,
+  accessToken: string,
+) => {
+  const { message } = await api
+    .delete<ApiResultMessage>(`/preset/${presetId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.data);
+
+  return {
+    message,
+  };
+};
+
+export const putPresetEdit = async (
+  userId: number,
+  presetId: number,
+  accessToken: string,
+  newPresetName: string,
+) => {
+  const body = { newPresetName };
+  const { message } = await api
+    .put<ApiResultMessage>(`/preset/${userId}/${presetId}`, body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.data);
+
+  return {
+    message,
+  };
+};
