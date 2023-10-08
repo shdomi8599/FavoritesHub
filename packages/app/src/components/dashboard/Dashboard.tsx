@@ -6,18 +6,13 @@ import {
   useHandler,
 } from "@/hooks";
 import { usePresetModal } from "@/hooks/usePresetModal";
-import {
-  accessTokenState,
-  authModalState,
-  isLoginState,
-  userIdState,
-} from "@/states";
+import { accessTokenState, isLoginState, userIdState } from "@/states";
 import { ApiResultMessage } from "@/types";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
@@ -25,8 +20,8 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   // 훅
   const { api } = useApi();
   const router = useRouter();
-  const { openAuthModal } = useAuthModal();
-  const { openPresetModal } = usePresetModal();
+  const { handleLoginModal } = useAuthModal();
+  const { addPresetModal } = usePresetModal();
   const { width } = useHandleWidth();
   const { ref: barRef, barHeight } = useBarHeight();
   const {
@@ -37,7 +32,6 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
 
   // 상태
-  const setAuthModal = useSetRecoilState(authModalState);
   const [userId, setUserId] = useRecoilState(userIdState);
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
   const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
@@ -48,11 +42,6 @@ export default function Dashboard({ children }: { children: ReactNode }) {
       return;
     }
     router.push(route);
-  };
-
-  const handleLoginModal = () => {
-    setAuthModal("login");
-    openAuthModal();
   };
 
   const logoutEvent = async () => {
@@ -102,7 +91,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         toolBarOpen={toolBarOpen}
         isLogin={isLogin}
         logoutEvent={logoutEvent}
-        openPresetModal={openPresetModal}
+        addPresetModal={addPresetModal}
       />
       <Main component="main" barheight={barHeight}>
         {children}

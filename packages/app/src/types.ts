@@ -24,6 +24,10 @@ export interface AuthProps {
 
 export type PresetModalState = "add";
 
+export interface PresetProps {
+  offPresetModal: () => void;
+}
+
 type Message = "success" | "exist" | "not exact" | "not verify";
 
 export type ApiResultMessage = {

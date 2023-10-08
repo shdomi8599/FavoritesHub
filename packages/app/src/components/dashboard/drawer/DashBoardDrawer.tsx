@@ -23,7 +23,7 @@ import { styled } from "@mui/material/styles";
 
 interface Props extends DashBoardChildProps {
   handlePage: (route: string) => void;
-  openPresetModal: () => void;
+  addPresetModal: () => void;
 }
 
 export default function DashboardDrawer({
@@ -33,7 +33,7 @@ export default function DashboardDrawer({
   handlePage,
   isLogin,
   logoutEvent,
-  openPresetModal,
+  addPresetModal,
 }: Props) {
   return (
     <Drawer variant="permanent" open={toolBarOpen}>
@@ -59,7 +59,7 @@ export default function DashboardDrawer({
               width: "100%",
               padding: "12px",
             }}
-            onClick={openPresetModal}
+            onClick={addPresetModal}
           >
             <AddCircleOutlineIcon />
             프리셋 추가하기
