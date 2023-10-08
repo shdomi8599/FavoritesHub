@@ -319,19 +319,32 @@ export class ApiController {
   }
 
   // @UseGuards(AuthGuard("jwt"))
-  @Put("preset/:presetId")
+  @Put("preset/:userId/:presetId")
   @ApiResponse({
     status: 200,
     description: "프리셋 수정에 사용되는 API입니다.",
     type: ResSuccessMessageDto,
   })
   async putPreset(
+    @Param("userId") userId: number,
     @Param("presetId") presetId: number,
     @Body() dto: ReqPutPresetDto,
   ) {
-    const { newPresetName } = dto;
-    await this.presetsService.update(presetId, newPresetName);
-    return { message: "success" };
+    try {
+      const { newPresetName } = dto;
+      await this.presetsService.update(userId, presetId, newPresetName);
+      return { message: "success" };
+    } catch (e) {
+      const { message } = e;
+
+      if (message === "same") {
+        return { message: "same" };
+      }
+
+      if (message === "exist") {
+        return { message: "exist" };
+      }
+    }
   }
 
   // @UseGuards(AuthGuard("jwt"))

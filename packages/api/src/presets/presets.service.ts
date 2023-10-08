@@ -46,9 +46,13 @@ export class PresetsService {
     return preset;
   }
 
-  async add(user: User, presetName: string) {
-    const presets = await this.findAll(user.id);
-
+  async exist(
+    presets: {
+      presetName: string;
+      defaultPreset: boolean;
+    }[],
+    presetName: string,
+  ) {
     const isSamePreset = presets
       ?.map(({ presetName }) => presetName)
       ?.includes(presetName);
@@ -56,6 +60,12 @@ export class PresetsService {
     if (isSamePreset) {
       throw new Error("exist");
     }
+  }
+
+  async add(user: User, presetName: string) {
+    const presets = await this.findAll(user.id);
+
+    await this.exist(presets, presetName);
 
     const isFirstPreset = presets.length === 0;
 
@@ -73,8 +83,19 @@ export class PresetsService {
     await this.presetTable.delete(preset);
   }
 
-  async update(presetId: number, newPresetName: string) {
+  async update(userId: number, presetId: number, newPresetName: string) {
     const preset = await this.findOne(presetId);
+
+    const sameName = preset.presetName === newPresetName;
+
+    if (sameName) {
+      throw new Error("same");
+    }
+
+    const presets = await this.findAll(userId);
+
+    await this.exist(presets, newPresetName);
+
     preset.presetName = newPresetName;
     await this.presetTable.save(preset);
   }
