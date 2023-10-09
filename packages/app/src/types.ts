@@ -22,7 +22,9 @@ export interface AuthProps {
   handleClose: () => void;
 }
 
-export type PresetModalState = "add" | "edit" | "delete";
+export type PresetModalState = "add" | "edit";
+
+export type FavoriteModalState = "add" | "edit";
 
 export interface PresetAddFormInput {
   presetName: string;

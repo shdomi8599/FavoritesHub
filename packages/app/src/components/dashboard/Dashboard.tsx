@@ -4,7 +4,6 @@ import {
   useAuth,
   useAuthModal,
   useBarHeight,
-  useHandleWidth,
   useHandler,
   usePresetModal,
 } from "@/hooks";
@@ -35,18 +34,17 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     isBoolean: toolBarOpen,
     setisBoolean: setToolBartoolBarOpen,
     handleBoolean: handleDrawer,
-  } = useHandler();
-  const { width } = useHandleWidth();
+  } = useHandler(true);
   const queryClient = useQueryClient();
   const { handleSignUpModal } = useAuthModal();
   const { ref: barRef, barHeight } = useBarHeight();
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
+  const isMaxWidth900 = useMediaQuery("(max-width:900px)");
   const { addPresetModal, editPresetModal } = usePresetModal();
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
-  console.log(presets);
 
   // 이벤트
   const logoutEvent = async () => {
@@ -68,10 +66,10 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   // 이펙트
   useEffect(() => {
-    if (width < 1500) {
+    if (isMaxWidth900) {
       setToolBartoolBarOpen(false);
     }
-  }, [width, setToolBartoolBarOpen]);
+  }, [isMaxWidth900, setToolBartoolBarOpen]);
 
   useEffect(() => {
     if (accessToken) {
@@ -83,7 +81,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   }, [accessToken, setIsLogin, setUserId]);
 
   useEffect(() => {
-    const defaultPreset = presets?.find((preset) => preset.defaultPreset)!;
+    const defaultPreset = presets?.find(({ defaultPreset }) => defaultPreset)!;
     setViewPreset(defaultPreset);
   }, [presets, setViewPreset]);
 

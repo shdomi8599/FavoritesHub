@@ -38,7 +38,7 @@ export default function DashboardBar({
     isBoolean: isOpen,
     handleBoolean: handleOpen,
     offBoolean: offContent,
-  } = useHandler();
+  } = useHandler(false);
   const { ref } = useOutSideRef(offContent);
   const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
   return (

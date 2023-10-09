@@ -1,14 +1,12 @@
 import { postPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
+import { MainTitle } from "@/components/main";
 import { useAuth, useAuthModal } from "@/hooks";
+import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { viewPresetState } from "@/states";
 import { callbackSuccessAlert } from "@/util";
-import {
-  Star as StarIcon,
-  StarOutline as StarOutlineIcon,
-} from "@mui/icons-material";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 
@@ -17,13 +15,13 @@ export default function Main() {
   const {
     userId,
     isLogin,
-    userMail,
     accessToken,
     setUserId,
     setUserMail,
     setAccessToken,
   } = useAuth();
   const queryClient = useQueryClient();
+  const { addFavoriteModal } = useFavoriteModal();
   const viewPreset = useRecoilValue(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
 
@@ -45,43 +43,27 @@ export default function Main() {
 
   return isLogin ? (
     <>
-      <Box sx={{ p: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <Typography
-            sx={{
-              fontSize: "2rem",
-            }}
-            noWrap
+      <Box
+        sx={{
+          p: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <MainTitle
+          HandleDefaultPreset={HandleDefaultPreset}
+          presetName={viewPreset?.presetName}
+          defaultPreset={viewPreset?.defaultPreset}
+        />
+        <Box>
+          <Button
+            onClick={addFavoriteModal}
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
           >
-            {viewPreset.presetName}
-          </Typography>
-          {viewPreset.defaultPreset ? (
-            <Typography
-              sx={{
-                p: 0.5,
-                backgroundColor: "#1976d2",
-                color: "white",
-                borderRadius: "50%",
-                display: "flex",
-              }}
-            >
-              <StarIcon />
-            </Typography>
-          ) : (
-            <Typography
-              onClick={HandleDefaultPreset}
-              sx={{
-                p: 0.5,
-                backgroundColor: "rgb(195, 197, 197)",
-                color: "white",
-                borderRadius: "50%",
-                display: "flex",
-                cursor: "pointer",
-              }}
-            >
-              <StarOutlineIcon />
-            </Typography>
-          )}
+            즐겨찾기 추가하기
+          </Button>
         </Box>
       </Box>
       <Grid

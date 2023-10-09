@@ -4,8 +4,7 @@ import { Box, Modal } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
-import { AddForm } from "./form";
-import EditForm from "./form/EditForm";
+import { AddForm, EditForm } from "./form";
 
 export default function PresetModal() {
   const queryClient = useQueryClient();
