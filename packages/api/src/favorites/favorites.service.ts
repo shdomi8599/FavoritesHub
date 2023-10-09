@@ -28,16 +28,21 @@ export class FavoritesService {
     return favorite;
   }
 
+  async exist(favorites: Favorite[], favoriteName: string) {
+    const isSameFavorite = favorites
+      ?.map(({ favoriteName }) => favoriteName)
+      ?.includes(favoriteName);
+
+    if (isSameFavorite) {
+      throw new Error("exist");
+    }
+  }
+
   async add(preset: Preset, favoriteData: Favorite) {
     const { favoriteName: newFavoriteName } = favoriteData;
     const favorites = await this.findAll(preset);
-    const isSameFavorite = favorites
-      .map((favorite) => favorite.favoriteName)
-      .includes(newFavoriteName);
 
-    if (isSameFavorite) {
-      throw new Error("같은 이름의 즐겨찾기가 존재합니다.");
-    }
+    await this.exist(favorites, newFavoriteName);
 
     const newFavorite = this.favoriteTable.create({
       ...favoriteData,

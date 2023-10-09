@@ -399,10 +399,17 @@ export class ApiController {
     @Param("presetId") presetId: number,
     @Body() dto: ReqPostFavoriteAddDto,
   ) {
-    const { favoriteData } = dto;
-    const preset = await this.presetsService.findOne(presetId);
-    await this.favoritesService.add(preset, favoriteData);
-    return { message: "success" };
+    try {
+      const { favoriteData } = dto;
+      const preset = await this.presetsService.findOne(presetId);
+      await this.favoritesService.add(preset, favoriteData);
+      return { message: "success" };
+    } catch (e) {
+      const { mesaage } = e;
+      if (mesaage === "exist") {
+        return { message: "exist" };
+      }
+    }
   }
 
   // @UseGuards(AuthGuard("jwt"))
@@ -414,7 +421,6 @@ export class ApiController {
   })
   async deleteFavorite(@Param("favoriteId") favoriteId: number) {
     await this.favoritesService.remove(favoriteId);
-    return { message: "success" };
   }
 
   // @UseGuards(AuthGuard("jwt"))

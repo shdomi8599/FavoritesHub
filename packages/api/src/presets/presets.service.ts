@@ -40,9 +40,6 @@ export class PresetsService {
         id: presetId,
       },
     });
-    if (!preset) {
-      throw new Error("프리셋을 찾을 수 없습니다.");
-    }
     return preset;
   }
 
