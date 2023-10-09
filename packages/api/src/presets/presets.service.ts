@@ -19,12 +19,9 @@ export class PresetsService {
       relations: ["user"],
     });
 
-    const presetsData = presets?.map(({ presetName, id, defaultPreset }) => {
-      const data = {
-        presetName,
-        id,
-        defaultPreset,
-      };
+    const presetsData = presets?.map((data) => {
+      delete data.user;
+      delete data.favorites;
       return data;
     });
 

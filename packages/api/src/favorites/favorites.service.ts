@@ -20,7 +20,12 @@ export class FavoritesService {
       where: { preset: { id: presetId } },
       relations: ["preset"],
     });
-    return favorites;
+
+    const favoritesData = favorites?.map((data) => {
+      delete data.preset;
+      return data;
+    });
+    return favoritesData;
   }
 
   async findOne(favoriteId: number): Promise<Favorite> {
