@@ -9,6 +9,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  IconButton,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -33,7 +34,9 @@ export default function BarUserModal({
   return (
     <UserContentBox top={contentBoxTop}>
       <CloseBox>
-        <CloseIcon fontSize="large" onClick={handleOpen} />
+        <IconButton>
+          <CloseIcon onClick={handleOpen} />
+        </IconButton>
       </CloseBox>
       <MailBox>{userMail}</MailBox>
       <AccordionBox disableGutters={true}>
@@ -79,14 +82,6 @@ const CloseBox = styled(Box)(() => ({
   width: "100%",
   display: "flex",
   justifyContent: "flex-end",
-  "&>svg": {
-    cursor: "pointer",
-    padding: "4px",
-    "&:hover": {
-      backgroundColor: "#e0e0e0",
-      borderRadius: "50%",
-    },
-  },
 }));
 
 const MailBox = styled(Box)(() => ({

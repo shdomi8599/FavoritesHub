@@ -70,11 +70,9 @@ export default function DashboardBar({
           Favorites Hub
         </Typography>
         <UserIconBox ref={ref}>
-          <AccountCircleIcon
-            onClick={handleOpen}
-            sx={{ cursor: "pointer" }}
-            fontSize="large"
-          />
+          <IconButton onClick={handleOpen}>
+            <AccountCircleIcon sx={{ color: "white" }} fontSize="large" />
+          </IconButton>
           {isOpen && (
             <BarUserModal
               userMail={userMail}

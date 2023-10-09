@@ -12,11 +12,11 @@ import {
   CardActions,
   CardContent,
   Grid,
+  IconButton,
   Typography,
 } from "@mui/material";
 import moment from "moment";
 import "moment/locale/ko";
-import IconBox from "../icon/IconBox";
 
 type Props = {
   favoriteVisited: (favoriteId: number) => void;
@@ -96,19 +96,18 @@ export default function FavoriteCard({
             </Box>
             <Box
               sx={{
-                minWidth: "52px",
+                minWidth: "72px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "10px",
               }}
             >
-              <IconBox clickEvent={deleteEvent}>
+              <IconButton onClick={deleteEvent}>
                 <ClearIcon />
-              </IconBox>
-              <IconBox clickEvent={handleStar}>
+              </IconButton>
+              <IconButton onClick={handleStar}>
                 {star ? <StarIcon /> : <StarBorderIcon />}
-              </IconBox>
+              </IconButton>
             </Box>
           </Box>
           <Box
