@@ -127,7 +127,6 @@ export default function LoginForm({
             type="password"
           />
           <FormControlLabel
-            sx={{ display: "block" }}
             control={<Checkbox value="auto-login" color="primary" />}
             label="자동 로그인"
           />
