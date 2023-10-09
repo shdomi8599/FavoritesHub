@@ -43,7 +43,7 @@ export const presetFormOptions: Record<string, RegisterOptions> = {
 };
 
 export const favoriteFormOptions: Record<string, RegisterOptions> = {
-  presetName: {
+  favoriteName: {
     pattern: {
       value: /^[\p{L}0-9가-힣ㄱ-ㅎㅏ-ㅣ\x20]{1,20}$/iu,
       message:

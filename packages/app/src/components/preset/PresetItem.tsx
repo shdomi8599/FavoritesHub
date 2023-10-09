@@ -10,6 +10,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
   styled,
 } from "@mui/material";
 import { SetterOrUpdater } from "recoil";
@@ -35,7 +36,9 @@ export default function PresetItem({
       <ListItemIcon>
         <DashboardIcon sx={{ color: viewPreset?.id === id ? "#1976d2" : "" }} />
       </ListItemIcon>
-      <ListItemText sx={itemTextStyle} primary={presetName} />
+      <Tooltip title={presetName}>
+        <ListItemText sx={itemTextStyle} primary={presetName} />
+      </Tooltip>
       <IconContainer>
         <IconButton onClick={() => editPresetModal(id)}>
           <EditIcon />
