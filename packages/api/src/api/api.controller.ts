@@ -454,14 +454,13 @@ export class ApiController {
   }
 
   // @UseGuards(AuthGuard("jwt"))
-  @Post("favorite/star/:favoriteId")
+  @Get("favorite/star/:favoriteId")
   @ApiResponse({
     status: 201,
     description: "즐겨찾기 별표 핸들러 API입니다.",
     type: ResSuccessMessageDto,
   })
-  async postFavoriteHandleStar(@Param("favoriteId") favoriteId: number) {
+  async getFavoriteHandleStar(@Param("favoriteId") favoriteId: number) {
     await this.favoritesService.handleStar(favoriteId);
-    return { message: "success" };
   }
 }

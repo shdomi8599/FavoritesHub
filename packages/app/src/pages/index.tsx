@@ -1,4 +1,4 @@
-import { getFavoriteVisited } from "@/api/favorite";
+import { getFavoriteHandleStar, getFavoriteVisited } from "@/api/favorite";
 import { postPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
@@ -49,6 +49,12 @@ export default function Main() {
     queryClient.invalidateQueries(["favoriteList", userId, presetId]);
   };
 
+  const favoriteHandleStar = async (favoriteId: number) => {
+    await getFavoriteHandleStar(favoriteId, accessToken);
+    const { id: presetId } = viewPreset;
+    queryClient.invalidateQueries(["favoriteList", userId, presetId]);
+  };
+
   return isLogin ? (
     <>
       <Box
@@ -87,6 +93,7 @@ export default function Main() {
               favorite={favorite}
               key={index}
               favoriteVisited={favoriteVisited}
+              favoriteHandleStar={favoriteHandleStar}
             />
           ))}
       </Grid>

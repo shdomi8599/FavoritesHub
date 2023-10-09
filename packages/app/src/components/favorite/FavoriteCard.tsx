@@ -18,10 +18,15 @@ import "moment/locale/ko";
 
 type Props = {
   favoriteVisited: (favoriteId: number) => void;
+  favoriteHandleStar: (favoriteId: number) => void;
   favorite: Favorite;
 };
 
-export default function FavoriteCard({ favorite, favoriteVisited }: Props) {
+export default function FavoriteCard({
+  favorite,
+  favoriteVisited,
+  favoriteHandleStar,
+}: Props) {
   const {
     id,
     path,
@@ -67,7 +72,10 @@ export default function FavoriteCard({ favorite, favoriteVisited }: Props) {
               style={{ width: "2rem", height: "2rem" }}
               alt=""
             />
-            <Box sx={{ cursor: "pointer" }}>
+            <Box
+              onClick={() => favoriteHandleStar(id)}
+              sx={{ cursor: "pointer" }}
+            >
               {star ? <StarIcon /> : <StarBorderIcon />}
             </Box>
           </Box>

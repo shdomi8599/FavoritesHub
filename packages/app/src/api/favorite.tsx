@@ -44,3 +44,14 @@ export const getFavoriteVisited = async (
     },
   });
 };
+
+export const getFavoriteHandleStar = async (
+  favoriteId: number,
+  accessToken: string,
+) => {
+  await api(`/favorite/star/${favoriteId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
