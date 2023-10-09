@@ -4,7 +4,7 @@ import {
   StarBorder as StarBorderIcon,
   Star as StarIcon,
 } from "@mui/icons-material";
-import { Box, IconButton, styled } from "@mui/material";
+import { Box, IconButton, Tooltip, styled } from "@mui/material";
 var randomColor = require("randomcolor"); // import the script
 
 type Props = {
@@ -33,7 +33,9 @@ export default function CardTopContainer({
         ) : (
           <TopImg src={imgSrc} alt="" />
         )}
-        <TopNameBox sx={{ fontSize: 14 }}>{favoriteName}</TopNameBox>
+        <TopNameBox title={favoriteName} sx={{ fontSize: 14 }} enterDelay={300}>
+          <Box>{favoriteName}</Box>
+        </TopNameBox>
       </TopImgBox>
       <TopIconContainer>
         <IconButton onClick={deleteEvent}>
@@ -62,7 +64,7 @@ const TopImgBox = styled(Box)(() => ({
   whiteSpace: "nowrap",
 }));
 
-const TopNameBox = styled(Box)(() => ({
+const TopNameBox = styled(Tooltip)(() => ({
   textOverflow: "ellipsis",
   overflow: "hidden",
   whiteSpace: "nowrap",

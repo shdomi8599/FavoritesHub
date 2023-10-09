@@ -1,4 +1,4 @@
-import { Box, Button, CardActions, styled } from "@mui/material";
+import { Box, Button, CardActions, Tooltip, styled } from "@mui/material";
 
 type Props = {
   openSite: () => void;
@@ -15,17 +15,22 @@ export default function CardBottomContainer({
         p: 2,
       }}
     >
-      <Button size="small" onClick={openSite}>
+      <Button size="small" onClick={openSite} sx={{ minWidth: "64px" }}>
         방문하기
       </Button>
-      <Box
-        sx={{
-          fontSize: 8,
-        }}
-        color="text.secondary"
-      >
-        최근 방문 : {formatLastVisitedAt}
-      </Box>
+      <Tooltip title={formatLastVisitedAt} enterDelay={300}>
+        <Box
+          sx={{
+            fontSize: 8,
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+          }}
+          color="text.secondary"
+        >
+          최근 방문 : {formatLastVisitedAt}
+        </Box>
+      </Tooltip>
     </BottomContainer>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Typography, styled } from "@mui/material";
+import { Box, Tooltip, Typography, styled } from "@mui/material";
 
 type Props = {
   title: string;
@@ -24,32 +24,38 @@ export default function CardMiddleContainer({
       >
         등록 : {formatCreatedAt}
       </Box>
-      <Typography
-        variant="h5"
-        component="div"
-        sx={{
-          ...hideText,
-        }}
-      >
-        {title}
-      </Typography>
-      <Box
-        sx={{
-          mb: 1.3,
-          ...hideText,
-        }}
-        color="text.secondary"
-      >
-        {address}
-      </Box>
-      <Typography
-        sx={{
-          ...hideText,
-        }}
-        variant="body2"
-      >
-        {description}
-      </Typography>
+      <Tooltip title={title} enterDelay={300}>
+        <Typography
+          variant="h5"
+          component="div"
+          sx={{
+            ...hideText,
+          }}
+        >
+          {title}
+        </Typography>
+      </Tooltip>
+      <Tooltip title={address} enterDelay={300}>
+        <Box
+          color="text.secondary"
+          sx={{
+            mb: 1.3,
+            ...hideText,
+          }}
+        >
+          {address}
+        </Box>
+      </Tooltip>
+      <Tooltip title={description} enterDelay={300}>
+        <Typography
+          sx={{
+            ...hideText,
+          }}
+          variant="body2"
+        >
+          {description}
+        </Typography>
+      </Tooltip>
     </MiddleContainer>
   );
 }
