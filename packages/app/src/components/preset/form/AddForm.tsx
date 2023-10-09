@@ -20,7 +20,7 @@ export default function AddForm({ presetAdd }: Props) {
     formState: { errors, isSubmitted },
   } = useForm<PresetAddFormInput>();
 
-  const onSubmit: SubmitHandler<PresetAddFormInput> = async (data) => {
+  const onSubmit: SubmitHandler<PresetAddFormInput> = (data) => {
     const { presetName } = data;
     presetAdd(presetName);
   };

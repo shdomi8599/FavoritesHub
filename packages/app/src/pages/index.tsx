@@ -3,12 +3,11 @@ import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
 import { useAuth, useAuthModal } from "@/hooks";
+import { useFavoriteList } from "@/hooks/react-query/favorite/useFavoriteList";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { viewPresetState } from "@/states";
 import { callbackSuccessAlert } from "@/util";
 import { Box, Button, Grid } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
 
 export default function Main() {
   // 훅
@@ -21,9 +20,11 @@ export default function Main() {
     setAccessToken,
   } = useAuth();
   const queryClient = useQueryClient();
-  const { addFavoriteModal } = useFavoriteModal();
-  const viewPreset = useRecoilValue(viewPresetState);
+  const { viewPreset, addFavoriteModal } = useFavoriteModal();
   const { handleAuthModal, openAuthModal } = useAuthModal();
+
+  // 데이터
+  const { data } = useFavoriteList(userId, viewPreset?.id, accessToken);
 
   // 이벤트
   const HandleDefaultPreset = async () => {
@@ -31,7 +32,7 @@ export default function Main() {
 
     const callbackEvent = async () => {
       await postPresetDefault(userId, presetId, accessToken);
-      queryClient.invalidateQueries(["presetList", userId]);
+      queryClient.invalidateQueries(["favoriteList", userId, presetId]);
     };
 
     callbackSuccessAlert(
@@ -73,10 +74,7 @@ export default function Main() {
           p: 2,
         }}
       >
-        <FavoriteCard />
-        <FavoriteCard />
-        <FavoriteCard />
-        <FavoriteCard />
+        {data && data?.map((favorite, index) => <FavoriteCard key={index} />)}
       </Grid>
     </>
   ) : (

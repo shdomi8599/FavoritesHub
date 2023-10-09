@@ -30,13 +30,19 @@ export interface PresetAddFormInput {
   presetName: string;
 }
 
+export interface FavoriteAddFormInput {
+  favoriteName: string;
+  address: string;
+}
+
 type Message =
   | "success"
   | "exist"
   | "not exact"
   | "not verify"
   | "same"
-  | "max";
+  | "max"
+  | "cors";
 
 export type ApiResultMessage = {
   message: Message;

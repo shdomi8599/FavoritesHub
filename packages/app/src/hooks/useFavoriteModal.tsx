@@ -2,10 +2,13 @@ import {
   favoriteModalState,
   isFavoriteModalState,
   selectedFavoriteIdState,
+  viewPresetState,
 } from "@/states";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { errorAlert } from "@/util";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 export const useFavoriteModal = () => {
+  const viewPreset = useRecoilValue(viewPresetState);
   const setSelectedFavoriteId = useSetRecoilState(selectedFavoriteIdState);
   const [favoriteModal, setFavoriteModal] = useRecoilState(favoriteModalState);
   const [isFavoriteModal, setIsFavoriteModal] =
@@ -14,6 +17,9 @@ export const useFavoriteModal = () => {
   const offFavoriteModal = () => setIsFavoriteModal(false);
 
   const addFavoriteModal = () => {
+    if (!viewPreset) {
+      return errorAlert("프리셋을 선택해주세요.", "즐겨찾기 추가");
+    }
     setFavoriteModal("add");
     openFavoriteModal();
   };
@@ -25,6 +31,7 @@ export const useFavoriteModal = () => {
   };
 
   return {
+    viewPreset,
     favoriteModal,
     isFavoriteModal,
     offFavoriteModal,

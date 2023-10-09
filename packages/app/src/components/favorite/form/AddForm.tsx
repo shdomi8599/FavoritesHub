@@ -4,24 +4,25 @@ import {
   ModalFormInput,
   ModalTitle,
 } from "@/components/modal";
-import { presetFormOptions } from "@/const";
-import { PresetAddFormInput } from "@/types";
+import { favoriteFormOptions } from "@/const";
+import { FavoriteAddFormInput } from "@/types";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
-  presetAdd: (presetName: string) => void;
+  favoriteAdd: (favoriteName: string, address: string) => void;
 }
 
-export default function AddForm() {
+export default function AddForm({ favoriteAdd }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
-  } = useForm<PresetAddFormInput>();
+  } = useForm<FavoriteAddFormInput>();
 
-  const onSubmit: SubmitHandler<PresetAddFormInput> = async (data) => {
-    const { presetName } = data;
+  const onSubmit: SubmitHandler<FavoriteAddFormInput> = (data) => {
+    const { favoriteName, address } = data;
+    favoriteAdd(favoriteName, address);
   };
 
   return (
@@ -36,13 +37,22 @@ export default function AddForm() {
         <ModalTitle name="즐겨찾기 추가" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <ModalFormInput
+            label={"별칭"}
+            required={false}
+            name="favoriteName"
             register={register}
-            name="presetName"
-            error={errors?.presetName}
             isSubmitted={isSubmitted}
-            option={presetFormOptions["presetName"]}
-            label={"즐겨찾기 추가"}
+            error={errors?.favoriteName}
+            option={favoriteFormOptions["favoriteName"]}
+          />
+          <ModalFormInput
+            label={"주소"}
+            name="address"
             autoFocus={true}
+            register={register}
+            error={errors?.address}
+            isSubmitted={isSubmitted}
+            option={favoriteFormOptions["address"]}
           />
           <ModalButton>추가하기</ModalButton>
         </ModalForm>

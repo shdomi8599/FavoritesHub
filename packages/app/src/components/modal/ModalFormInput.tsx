@@ -17,6 +17,7 @@ interface Props<T extends FieldValues> {
   label: string;
   type?: string;
   autoFocus?: boolean;
+  required?: boolean;
 }
 
 export default function ModalFormInput<T extends FieldValues>({
@@ -28,12 +29,13 @@ export default function ModalFormInput<T extends FieldValues>({
   label,
   type,
   autoFocus,
+  required = true,
 }: Props<T>) {
   return (
     <>
       <TextField
         margin="normal"
-        required
+        required={required}
         fullWidth
         {...register(name as Path<T>, option)}
         label={label}
