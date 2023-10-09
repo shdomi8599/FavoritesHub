@@ -67,7 +67,6 @@ export interface Preset {
   defaultPreset: boolean;
   id: number;
   presetName: string;
-  favorites?: Favorite[];
 }
 
 export interface Favorite {

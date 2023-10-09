@@ -14,5 +14,5 @@ export const useFavoriteList = (
       enabled: !!accessToken && !!presetId,
     },
   );
-  return data;
+  return data || [];
 };

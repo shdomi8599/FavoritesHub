@@ -11,7 +11,7 @@ import { useAuth, useAuthModal } from "@/hooks";
 import { useFavoriteList } from "@/hooks/react-query/favorite/useFavoriteList";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, styled } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Main() {
@@ -74,12 +74,9 @@ export default function Main() {
 
   return isLogin ? (
     <>
-      <Box
+      <TopContainer
         sx={{
           p: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
         }}
       >
         <MainTitle
@@ -91,12 +88,12 @@ export default function Main() {
           <Button
             onClick={addFavoriteModal}
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, minWidth: 105 }}
           >
-            즐겨찾기 추가하기
+            즐겨찾기 추가
           </Button>
         </Box>
-      </Box>
+      </TopContainer>
       <Grid
         container
         spacing={4}
@@ -104,27 +101,19 @@ export default function Main() {
           p: 2,
         }}
       >
-        {data &&
-          data?.map((favorite, index) => (
-            <FavoriteCard
-              key={index}
-              favorite={favorite}
-              favoriteVisited={favoriteVisited}
-              favoriteHandleStar={favoriteHandleStar}
-              deleteFavoriteEvent={deleteFavoriteEvent}
-            />
-          ))}
+        {data?.map((favorite, index) => (
+          <FavoriteCard
+            key={index}
+            favorite={favorite}
+            favoriteVisited={favoriteVisited}
+            favoriteHandleStar={favoriteHandleStar}
+            deleteFavoriteEvent={deleteFavoriteEvent}
+          />
+        ))}
       </Grid>
     </>
   ) : (
-    <Box
-      sx={{
-        height: "90%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <LoginContainer>
       <LoginForm
         setUserId={setUserId}
         setUserMail={setUserMail}
@@ -132,6 +121,19 @@ export default function Main() {
         setAccessToken={setAccessToken}
         handleAuthModal={handleAuthModal}
       />
-    </Box>
+    </LoginContainer>
   );
 }
+
+const LoginContainer = styled(Box)(() => ({
+  height: "90%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const TopContainer = styled(Box)(() => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));

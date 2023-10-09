@@ -16,7 +16,16 @@ export default function MainTitle({
   HandleDefaultPreset,
 }: Props) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem",
+        textOverflow: "ellipsis",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+      }}
+    >
       {defaultPreset ? (
         <Typography
           sx={{
