@@ -17,14 +17,6 @@ export default function MainTitle({
 }: Props) {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-      <Typography
-        sx={{
-          fontSize: "2rem",
-        }}
-        noWrap
-      >
-        {presetName}
-      </Typography>
       {defaultPreset ? (
         <Typography
           sx={{
@@ -52,6 +44,14 @@ export default function MainTitle({
           <StarOutlineIcon />
         </Typography>
       )}
+      <Typography
+        sx={{
+          fontSize: "2rem",
+        }}
+        noWrap
+      >
+        {presetName}
+      </Typography>
     </Box>
   );
 }

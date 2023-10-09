@@ -25,8 +25,8 @@ export default function Main() {
     setAccessToken,
   } = useAuth();
   const queryClient = useQueryClient();
-  const { viewPreset, addFavoriteModal } = useFavoriteModal();
   const { handleAuthModal, openAuthModal } = useAuthModal();
+  const { viewPreset, addFavoriteModal } = useFavoriteModal();
 
   // 데이터
   const { data } = useFavoriteList(userId, viewPreset?.id, accessToken);
@@ -83,9 +83,9 @@ export default function Main() {
         }}
       >
         <MainTitle
-          HandleDefaultPreset={HandleDefaultPreset}
           presetName={viewPreset?.presetName}
           defaultPreset={viewPreset?.defaultPreset}
+          HandleDefaultPreset={HandleDefaultPreset}
         />
         <Box>
           <Button
@@ -107,8 +107,8 @@ export default function Main() {
         {data &&
           data?.map((favorite, index) => (
             <FavoriteCard
-              favorite={favorite}
               key={index}
+              favorite={favorite}
               favoriteVisited={favoriteVisited}
               favoriteHandleStar={favoriteHandleStar}
               deleteFavoriteEvent={deleteFavoriteEvent}
@@ -119,10 +119,10 @@ export default function Main() {
   ) : (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
         height: "90%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <LoginForm
