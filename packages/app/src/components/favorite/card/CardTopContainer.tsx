@@ -5,6 +5,7 @@ import {
   Star as StarIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, Tooltip, styled } from "@mui/material";
+import { useState } from "react";
 var randomColor = require("randomcolor"); // import the script
 
 type Props = {
@@ -24,12 +25,19 @@ export default function CardTopContainer({
   handleStar,
   deleteEvent,
 }: Props) {
+  const [color] = useState(randomColor());
   const isNotImgSrc = imgSrc === "https://";
   return (
     <TopContainer>
       <TopImgBox>
         {isNotImgSrc ? (
-          <TopCustomImg>{title[0]}</TopCustomImg>
+          <TopCustomImg
+            sx={{
+              backgroundColor: color,
+            }}
+          >
+            {title[0]}
+          </TopCustomImg>
         ) : (
           <TopImg src={imgSrc} alt="" />
         )}
@@ -81,7 +89,6 @@ const TopCustomImg = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: randomColor(),
   borderRadius: "50%",
   color: "white",
   verticalAlign: "center",
