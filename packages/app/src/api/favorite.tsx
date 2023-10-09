@@ -33,3 +33,14 @@ export const postFavoriteAdd = async (
     message,
   };
 };
+
+export const getFavoriteVisited = async (
+  favoriteId: number,
+  accessToken: string,
+) => {
+  await api(`/favorite/visited/${favoriteId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};

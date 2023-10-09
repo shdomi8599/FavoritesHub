@@ -451,7 +451,6 @@ export class ApiController {
   })
   async getFavoriteVisited(@Param("favoriteId") favoriteId: number) {
     await this.favoritesService.updateVisitedTime(favoriteId);
-    return { message: "success" };
   }
 
   // @UseGuards(AuthGuard("jwt"))

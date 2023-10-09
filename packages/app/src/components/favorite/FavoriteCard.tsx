@@ -16,8 +16,14 @@ import {
 import moment from "moment";
 import "moment/locale/ko";
 
-export default function FavoriteCard({ favorite }: { favorite: Favorite }) {
+type Props = {
+  favoriteVisited: (favoriteId: number) => void;
+  favorite: Favorite;
+};
+
+export default function FavoriteCard({ favorite, favoriteVisited }: Props) {
   const {
+    id,
     path,
     domain,
     imgHref,
@@ -29,17 +35,19 @@ export default function FavoriteCard({ favorite }: { favorite: Favorite }) {
     lastVisitedAt,
   } = favorite;
 
-  const openSith = () => {
-    window.open(`https://${domain}${path}`, "_blank");
-  };
-
   const formatDate = (date: string) => {
     return moment(date).format("YYYY년 MMMM Do, a h:mm:ss");
   };
 
-  const imgSrc = imgHref.includes("https") ? imgHref : `https://${imgHref}`;
+  const address = `https://${domain + path}`;
   const formatCreatedAt = formatDate(createdAt);
   const formatLastVisitedAt = formatDate(lastVisitedAt);
+  const imgSrc = imgHref.includes("https") ? imgHref : `https://${imgHref}`;
+
+  const openSite = () => {
+    favoriteVisited(id);
+    window.open(address, "_blank");
+  };
 
   return (
     <Grid item xs={12} md={4} lg={3}>
@@ -76,8 +84,16 @@ export default function FavoriteCard({ favorite }: { favorite: Favorite }) {
           <Typography variant="h5" component="div">
             {title}
           </Typography>
-          <Box sx={{ mb: 1.3 }} color="text.secondary">
-            {domain}
+          <Box
+            sx={{
+              mb: 1.3,
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+            }}
+            color="text.secondary"
+          >
+            {address}
           </Box>
           <Typography
             sx={{
@@ -99,7 +115,7 @@ export default function FavoriteCard({ favorite }: { favorite: Favorite }) {
             p: 2,
           }}
         >
-          <Button size="small" onClick={openSith}>
+          <Button size="small" onClick={openSite}>
             방문하기
           </Button>
           <Box
