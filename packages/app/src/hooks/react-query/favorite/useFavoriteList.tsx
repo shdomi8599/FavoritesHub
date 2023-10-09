@@ -1,5 +1,5 @@
 import { getFavoriteList } from "@/api/favorite";
-import { Preset } from "@/types";
+import { Favorite } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFavoriteList = (
@@ -7,7 +7,7 @@ export const useFavoriteList = (
   presetId: number,
   accessToken: string,
 ) => {
-  const data = useQuery<Preset[]>(
+  const data = useQuery<Favorite[]>(
     ["favoriteList", userId, presetId],
     () => getFavoriteList(presetId, accessToken),
     {

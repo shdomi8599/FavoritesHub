@@ -74,7 +74,10 @@ export default function Main() {
           p: 2,
         }}
       >
-        {data && data?.map((favorite, index) => <FavoriteCard key={index} />)}
+        {data &&
+          data?.map((favorite, index) => (
+            <FavoriteCard favorite={favorite} key={index} />
+          ))}
       </Grid>
     </>
   ) : (
