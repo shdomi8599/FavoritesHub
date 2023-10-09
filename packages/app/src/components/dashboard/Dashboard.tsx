@@ -58,9 +58,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   const deletePresetEvent = async (id: number) => {
     await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-
     await postPresetDelete(id, accessToken);
-
     queryClient.invalidateQueries(["presetList", userId]);
   };
 

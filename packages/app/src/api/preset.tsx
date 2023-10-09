@@ -69,7 +69,7 @@ export const postPresetDefault = async (
   accessToken: string,
 ) => {
   await api
-    .post(`/preset/${userId}/${presetId}`, {
+    .post(`/preset/default/${userId}/${presetId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

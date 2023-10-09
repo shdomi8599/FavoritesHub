@@ -37,12 +37,16 @@ export default function Main() {
     queryClient.invalidateQueries(["favoriteList", userId, presetId]);
   };
 
+  const resetPresetList = () => {
+    queryClient.invalidateQueries(["presetList", userId]);
+  };
+
   const HandleDefaultPreset = async () => {
     const { id: presetId } = viewPreset;
 
     const callbackEvent = async () => {
       await postPresetDefault(userId, presetId, accessToken);
-      resetFavoriteList();
+      resetPresetList();
     };
 
     callbackSuccessAlert(

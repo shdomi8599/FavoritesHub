@@ -351,12 +351,12 @@ export class ApiController {
   }
 
   // @UseGuards(AuthGuard("jwt"))
-  @Post("preset/:userId/:presetId")
+  @Post("preset/default/:userId/:presetId")
   @ApiResponse({
     status: 200,
     description: "프리셋 디폴트 변경에 사용되는 API입니다.",
   })
-  async putDefaultPreset(
+  async postDefaultPreset(
     @Param("userId") userId: number,
     @Param("presetId") presetId: number,
   ) {
