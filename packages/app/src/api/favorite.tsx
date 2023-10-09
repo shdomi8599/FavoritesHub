@@ -55,3 +55,14 @@ export const getFavoriteHandleStar = async (
     },
   });
 };
+
+export const deleteFavorite = async (
+  favoriteId: number,
+  accessToken: string,
+) => {
+  await api.delete<ApiResultMessage>(`/favorite/${favoriteId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};

@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Favorite } from "@/types";
 import {
+  Clear as ClearIcon,
   StarBorder as StarBorderIcon,
   Star as StarIcon,
 } from "@mui/icons-material";
@@ -15,10 +16,12 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import "moment/locale/ko";
+import IconBox from "../icon/IconBox";
 
 type Props = {
   favoriteVisited: (favoriteId: number) => void;
   favoriteHandleStar: (favoriteId: number) => void;
+  deleteFavoriteEvent: (favoriteId: number) => void;
   favorite: Favorite;
 };
 
@@ -26,6 +29,7 @@ export default function FavoriteCard({
   favorite,
   favoriteVisited,
   favoriteHandleStar,
+  deleteFavoriteEvent,
 }: Props) {
   const {
     id,
@@ -58,6 +62,10 @@ export default function FavoriteCard({
     favoriteHandleStar(id);
   };
 
+  const deleteEvent = () => {
+    deleteFavoriteEvent(id);
+  };
+
   return (
     <Grid item xs={12} md={4} lg={3}>
       <Card sx={cardStyle}>
@@ -71,13 +79,36 @@ export default function FavoriteCard({
               alignItems: "center",
             }}
           >
-            <img
-              src={imgSrc}
-              style={{ width: "2rem", height: "2rem" }}
-              alt=""
-            />
-            <Box onClick={handleStar} sx={{ cursor: "pointer" }}>
-              {star ? <StarIcon /> : <StarBorderIcon />}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+                ...hideText,
+              }}
+            >
+              <img
+                src={imgSrc}
+                style={{ width: "2rem", height: "2rem" }}
+                alt=""
+              />
+              <Box sx={{ fontSize: 14, ...hideText }}>{favoriteName}</Box>
+            </Box>
+            <Box
+              sx={{
+                minWidth: "52px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <IconBox clickEvent={deleteEvent}>
+                <ClearIcon />
+              </IconBox>
+              <IconBox clickEvent={handleStar}>
+                {star ? <StarIcon /> : <StarBorderIcon />}
+              </IconBox>
             </Box>
           </Box>
           <Box
@@ -89,8 +120,13 @@ export default function FavoriteCard({
           >
             등록 : {formatCreatedAt}
           </Box>
-          <Box sx={{ fontSize: 14 }}>{favoriteName}</Box>
-          <Typography variant="h5" component="div">
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              ...hideText,
+            }}
+          >
             {title}
           </Typography>
           <Box
@@ -129,7 +165,7 @@ export default function FavoriteCard({
             }}
             color="text.secondary"
           >
-            방문 : {formatLastVisitedAt}
+            최근 방문 : {formatLastVisitedAt}
           </Box>
         </CardActions>
       </Card>

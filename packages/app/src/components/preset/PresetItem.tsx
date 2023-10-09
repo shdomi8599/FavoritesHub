@@ -12,6 +12,7 @@ import {
   styled,
 } from "@mui/material";
 import { SetterOrUpdater } from "recoil";
+import IconBox from "../icon/IconBox";
 
 interface Props {
   preset: Preset;
@@ -36,20 +37,10 @@ export default function PresetItem({
       </ListItemIcon>
       <ListItemText sx={itemTextStyle} primary={presetName} />
       <IconContainer>
-        <IconBox
-          onClick={(e) => {
-            e.stopPropagation();
-            editPresetModal(id);
-          }}
-        >
+        <IconBox clickEvent={() => editPresetModal(id)}>
           <EditIcon />
         </IconBox>
-        <IconBox
-          onClick={(e) => {
-            e.stopPropagation();
-            deletePresetEvent(id);
-          }}
-        >
+        <IconBox clickEvent={() => deletePresetEvent(id)}>
           <DeleteIcon />
         </IconBox>
       </IconContainer>
@@ -60,23 +51,6 @@ export default function PresetItem({
 const IconContainer = styled(Box)(({}) => ({
   display: "flex",
   gap: "0.9rem",
-}));
-
-const IconBox = styled(Box)(({}) => ({
-  position: "relative",
-  "&:hover": {
-    "&:before": {
-      content: '""',
-      position: "absolute",
-      left: "-25%",
-      top: "-25%",
-      background: "#666666",
-      transition: "all 0.2s",
-      opacity: "0.5",
-      padding: "1.2rem",
-      borderRadius: "10px",
-    },
-  },
 }));
 
 const itemTextStyle = {
