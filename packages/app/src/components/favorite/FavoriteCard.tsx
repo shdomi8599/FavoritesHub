@@ -64,6 +64,7 @@ export default function FavoriteCard({
         >
           <CardTopContainer
             star={star}
+            title={title}
             imgSrc={imgSrc}
             favoriteName={favoriteName}
             handleStar={handleStar}

@@ -69,9 +69,7 @@ export default function DashboardDrawer({
           >
             <AddCircleOutlineIcon />
             {toolBarOpen && (
-              <Typography sx={{ marginLeft: "1px" }}>
-                프리셋 추가하기
-              </Typography>
+              <Typography sx={{ marginLeft: "1px" }}>프리셋 추가</Typography>
             )}
           </Button>
         ) : (

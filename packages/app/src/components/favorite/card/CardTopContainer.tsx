@@ -5,26 +5,34 @@ import {
   Star as StarIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, styled } from "@mui/material";
+var randomColor = require("randomcolor"); // import the script
 
 type Props = {
+  title: string;
+  star: boolean;
+  imgSrc: string;
+  favoriteName: string;
   handleStar: () => void;
   deleteEvent: () => void;
-  favoriteName: string;
-  imgSrc: string;
-  star: boolean;
 };
 
 export default function CardTopContainer({
   star,
+  title,
   imgSrc,
   favoriteName,
   handleStar,
   deleteEvent,
 }: Props) {
+  const isNotImgSrc = imgSrc === "https://";
   return (
     <TopContainer>
       <TopImgBox>
-        <TopImg src={imgSrc} alt="" />
+        {isNotImgSrc ? (
+          <TopCustomImg>{title[0]}</TopCustomImg>
+        ) : (
+          <TopImg src={imgSrc} alt="" />
+        )}
         <TopNameBox sx={{ fontSize: 14 }}>{favoriteName}</TopNameBox>
       </TopImgBox>
       <TopIconContainer>
@@ -48,7 +56,7 @@ const TopContainer = styled(Box)(() => ({
 const TopImgBox = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
-  gap: "4px",
+  gap: "8px",
   textOverflow: "ellipsis",
   overflow: "hidden",
   whiteSpace: "nowrap",
@@ -63,6 +71,20 @@ const TopNameBox = styled(Box)(() => ({
 const TopImg = styled("img")(() => ({
   width: "2rem",
   height: "2rem",
+}));
+
+const TopCustomImg = styled(Box)(() => ({
+  width: "2rem",
+  height: "2rem",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: randomColor(),
+  borderRadius: "50%",
+  color: "white",
+  verticalAlign: "center",
+  textAlign: "center",
+  paddingBottom: "1px",
 }));
 
 const TopIconContainer = styled(Box)(() => ({
