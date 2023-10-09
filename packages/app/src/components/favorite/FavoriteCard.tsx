@@ -29,14 +29,14 @@ export default function FavoriteCard({
 }: Props) {
   const {
     id,
+    star,
     path,
+    title,
     domain,
     imgHref,
-    star,
-    favoriteName,
-    title,
-    description,
     createdAt,
+    description,
+    favoriteName,
     lastVisitedAt,
   } = favorite;
 
@@ -52,6 +52,10 @@ export default function FavoriteCard({
   const openSite = () => {
     favoriteVisited(id);
     window.open(address, "_blank");
+  };
+
+  const handleStar = () => {
+    favoriteHandleStar(id);
   };
 
   return (
@@ -72,10 +76,7 @@ export default function FavoriteCard({
               style={{ width: "2rem", height: "2rem" }}
               alt=""
             />
-            <Box
-              onClick={() => favoriteHandleStar(id)}
-              sx={{ cursor: "pointer" }}
-            >
+            <Box onClick={handleStar} sx={{ cursor: "pointer" }}>
               {star ? <StarIcon /> : <StarBorderIcon />}
             </Box>
           </Box>
@@ -95,9 +96,7 @@ export default function FavoriteCard({
           <Box
             sx={{
               mb: 1.3,
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
+              ...hideText,
             }}
             color="text.secondary"
           >
@@ -105,9 +104,7 @@ export default function FavoriteCard({
           </Box>
           <Typography
             sx={{
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
+              ...hideText,
             }}
             variant="body2"
           >
@@ -146,4 +143,10 @@ const cardStyle = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
+};
+
+const hideText = {
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
 };
