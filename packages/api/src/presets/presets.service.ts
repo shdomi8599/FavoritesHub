@@ -19,7 +19,21 @@ export class PresetsService {
       relations: ["user"],
     });
 
-    const presetsData = presets?.map((data) => {
+    if (!presets) {
+      return [];
+    }
+
+    const defaultPresetIndex = presets.findIndex(
+      (preset) => preset.defaultPreset,
+    );
+
+    if (defaultPresetIndex !== -1) {
+      const defaultPreset = presets[defaultPresetIndex];
+      presets.splice(defaultPresetIndex, 1);
+      presets.unshift(defaultPreset);
+    }
+
+    const presetsData = presets.map((data) => {
       delete data.user;
       delete data.favorites;
       return data;
