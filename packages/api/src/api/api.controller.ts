@@ -10,7 +10,7 @@ import {
   Res,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import * as NodeCache from "node-cache";
+import NodeCache from "node-cache";
 import { AuthService } from "src/auth/auth.service";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
@@ -364,15 +364,14 @@ export class ApiController {
   }
 
   // @UseGuards(AuthGuard("jwt"))
-  @Get("favorite/:presetId")
+  @Get("favorite/list/:presetId")
   @ApiResponse({
     status: 200,
     description: "즐겨찾기 리스트 조회에 사용되는 API입니다.",
     type: [Favorite],
   })
   async getFavoriteList(@Param("presetId") presetId: number) {
-    const preset = await this.getPreset(presetId);
-    const favorites = await this.favoritesService.findAll(preset);
+    const favorites = await this.favoritesService.findAll(presetId);
     return favorites;
   }
 
@@ -400,14 +399,18 @@ export class ApiController {
     @Body() dto: ReqPostFavoriteAddDto,
   ) {
     try {
-      const { favoriteData } = dto;
+      const { favoriteName, address } = dto;
       const preset = await this.presetsService.findOne(presetId);
-      await this.favoritesService.add(preset, favoriteData);
+      await this.favoritesService.add(preset, favoriteName, address);
       return { message: "success" };
     } catch (e) {
-      const { mesaage } = e;
-      if (mesaage === "exist") {
-        return { message: "exist" };
+      const { message } = e;
+      if (message === "not exact") {
+        return { message: "not exact" };
+      }
+
+      if (message === "cors") {
+        return { message: "cors" };
       }
     }
   }

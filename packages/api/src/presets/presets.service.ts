@@ -19,17 +19,14 @@ export class PresetsService {
       relations: ["user"],
     });
 
-    const presetsData = presets?.map(
-      ({ favorites, presetName, id, defaultPreset }) => {
-        const data = {
-          favorites,
-          presetName,
-          id,
-          defaultPreset,
-        };
-        return data;
-      },
-    );
+    const presetsData = presets?.map(({ presetName, id, defaultPreset }) => {
+      const data = {
+        presetName,
+        id,
+        defaultPreset,
+      };
+      return data;
+    });
 
     return presetsData;
   }

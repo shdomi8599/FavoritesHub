@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Migration1696775820336 implements MigrationInterface {
-  name = "Migration1696775820336";
+export class Migration1696852532974 implements MigrationInterface {
+  name = "Migration1696852532974";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -11,7 +11,7 @@ export class Migration1696775820336 implements MigrationInterface {
       `CREATE TABLE \`presets\` (\`id\` int NOT NULL AUTO_INCREMENT, \`presetName\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`defaultPreset\` tinyint NOT NULL DEFAULT 0, \`userId\` int NULL, INDEX \`IDX_7bd663a558ec85144fe51d9c2f\` (\`presetName\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     );
     await queryRunner.query(
-      `CREATE TABLE \`favorites\` (\`id\` int NOT NULL AUTO_INCREMENT, \`favoriteName\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`domain\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`route\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`star\` tinyint NOT NULL DEFAULT 0, \`lastVisitedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`presetId\` int NULL, INDEX \`IDX_fed65312e52baf4e4f20c95e75\` (\`favoriteName\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
+      `CREATE TABLE \`favorites\` (\`id\` int NOT NULL AUTO_INCREMENT, \`favoriteName\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`domain\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`path\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`title\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`description\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`imgHref\` varchar(255) CHARACTER SET "utf8" NOT NULL, \`star\` tinyint NOT NULL DEFAULT 0, \`lastVisitedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \`presetId\` int NULL, INDEX \`IDX_fed65312e52baf4e4f20c95e75\` (\`favoriteName\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`,
     );
     await queryRunner.query(
       `ALTER TABLE \`presets\` ADD CONSTRAINT \`FK_ae4b633aa4682700fe0745fb5ed\` FOREIGN KEY (\`userId\`) REFERENCES \`users\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,

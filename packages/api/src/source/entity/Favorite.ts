@@ -36,7 +36,16 @@ export class Favorite {
     description: "도메인 뒤의 라우트 부분을 전달해주세요.",
     required: true,
   })
-  route: string;
+  path: string;
+
+  @Column({ charset: "utf8" })
+  title: string;
+
+  @Column({ charset: "utf8" })
+  description: string;
+
+  @Column({ charset: "utf8" })
+  imgHref: string;
 
   @Column({ default: false })
   @ApiProperty({
