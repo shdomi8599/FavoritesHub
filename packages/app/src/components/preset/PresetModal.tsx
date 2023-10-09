@@ -16,7 +16,7 @@ export default function PresetModal() {
     queryClient.invalidateQueries(["presetList", userId]);
   };
 
-  const { presetAdd, presetEdit } = usePresetEvent({
+  const { isLoding, presetAdd, presetEdit } = usePresetEvent({
     userId,
     accessToken,
     selectedPresetId,
@@ -25,8 +25,8 @@ export default function PresetModal() {
   });
 
   const modalData: { [key: string]: JSX.Element } = {
-    add: <AddForm presetAdd={presetAdd} />,
-    edit: <EditForm presetEdit={presetEdit} />,
+    add: <AddForm presetAdd={presetAdd} isLoding={isLoding} />,
+    edit: <EditForm presetEdit={presetEdit} isLoding={isLoding} />,
   };
 
   return (

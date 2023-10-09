@@ -11,9 +11,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
   presetAdd: (presetName: string) => void;
+  isLoding: boolean;
 }
 
-export default function AddForm({ presetAdd }: Props) {
+export default function AddForm({ presetAdd, isLoding }: Props) {
   const {
     register,
     handleSubmit,
@@ -45,7 +46,7 @@ export default function AddForm({ presetAdd }: Props) {
             label={"프리셋 추가"}
             autoFocus={true}
           />
-          <ModalButton>추가하기</ModalButton>
+          <ModalButton disabled={isLoding}>추가하기</ModalButton>
         </ModalForm>
       </Box>
     </Container>
