@@ -243,7 +243,7 @@ export default function Main() {
             )}
           </IconButton>
           <SearchSelect
-            label={"필터"}
+            label={"날짜"}
             selectValue={selectValue}
             menuItems={SearchSelects}
             setSelectValue={setSelectValue}

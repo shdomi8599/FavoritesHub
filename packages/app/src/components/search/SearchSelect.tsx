@@ -22,10 +22,8 @@ export default function SearchSelect({
   setSelectValue,
 }: Props) {
   const handleChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
     setSelectValue(event.target.value as string);
   };
-
   return (
     <FormControl sx={{ width: 120 }}>
       <InputLabel>{label}</InputLabel>
