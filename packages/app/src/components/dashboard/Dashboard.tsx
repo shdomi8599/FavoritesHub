@@ -8,9 +8,10 @@ import {
   usePresetModal,
 } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
+import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { isLoadingState, isPresetAddState, viewPresetState } from "@/states";
 import { confirmAlert } from "@/util";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -39,8 +40,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const { ref: barRef, barHeight } = useBarHeight();
   const isPresetAdd = useRecoilValue(isPresetAddState);
   const setIsLoading = useSetRecoilState(isLoadingState);
-  const isMinWidth600 = useMediaQuery("(min-width:600px)");
-  const isMaxWidth900 = useMediaQuery("(max-width:900px)");
+  const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
   const { addPresetModal, editPresetModal } = usePresetModal();
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
 
