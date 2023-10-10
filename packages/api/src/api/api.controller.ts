@@ -318,6 +318,14 @@ export class ApiController {
     type: ResSuccessMessageDto,
   })
   async deletePreset(@Param("presetId") presetId: number) {
+    const favorites = await this.favoritesService.findAll(presetId);
+
+    if (favorites && favorites.length > 0) {
+      favorites.map(async (favorite) => {
+        await this.favoritesService.remove(favorite.id);
+      });
+    }
+
     await this.presetsService.remove(presetId);
   }
 
