@@ -54,3 +54,5 @@ export const favoriteFormOptions: Record<string, RegisterOptions> = {
     required: true,
   },
 };
+
+export const SearchTags = ["전체", "별칭", "도메인", "타이틀", "설명"];

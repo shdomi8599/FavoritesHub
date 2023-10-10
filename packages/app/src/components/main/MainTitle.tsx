@@ -2,7 +2,7 @@ import {
   Star as StarIcon,
   StarOutline as StarOutlineIcon,
 } from "@mui/icons-material";
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 
 type Props = {
   presetName: string;
@@ -53,14 +53,16 @@ export default function MainTitle({
           <StarOutlineIcon />
         </Typography>
       )}
-      <Typography
-        sx={{
-          fontSize: "2rem",
-        }}
-        noWrap
-      >
-        {presetName}
-      </Typography>
+      <Tooltip title={presetName} enterDelay={300}>
+        <Typography
+          sx={{
+            fontSize: "2rem",
+          }}
+          noWrap
+        >
+          {presetName}
+        </Typography>
+      </Tooltip>
     </Box>
   );
 }

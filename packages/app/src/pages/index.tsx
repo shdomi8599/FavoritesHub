@@ -7,14 +7,23 @@ import { postPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
+import SearchAutoBar from "@/components/search/SearchAutoBar";
+import SearchTag from "@/components/search/SearchTag";
 import { useAuth, useAuthModal } from "@/hooks";
 import { useFavoriteList } from "@/hooks/react-query/favorite/useFavoriteList";
+import { useMemoFavorites } from "@/hooks/react-query/favorite/useMemoFavorites";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
-import { Box, Button, Grid, styled } from "@mui/material";
+import { Box, Button, Container, Grid, styled } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function Main() {
+  // 상태
+  const [tags, setTags] = useState<string[]>([]);
+  const searchLabel = tags.includes("전체") ? "전체" : tags.join(", ");
+  const [searchValue, setSearchValue] = useState("");
+
   // 훅
   const {
     userId,
@@ -30,8 +39,38 @@ export default function Main() {
 
   // 데이터
   const { data } = useFavoriteList(userId, viewPreset?.id, accessToken);
+  const { titleItems, domainItems, descriptionItems, favoriteNameItems } =
+    useMemoFavorites(data!);
 
   // 이벤트
+  const getAutoBarData = () => {
+    const selectedItems = [];
+
+    if (tags.includes("전체")) {
+      selectedItems.push(
+        titleItems,
+        domainItems,
+        descriptionItems,
+        favoriteNameItems,
+      );
+    } else {
+      if (tags.includes("타이틀")) {
+        selectedItems.push(titleItems);
+      }
+      if (tags.includes("도메인")) {
+        selectedItems.push(domainItems);
+      }
+      if (tags.includes("설명")) {
+        selectedItems.push(descriptionItems);
+      }
+      if (tags.includes("별칭")) {
+        selectedItems.push(favoriteNameItems);
+      }
+    }
+
+    return selectedItems.flat();
+  };
+
   const resetFavoriteList = () => {
     const { id: presetId } = viewPreset;
     queryClient.invalidateQueries(["favoriteList", userId, presetId]);
@@ -74,9 +113,26 @@ export default function Main() {
 
   return isLogin ? (
     <>
-      <TopContainer
+      <Container
+        maxWidth={"xs"}
         sx={{
-          p: 2,
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+          mt: 2,
+        }}
+      >
+        <SearchTag width={150} tags={tags} setTags={setTags} />
+        <SearchAutoBar
+          data={getAutoBarData()}
+          label={searchLabel}
+          value={searchValue}
+          setValue={setSearchValue}
+        />
+      </Container>
+      <MainContainer
+        sx={{
+          px: 2,
         }}
       >
         <MainTitle
@@ -93,7 +149,7 @@ export default function Main() {
             즐겨찾기 추가
           </Button>
         </Box>
-      </TopContainer>
+      </MainContainer>
       <Grid
         container
         spacing={4}
@@ -132,7 +188,7 @@ const LoginContainer = styled(Box)(() => ({
   justifyContent: "center",
 }));
 
-const TopContainer = styled(Box)(() => ({
+const MainContainer = styled(Box)(() => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
