@@ -104,6 +104,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     if (isPresetAdd) {
       setViewPreset(currentViewPreset);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presets, setViewPreset]);
 
   return (

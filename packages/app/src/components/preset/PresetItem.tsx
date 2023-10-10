@@ -36,6 +36,7 @@ export default function PresetItem({
   const setIsPresetAdd = useSetRecoilState(isPresetAddState);
   useEffect(() => {
     setIsPresetAdd(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <ListItemButton onClick={() => setViewPreset(preset)}>
