@@ -81,3 +81,8 @@ export const userMailState = atom({
   key: "userMailState",
   default: "",
 });
+
+export const isLoadingState = atom({
+  key: "isLoadingState",
+  default: false,
+});

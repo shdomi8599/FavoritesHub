@@ -8,13 +8,13 @@ import {
   usePresetModal,
 } from "@/hooks";
 import { usePresetList } from "@/hooks/react-query";
-import { viewPresetState } from "@/states";
+import { isLoadingState, viewPresetState } from "@/states";
 import { confirmAlert } from "@/util";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
@@ -38,6 +38,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const { handleSignUpModal } = useAuthModal();
   const { ref: barRef, barHeight } = useBarHeight();
+  const setIsLoading = useSetRecoilState(isLoadingState);
   const isMinWidth600 = useMediaQuery("(min-width:600px)");
   const isMaxWidth900 = useMediaQuery("(max-width:900px)");
   const { addPresetModal, editPresetModal } = usePresetModal();
@@ -57,9 +58,14 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   };
 
   const deletePresetEvent = async (id: number) => {
-    await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-    await postPresetDelete(id, accessToken);
-    queryClient.invalidateQueries(["presetList", userId]);
+    try {
+      setIsLoading(true);
+      await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
+      await postPresetDelete(id, accessToken);
+      queryClient.invalidateQueries(["presetList", userId]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 이펙트

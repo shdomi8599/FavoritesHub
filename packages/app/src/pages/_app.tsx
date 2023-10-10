@@ -1,6 +1,7 @@
 import AuthModal from "@/components/auth/AuthModal";
 import Dashboard from "@/components/dashboard/Dashboard";
 import FavoriteModal from "@/components/favorite/FavoriteModal";
+import Loading from "@/components/loading/Loading";
 import PresetModal from "@/components/preset/PresetModal";
 import "@/styles/globals.css";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
@@ -36,6 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
+        <Loading />
         <Dashboard>
           <FavoriteModal />
           <PresetModal />

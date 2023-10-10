@@ -11,10 +11,12 @@ import { SearchAutoBar, SearchTag } from "@/components/search";
 import { useAuth, useAuthModal } from "@/hooks";
 import { useFavoriteList, useMemoFavorites } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
+import { isLoadingState } from "@/states";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
 import { Box, Button, Container, Grid, styled } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 
 export default function Main() {
   // 상태
@@ -32,6 +34,7 @@ export default function Main() {
     setAccessToken,
   } = useAuth();
   const queryClient = useQueryClient();
+  const setIsLoading = useSetRecoilState(isLoadingState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
   const { viewPreset, addFavoriteModal } = useFavoriteModal();
 
@@ -82,8 +85,13 @@ export default function Main() {
     const { id: presetId } = viewPreset;
 
     const callbackEvent = async () => {
-      await postPresetDefault(userId, presetId, accessToken);
-      resetPresetList();
+      try {
+        setIsLoading(true);
+        await postPresetDefault(userId, presetId, accessToken);
+        resetPresetList();
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     callbackSuccessAlert(
@@ -94,9 +102,14 @@ export default function Main() {
   };
 
   const deleteFavoriteEvent = async (favoriteId: number) => {
-    await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
-    await deleteFavorite(favoriteId, accessToken);
-    resetFavoriteList();
+    try {
+      setIsLoading(true);
+      await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
+      await deleteFavorite(favoriteId, accessToken);
+      resetFavoriteList();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const favoriteVisited = async (favoriteId: number) => {
