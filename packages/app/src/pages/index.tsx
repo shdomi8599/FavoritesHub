@@ -9,10 +9,7 @@ import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
 import { useAuth, useAuthModal } from "@/hooks";
-import {
-  useFavoriteList,
-  useMemoFavorites,
-} from "@/hooks/react-query/favorite";
+import { useFavoriteList, useMemoFavorites } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
 import { Box, Button, Container, Grid, styled } from "@mui/material";
