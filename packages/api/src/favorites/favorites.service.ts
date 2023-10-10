@@ -46,6 +46,15 @@ export class FavoritesService {
 
     const path = address.split(domain)[1];
 
+    const favorites = await this.findAll(preset.id);
+    const existData = favorites.find(
+      (favorite) => favorite.path === path && favorite.domain === domain,
+    );
+
+    if (existData) {
+      throw new Error("exist");
+    }
+
     const favoriteData = {
       favoriteName,
       domain,

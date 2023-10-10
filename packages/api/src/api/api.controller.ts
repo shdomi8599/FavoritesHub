@@ -429,6 +429,10 @@ export class ApiController {
       if (message === "cors") {
         return { message: "cors" };
       }
+
+      if (message === "exist") {
+        return { message: "exist" };
+      }
     }
   }
 
