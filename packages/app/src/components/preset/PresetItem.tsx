@@ -1,3 +1,4 @@
+import { isPresetAddState } from "@/states";
 import { Preset } from "@/types";
 import {
   Dashboard as DashboardIcon,
@@ -13,7 +14,8 @@ import {
   Tooltip,
   styled,
 } from "@mui/material";
-import { SetterOrUpdater } from "recoil";
+import { useEffect } from "react";
+import { SetterOrUpdater, useSetRecoilState } from "recoil";
 
 interface Props {
   preset: Preset;
@@ -31,6 +33,10 @@ export default function PresetItem({
   deletePresetEvent,
 }: Props) {
   const { presetName, id, defaultPreset } = preset;
+  const setIsPresetAdd = useSetRecoilState(isPresetAddState);
+  useEffect(() => {
+    setIsPresetAdd(false);
+  }, []);
   return (
     <ListItemButton onClick={() => setViewPreset(preset)}>
       <ListItemIcon>

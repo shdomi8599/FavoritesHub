@@ -37,6 +37,11 @@ export const isPresetModalState = atom({
   default: false,
 });
 
+export const isPresetAddState = atom({
+  key: "isPresetAddState",
+  default: false,
+});
+
 export const presetModalState = atom<PresetModalState>({
   key: "authModalState",
   default: "add",

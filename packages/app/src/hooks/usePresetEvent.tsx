@@ -1,5 +1,5 @@
 import { postPresetAdd, putPresetEdit } from "@/api/preset";
-import { viewPresetState } from "@/states";
+import { isPresetAddState, viewPresetState } from "@/states";
 import { errorAlert, successAlert } from "@/util";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
@@ -21,6 +21,7 @@ export const usePresetEvent = ({
 }: Props) => {
   const [isLoding, setIsLoding] = useState(false);
   const setViewPreset = useSetRecoilState(viewPresetState);
+  const setIsPresetAdd = useSetRecoilState(isPresetAddState);
   const presetAdd = async (presetName: string) => {
     try {
       setIsLoding(true);
@@ -38,6 +39,7 @@ export const usePresetEvent = ({
         return errorAlert("이미 존재하는 이름입니다.", "프리셋 추가");
       }
 
+      setIsPresetAdd(true);
       offPresetModal();
       resetPresetList();
       successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
