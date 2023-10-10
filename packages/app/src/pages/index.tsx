@@ -9,12 +9,15 @@ import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
 import { useAuth, useAuthModal } from "@/hooks";
-import { useFavoriteList, useMemoFavorites } from "@/hooks/react-query";
+import {
+  useFavoriteList,
+  useMemoFavorites,
+  useResetQuery,
+} from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { isLoadingState, viewPresetState } from "@/states";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
 import { Box, Button, Container, Grid, styled } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 
@@ -33,11 +36,11 @@ export default function Main() {
     setUserMail,
     setAccessToken,
   } = useAuth();
-  const queryClient = useQueryClient();
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setViewPreset = useSetRecoilState(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
   const { viewPreset, addFavoriteModal } = useFavoriteModal();
+  const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
 
   // 데이터
   const { data } = useFavoriteList(userId, viewPreset?.id, accessToken);
@@ -73,15 +76,6 @@ export default function Main() {
     return selectedItems.flat();
   };
 
-  const resetFavoriteList = () => {
-    const { id: presetId } = viewPreset;
-    queryClient.invalidateQueries(["favoriteList", userId, presetId]);
-  };
-
-  const resetPresetList = async () => {
-    await queryClient.invalidateQueries(["presetList", userId]);
-  };
-
   const HandleDefaultPreset = async () => {
     const { id: presetId } = viewPreset;
 
@@ -108,7 +102,7 @@ export default function Main() {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
       await deleteFavorite(favoriteId, accessToken);
-      resetFavoriteList();
+      resetFavoriteList(viewPreset.id);
     } finally {
       setIsLoading(false);
     }
@@ -116,12 +110,12 @@ export default function Main() {
 
   const favoriteVisited = async (favoriteId: number) => {
     await getFavoriteVisited(favoriteId, accessToken);
-    resetFavoriteList();
+    resetFavoriteList(viewPreset.id);
   };
 
   const favoriteHandleStar = async (favoriteId: number) => {
     await getFavoriteHandleStar(favoriteId, accessToken);
-    resetFavoriteList();
+    resetFavoriteList(viewPreset.id);
   };
 
   return isLogin ? (

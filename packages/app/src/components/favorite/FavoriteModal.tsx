@@ -1,23 +1,20 @@
 import { postFavoriteAdd } from "@/api/favorite";
 import { useAuth } from "@/hooks";
+import { useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { errorAlert, successAlert } from "@/util";
 import { Box, Modal } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ModalContentBox } from "../modal";
 import { AddForm, EditForm } from "./form";
 
 export default function FavoriteModal() {
-  const queryClient = useQueryClient();
   const { userId, accessToken } = useAuth();
   const [isLoding, setIsLoding] = useState(false);
   const { viewPreset, isFavoriteModal, offFavoriteModal, favoriteModal } =
     useFavoriteModal();
 
-  const resetFavoriteList = () => {
-    queryClient.invalidateQueries(["favoriteList", userId, viewPreset?.id]);
-  };
+  const { resetFavoriteList } = useResetQuery(userId);
 
   const favoriteAdd = async (favoriteName: string, address: string) => {
     try {
@@ -41,7 +38,7 @@ export default function FavoriteModal() {
       }
 
       if (message === "success") {
-        resetFavoriteList();
+        resetFavoriteList(viewPreset?.id);
         offFavoriteModal();
         successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
       }

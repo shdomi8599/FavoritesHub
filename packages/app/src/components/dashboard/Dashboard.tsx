@@ -7,12 +7,11 @@ import {
   useHandler,
   usePresetModal,
 } from "@/hooks";
-import { usePresetList } from "@/hooks/react-query";
+import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { isLoadingState, viewPresetState } from "@/states";
 import { confirmAlert } from "@/util";
 import { Box, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode, useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { DashboardBar } from "./bar";
@@ -35,7 +34,6 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     setisBoolean: setToolBartoolBarOpen,
     handleBoolean: handleDrawer,
   } = useHandler(true);
-  const queryClient = useQueryClient();
   const { handleSignUpModal } = useAuthModal();
   const { ref: barRef, barHeight } = useBarHeight();
   const setIsLoading = useSetRecoilState(isLoadingState);
@@ -43,6 +41,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const isMaxWidth900 = useMediaQuery("(max-width:900px)");
   const { addPresetModal, editPresetModal } = usePresetModal();
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
+  const { resetPresetList } = useResetQuery(userId);
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
@@ -62,7 +61,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
       await postPresetDelete(id, accessToken);
-      await queryClient.invalidateQueries(["presetList", userId]);
+      resetPresetList();
     } finally {
       setIsLoading(false);
     }
