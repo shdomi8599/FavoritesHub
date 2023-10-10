@@ -11,7 +11,7 @@ import { SearchAutoBar, SearchTag } from "@/components/search";
 import { useAuth, useAuthModal } from "@/hooks";
 import { useFavoriteList, useMemoFavorites } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { isLoadingState } from "@/states";
+import { isLoadingState, viewPresetState } from "@/states";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
 import { Box, Button, Container, Grid, styled } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,6 +35,7 @@ export default function Main() {
   } = useAuth();
   const queryClient = useQueryClient();
   const setIsLoading = useSetRecoilState(isLoadingState);
+  const setViewPreset = useSetRecoilState(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
   const { viewPreset, addFavoriteModal } = useFavoriteModal();
 
@@ -77,8 +78,8 @@ export default function Main() {
     queryClient.invalidateQueries(["favoriteList", userId, presetId]);
   };
 
-  const resetPresetList = () => {
-    queryClient.invalidateQueries(["presetList", userId]);
+  const resetPresetList = async () => {
+    await queryClient.invalidateQueries(["presetList", userId]);
   };
 
   const HandleDefaultPreset = async () => {
@@ -87,8 +88,9 @@ export default function Main() {
     const callbackEvent = async () => {
       try {
         setIsLoading(true);
-        await postPresetDefault(userId, presetId, accessToken);
-        resetPresetList();
+        const preset = await postPresetDefault(userId, presetId, accessToken);
+        await resetPresetList();
+        setViewPreset(preset);
       } finally {
         setIsLoading(false);
       }

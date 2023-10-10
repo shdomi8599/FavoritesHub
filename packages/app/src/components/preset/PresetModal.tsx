@@ -12,8 +12,8 @@ export default function PresetModal() {
   const selectedPresetId = useRecoilValue(selectedPresetIdState);
   const { isPresetModal, offPresetModal, presetModal } = usePresetModal();
 
-  const resetPresetList = () => {
-    queryClient.invalidateQueries(["presetList", userId]);
+  const resetPresetList = async () => {
+    return await queryClient.invalidateQueries(["presetList", userId]);
   };
 
   const { isLoding, presetAdd, presetEdit } = usePresetEvent({

@@ -30,11 +30,20 @@ export default function PresetItem({
   editPresetModal,
   deletePresetEvent,
 }: Props) {
-  const { presetName, id } = preset;
+  const { presetName, id, defaultPreset } = preset;
   return (
     <ListItemButton onClick={() => setViewPreset(preset)}>
       <ListItemIcon>
-        <DashboardIcon sx={{ color: viewPreset?.id === id ? "#1976d2" : "" }} />
+        <DashboardIcon
+          sx={{
+            color:
+              viewPreset?.id === id
+                ? "#1976d2"
+                : defaultPreset
+                ? "#e96363d2"
+                : "",
+          }}
+        />
       </ListItemIcon>
       <Tooltip title={presetName}>
         <ListItemText sx={itemTextStyle} primary={presetName} />

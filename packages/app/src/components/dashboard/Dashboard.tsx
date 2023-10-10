@@ -62,7 +62,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
       await postPresetDelete(id, accessToken);
-      queryClient.invalidateQueries(["presetList", userId]);
+      await queryClient.invalidateQueries(["presetList", userId]);
     } finally {
       setIsLoading(false);
     }
@@ -86,6 +86,9 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const defaultPreset = presets?.find(({ defaultPreset }) => defaultPreset)!;
+    if (!defaultPreset && presets) {
+      return setViewPreset(presets[0]);
+    }
     setViewPreset(defaultPreset);
   }, [presets, setViewPreset]);
 

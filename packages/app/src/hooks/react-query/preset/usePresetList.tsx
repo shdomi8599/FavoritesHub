@@ -10,5 +10,5 @@ export const usePresetList = (userId: number, accessToken: string) => {
       enabled: !!accessToken,
     },
   );
-  return data;
+  return data || [];
 };

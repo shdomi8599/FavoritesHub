@@ -1,6 +1,8 @@
 import { postPresetAdd, putPresetEdit } from "@/api/preset";
+import { viewPresetState } from "@/states";
 import { errorAlert, successAlert } from "@/util";
 import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 
 type Props = {
   userId: number;
@@ -18,10 +20,15 @@ export const usePresetEvent = ({
   resetPresetList,
 }: Props) => {
   const [isLoding, setIsLoding] = useState(false);
+  const setViewPreset = useSetRecoilState(viewPresetState);
   const presetAdd = async (presetName: string) => {
     try {
       setIsLoding(true);
-      const { message } = await postPresetAdd(userId, accessToken, presetName);
+      const { message, preset } = await postPresetAdd(
+        userId,
+        accessToken,
+        presetName,
+      );
 
       if (message === "max") {
         return errorAlert("프리셋은 15개가 최대입니다.", "프리셋 추가");
@@ -31,11 +38,10 @@ export const usePresetEvent = ({
         return errorAlert("이미 존재하는 이름입니다.", "프리셋 추가");
       }
 
-      if (message === "success") {
-        offPresetModal();
-        resetPresetList();
-        successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
-      }
+      offPresetModal();
+      resetPresetList();
+      successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
+      setViewPreset(preset!);
     } finally {
       setIsLoding(false);
     }

@@ -44,10 +44,14 @@ type Message =
   | "max"
   | "cors";
 
-export type ApiResultMessage = {
-  message: Message;
+export interface ApiResultMessage {
+  message?: Message;
   userId?: number;
-};
+}
+
+export interface ResPostPresetAdd extends ApiResultMessage {
+  preset?: Preset;
+}
 
 export interface ApiResultAccessToken {
   accessToken?: string;
