@@ -302,8 +302,9 @@ export class ApiController {
     try {
       const user = await this.usersService.findOneToId(userId);
       const { presetName } = dto;
-      await this.presetsService.add(user, presetName);
-      return { message: "success" };
+      const preset = await this.presetsService.add(user, presetName);
+      delete preset.user;
+      return { preset };
     } catch (e) {
       const { message } = e;
 
@@ -375,7 +376,8 @@ export class ApiController {
     @Param("userId") userId: number,
     @Param("presetId") presetId: number,
   ) {
-    await this.presetsService.updateDefault(userId, presetId);
+    const preset = await this.presetsService.updateDefault(userId, presetId);
+    return preset;
   }
 
   // @UseGuards(AuthGuard("jwt"))

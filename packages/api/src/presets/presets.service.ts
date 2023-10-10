@@ -84,7 +84,8 @@ export class PresetsService {
       user,
     });
 
-    await this.presetTable.save(newPreset);
+    const preset = await this.presetTable.save(newPreset);
+    return preset;
   }
 
   async remove(presetId: number) {
@@ -113,11 +114,14 @@ export class PresetsService {
     const presets = await this.findAll(userId);
 
     const currentDefaultPreset = presets.find((preset) => preset.defaultPreset);
-    currentDefaultPreset.defaultPreset = false;
-    await this.presetTable.save(currentDefaultPreset);
+    if (currentDefaultPreset) {
+      currentDefaultPreset.defaultPreset = false;
+      await this.presetTable.save(currentDefaultPreset);
+    }
 
     const preset = await this.findOne(presetId);
     preset.defaultPreset = true;
     await this.presetTable.save(preset);
+    return preset;
   }
 }
