@@ -37,6 +37,10 @@ export default function FavoriteModal() {
         );
       }
 
+      if (message === "exist") {
+        return errorAlert("이미 존재하는 주소입니다.", "즐겨찾기 추가");
+      }
+
       if (message === "success") {
         resetFavoriteList(viewPreset?.id);
         offFavoriteModal();
