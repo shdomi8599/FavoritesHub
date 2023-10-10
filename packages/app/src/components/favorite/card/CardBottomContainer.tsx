@@ -15,8 +15,13 @@ export default function CardBottomContainer({
         p: 2,
       }}
     >
-      <Button size="small" onClick={openSite} sx={{ minWidth: "64px" }}>
-        방문하기
+      <Button
+        size="small"
+        onClick={openSite}
+        sx={{ minWidth: "50px" }}
+        variant="contained"
+      >
+        방문
       </Button>
       <Tooltip title={formatLastVisitedAt} enterDelay={300}>
         <Box
