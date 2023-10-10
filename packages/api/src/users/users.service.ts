@@ -43,9 +43,6 @@ export class UsersService {
 
   async remove(userId: number) {
     const user = await this.findOneToId(userId);
-    if (!user) {
-      throw new Error("사용자를 찾을 수 없습니다.");
-    }
     await this.userTable.delete(user);
   }
 

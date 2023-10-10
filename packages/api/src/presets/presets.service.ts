@@ -11,9 +11,7 @@ export class PresetsService {
     private presetTable: Repository<Preset>,
   ) {}
 
-  async findAll(
-    userId: number,
-  ): Promise<{ presetName: string; defaultPreset: boolean }[]> {
+  async findAll(userId: number): Promise<Preset[]> {
     const presets = await this.presetTable.find({
       where: { user: { id: userId } },
       relations: ["user"],

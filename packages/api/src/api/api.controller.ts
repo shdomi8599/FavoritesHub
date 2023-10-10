@@ -253,8 +253,15 @@ export class ApiController {
     type: ResSuccessMessageDto,
   })
   async deleteUser(@Param("userId") userId: number) {
+    const presets = await this.presetsService.findAll(userId);
+
+    if (presets && presets.length > 0) {
+      presets.map(async (preset) => {
+        await this.deletePreset(preset.id);
+      });
+    }
+
     await this.usersService.remove(userId);
-    return { message: "success" };
   }
 
   // @UseGuards(AuthGuard("jwt"))
