@@ -328,9 +328,9 @@ export class ApiController {
     const favorites = await this.favoritesService.findAll(presetId);
 
     if (favorites && favorites.length > 0) {
-      favorites.map(async (favorite) => {
+      for (const favorite of favorites) {
         await this.favoritesService.remove(favorite.id);
-      });
+      }
     }
 
     await this.presetsService.remove(presetId);
