@@ -4,12 +4,14 @@ import { Dispatch, SetStateAction } from "react";
 
 type Props<T> = {
   data: T[];
+  tags: string[];
   label?: string;
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
 };
 
 export default function SearchAutoBar<T extends AutoBarItem>({
+  tags,
   label,
   data,
   inputValue,
@@ -29,6 +31,7 @@ export default function SearchAutoBar<T extends AutoBarItem>({
   return (
     <Autocomplete
       disablePortal
+      disabled={tags.length === 0}
       options={data}
       sx={{ width: 250 }}
       inputValue={inputValue}

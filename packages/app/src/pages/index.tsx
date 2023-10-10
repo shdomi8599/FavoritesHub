@@ -8,7 +8,9 @@ import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
-import { useAuth, useAuthModal } from "@/hooks";
+import SearchSelect from "@/components/search/SearchSelect";
+import { SearchSelects } from "@/const";
+import { useAuth, useAuthModal, useHandler } from "@/hooks";
 import {
   useFavoriteList,
   useMemoFavorites,
@@ -16,16 +18,31 @@ import {
 } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { isLoadingState, viewPresetState } from "@/states";
+import { Favorite } from "@/types";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
-import { Box, Button, Container, Grid, styled } from "@mui/material";
+import {
+  Search as SearchIcon,
+  StarBorder as StarBorderIcon,
+  Star as StarIcon,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  styled,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 export default function Main() {
   // 상태
   const [tags, setTags] = useState<string[]>([]);
-  const searchLabel = tags.includes("전체") ? "전체" : tags.join(", ");
+  const [selectValue, setSelectValue] = useState("createdAt");
   const [inputValue, setInputValue] = useState("");
+  const searchLabel = tags.includes("전체") ? "전체" : tags.join(", ");
+  const { isBoolean: isStar, handleBoolean: handleStar } = useHandler(false);
 
   // 훅
   const {
@@ -49,7 +66,34 @@ export default function Main() {
     accessToken,
   );
 
-  const viewData = favorites?.filter((favorite) => {
+  const getFilterData = () => {
+    let data: Favorite[] = [];
+
+    if (selectValue === "createdAt") {
+      data = favorites?.sort((a, b) => {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      })!;
+    }
+
+    if (selectValue === "lastVisitedAt") {
+      data = favorites?.sort((a, b) => {
+        return (
+          new Date(a.lastVisitedAt).getTime() -
+          new Date(b.lastVisitedAt).getTime()
+        );
+      })!;
+    }
+
+    if (isStar) {
+      data = favorites?.filter((favorite) => favorite.star)!;
+    }
+
+    return data;
+  };
+
+  const viewData = getFilterData()?.filter((favorite) => {
     if (tags.length === 0) {
       return favorites;
     }
@@ -78,7 +122,7 @@ export default function Main() {
   });
 
   const { titleItems, domainItems, descriptionItems, favoriteNameItems } =
-    useMemoFavorites(favorites!);
+    useMemoFavorites(viewData!);
 
   const getAutoBarData = () => {
     const selectedItems = [];
@@ -163,8 +207,10 @@ export default function Main() {
           mt: 2,
         }}
       >
+        <SearchIcon fontSize="large" />
         <SearchTag tags={tags} setTags={setTags} />
         <SearchAutoBar
+          tags={tags}
           label={searchLabel}
           inputValue={inputValue}
           data={getAutoBarData()}
@@ -181,11 +227,31 @@ export default function Main() {
           defaultPreset={viewPreset?.defaultPreset}
           HandleDefaultPreset={HandleDefaultPreset}
         />
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <IconButton onClick={handleStar}>
+            {isStar ? (
+              <StarIcon fontSize="large" sx={{ color: "#e96363d2" }} />
+            ) : (
+              <StarBorderIcon fontSize="large" />
+            )}
+          </IconButton>
+          <SearchSelect
+            label={"필터"}
+            selectValue={selectValue}
+            menuItems={SearchSelects}
+            setSelectValue={setSelectValue}
+          />
           <Button
             onClick={addFavoriteModal}
             variant="contained"
-            sx={{ mt: 3, mb: 2, minWidth: 105 }}
+            sx={{ minWidth: 105 }}
           >
             즐겨찾기 추가
           </Button>

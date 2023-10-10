@@ -89,3 +89,7 @@ export interface Favorite {
 export interface AutoBarItem {
   label: string;
 }
+
+export interface SelectItem extends AutoBarItem {
+  value: string;
+}

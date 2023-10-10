@@ -2,6 +2,7 @@ import { Favorite } from "@/types";
 import { Card, CardContent, Grid } from "@mui/material";
 import moment from "moment";
 import "moment/locale/ko";
+import { memo } from "react";
 import {
   CardBottomContainer,
   CardMiddleContainer,
@@ -15,7 +16,7 @@ type Props = {
   favorite: Favorite;
 };
 
-export default function FavoriteCard({
+function FavoriteCard({
   favorite,
   favoriteVisited,
   favoriteHandleStar,
@@ -85,6 +86,8 @@ export default function FavoriteCard({
     </Grid>
   );
 }
+
+export default memo(FavoriteCard);
 
 const cardStyle = {
   minWidth: 275,
