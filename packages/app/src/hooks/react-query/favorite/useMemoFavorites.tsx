@@ -18,9 +18,8 @@ export const useMemoFavorites = (data: Favorite[]) => {
       JSON.parse(itemString as string),
     );
 
-    return uniqueItemsArray.map((item) => ({
+    return uniqueItemsArray.map((item: string) => ({
       label: item,
-      value: item,
     }));
   };
 

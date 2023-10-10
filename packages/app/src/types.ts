@@ -85,3 +85,7 @@ export interface Favorite {
   star: boolean;
   title: string;
 }
+
+export interface AutoBarItem {
+  label: string;
+}

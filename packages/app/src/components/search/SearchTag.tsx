@@ -12,12 +12,11 @@ import {
 import { Dispatch, SetStateAction } from "react";
 
 type Props = {
-  width: number;
   tags: string[];
   setTags: Dispatch<SetStateAction<string[]>>;
 };
 
-export default function SearchTag({ width, tags, setTags }: Props) {
+export default function SearchTag({ tags, setTags }: Props) {
   const isAll = tags.includes("전체");
 
   const handleChange = (event: SelectChangeEvent<typeof tags>) => {
@@ -63,13 +62,14 @@ export default function SearchTag({ width, tags, setTags }: Props) {
   );
 }
 
+const width = 130;
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 150,
+      width: width,
     },
   },
 };

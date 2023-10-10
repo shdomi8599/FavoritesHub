@@ -18,14 +18,14 @@ import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { isLoadingState, viewPresetState } from "@/states";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
 import { Box, Button, Container, Grid, styled } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 export default function Main() {
   // 상태
   const [tags, setTags] = useState<string[]>([]);
   const searchLabel = tags.includes("전체") ? "전체" : tags.join(", ");
-  const [searchValue, setSearchValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   // 훅
   const {
@@ -43,14 +43,45 @@ export default function Main() {
   const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
 
   // 데이터
-  const { data } = useFavoriteList(userId, viewPreset?.id, accessToken);
-  const { titleItems, domainItems, descriptionItems, favoriteNameItems } =
-    useMemoFavorites(data!);
+  const { data: favorites } = useFavoriteList(
+    userId,
+    viewPreset?.id,
+    accessToken,
+  );
 
-  // 이벤트
+  const viewData = favorites?.filter((favorite) => {
+    if (tags.length === 0) {
+      return favorites;
+    }
+    const { domain, description, favoriteName, title } = favorite;
+    const loweredInputValue = inputValue.toLowerCase();
+    if (tags.includes("전체")) {
+      return (
+        domain.toLowerCase().includes(loweredInputValue) ||
+        description.toLowerCase().includes(loweredInputValue) ||
+        favoriteName.toLowerCase().includes(loweredInputValue) ||
+        title.toLowerCase().includes(loweredInputValue)
+      );
+    }
+    if (tags.includes("타이틀")) {
+      return title.toLowerCase().includes(loweredInputValue);
+    }
+    if (tags.includes("도메인")) {
+      return domain.toLowerCase().includes(loweredInputValue);
+    }
+    if (tags.includes("설명")) {
+      return description.toLowerCase().includes(loweredInputValue);
+    }
+    if (tags.includes("별칭")) {
+      return favoriteName.toLowerCase().includes(loweredInputValue);
+    }
+  });
+
+  const { titleItems, domainItems, descriptionItems, favoriteNameItems } =
+    useMemoFavorites(favorites!);
+
   const getAutoBarData = () => {
     const selectedItems = [];
-
     if (tags.includes("전체")) {
       selectedItems.push(
         titleItems,
@@ -72,7 +103,6 @@ export default function Main() {
         selectedItems.push(favoriteNameItems);
       }
     }
-
     return selectedItems.flat();
   };
 
@@ -118,10 +148,14 @@ export default function Main() {
     resetFavoriteList(viewPreset.id);
   };
 
+  useEffect(() => {
+    setInputValue("");
+  }, [tags]);
+
   return isLogin ? (
     <>
       <Container
-        maxWidth={"xs"}
+        maxWidth={"md"}
         sx={{
           justifyContent: "center",
           alignItems: "center",
@@ -129,12 +163,12 @@ export default function Main() {
           mt: 2,
         }}
       >
-        <SearchTag width={150} tags={tags} setTags={setTags} />
+        <SearchTag tags={tags} setTags={setTags} />
         <SearchAutoBar
-          data={getAutoBarData()}
           label={searchLabel}
-          value={searchValue}
-          setValue={setSearchValue}
+          inputValue={inputValue}
+          data={getAutoBarData()}
+          setInputValue={setInputValue}
         />
       </Container>
       <MainContainer
@@ -164,7 +198,7 @@ export default function Main() {
           p: 2,
         }}
       >
-        {data?.map((favorite, index) => (
+        {viewData?.map((favorite, index) => (
           <FavoriteCard
             key={index}
             favorite={favorite}
