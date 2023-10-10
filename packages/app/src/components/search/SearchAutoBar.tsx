@@ -1,6 +1,6 @@
 import { AutoBarItem } from "@/types";
 import { Autocomplete, FilterOptionsState, TextField } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 type Props<T> = {
   data: T[];
@@ -17,7 +17,7 @@ export default function SearchAutoBar<T extends AutoBarItem>({
   inputValue,
   setInputValue,
 }: Props<T>) {
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
+  const handleChange = (event: ChangeEvent<{}>, newValue: string) => {
     setInputValue(newValue);
   };
 
@@ -37,7 +37,7 @@ export default function SearchAutoBar<T extends AutoBarItem>({
       inputValue={inputValue}
       onInputChange={handleChange}
       filterOptions={filterOptions}
-      isOptionEqualToValue={(option, value) => option === value}
+      isOptionEqualToValue={(option, value) => option.label === value.label}
       renderInput={(params) => <TextField {...params} label={label} />}
     />
   );
