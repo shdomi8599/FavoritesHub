@@ -7,11 +7,12 @@ import { postPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
-import SearchAutoBar from "@/components/search/SearchAutoBar";
-import SearchTag from "@/components/search/SearchTag";
+import { SearchAutoBar, SearchTag } from "@/components/search";
 import { useAuth, useAuthModal } from "@/hooks";
-import { useFavoriteList } from "@/hooks/react-query/favorite/useFavoriteList";
-import { useMemoFavorites } from "@/hooks/react-query/favorite/useMemoFavorites";
+import {
+  useFavoriteList,
+  useMemoFavorites,
+} from "@/hooks/react-query/favorite";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { callbackSuccessAlert, confirmAlert } from "@/util";
 import { Box, Button, Container, Grid, styled } from "@mui/material";
