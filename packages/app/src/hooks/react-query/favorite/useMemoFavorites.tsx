@@ -24,11 +24,15 @@ export const useMemoFavorites = (data: Favorite[]) => {
     }));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const titleItems = useMemo(() => getUniqueItems("title"), [data]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const domainItems = useMemo(() => getUniqueItems("domain"), [data]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const descriptionItems = useMemo(() => getUniqueItems("description"), [data]);
   const favoriteNameItems = useMemo(
     () => getUniqueItems("favoriteName"),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data],
   );
 
