@@ -55,9 +55,9 @@ export class ApiController {
       if (!verify) {
         return { message: "not verify", userId: user.id };
       }
-
       const tokens = await this.authService.login(user);
       const { accessToken, refreshToken } = tokens;
+
       await this.usersService.updateloginTime(user);
       await this.usersService.updateRefreshToken(user, refreshToken);
 
@@ -73,18 +73,37 @@ export class ApiController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get("auth/refreshToken")
   @ApiResponse({
     status: 200,
-    description: "리프레시 토큰을 반환하는 API입니다.",
+    description: "리프레시 토큰을 검증하고 로그인 여부를 검증하는 API입니다.",
     type: ResGetAuthRefreshTokenDto,
   })
-  async getAuthRefreshToken(@Request() req) {
-    const { mail } = req.user;
-    const refreshToken = await this.authService.getRefreshToken(mail);
-    await this.usersService.updateRefreshToken(mail, refreshToken);
-    return { refreshToken };
+  async getAuthRefreshToken(@Request() req, @Res({ passthrough: true }) res) {
+    const reqRefreshToken = req.cookies.refreshToken;
+    if (!reqRefreshToken) {
+      return { accessToken: "", userId: 0 };
+    }
+    const decodedRefreshToken =
+      await this.authService.decodedRefreshToken(reqRefreshToken);
+    const userId = decodedRefreshToken.sub;
+    const user = await this.usersService.validRefreshToken(
+      userId,
+      reqRefreshToken,
+    );
+
+    const tokens = await this.authService.login(user);
+    const { accessToken, refreshToken } = tokens;
+
+    await this.usersService.updateloginTime(user);
+    await this.usersService.updateRefreshToken(user, refreshToken);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    });
+
+    return { accessToken, userId: user.id };
   }
 
   @UseGuards(JwtAuthGuard)

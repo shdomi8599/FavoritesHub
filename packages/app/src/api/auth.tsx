@@ -1,14 +1,17 @@
 import { ApiResultAccessToken, ApiResultMessage } from "@/types";
 import { api } from ".";
 
-function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return (parts as any).pop().split(";").shift();
-}
-
 export const postUserExist = async (mail: string) => {
   const user = await api.post("/user/exist", { mail }).then((res) => res.data);
+  return user;
+};
+
+export const getAuthRefreshToken = async () => {
+  const user = await api<ApiResultAccessToken>("/auth/refreshToken", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.data);
   return user;
 };
 
@@ -16,6 +19,7 @@ export const postAuthLogin = async (username: string, password: string) => {
   const { accessToken, message, userId } = await api
     .post<ApiResultAccessToken>("/auth/login", { username, password })
     .then((res) => res.data);
+  console.log(accessToken);
 
   return {
     accessToken,

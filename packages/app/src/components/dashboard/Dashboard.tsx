@@ -1,4 +1,4 @@
-import { postAuthLogout } from "@/api/auth";
+import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
 import { postPresetDelete } from "@/api/preset";
 import {
   useAuth,
@@ -106,6 +106,16 @@ export default function Dashboard({ children }: { children: ReactNode }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presets, setViewPreset]);
+
+  useEffect(() => {
+    getAuthRefreshToken().then((res) => {
+      if (res) {
+        const { accessToken, userId } = res;
+        setUserId(userId);
+        setAccessToken(accessToken!);
+      }
+    });
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>

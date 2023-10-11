@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as nodemailer from "nodemailer";
-import { nodemailerOption } from "src/constants";
+import {
+  JWT_ACCESS_SECRET,
+  JWT_REFRESH_SECRET,
+  nodemailerOption,
+} from "src/constants";
 import { User } from "src/source/entity/User";
 import { UsersService } from "src/users/users.service";
 
@@ -26,14 +30,25 @@ export class AuthService {
   async getAccessToken(user: User) {
     const payload = { username: user.mail, sub: user.id };
     return await this.jwtService.signAsync(payload, {
+      secret: JWT_ACCESS_SECRET,
       expiresIn: "15m",
     });
+  }
+
+  async decodedRefreshToken(refreshToken: string) {
+    console.log(refreshToken);
+    const decodedRefreshToken = await this.jwtService.verify(refreshToken, {
+      secret: JWT_REFRESH_SECRET,
+    });
+    console.log(decodedRefreshToken);
+    return decodedRefreshToken;
   }
 
   async getRefreshToken(user: User) {
     const payload = { username: user.mail, sub: user.id };
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: "7d",
+      secret: JWT_REFRESH_SECRET,
     });
     return refreshToken;
   }

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { User } from "src/source/entity/User";
@@ -64,17 +64,17 @@ export class UsersService {
     await this.userTable.save(user);
   }
 
-  async validRefreshToken(user: User, refreshToken: string) {
-    console.log(user.refreshToken, refreshToken);
+  async validRefreshToken(id: number, refreshToken: string): Promise<User> {
+    const user = await this.findOneToId(id);
     if (!user || !user.refreshToken) {
-      return false;
+      throw new ForbiddenException("Access Denied");
     }
 
     if (!(await bcrypt.compare(refreshToken, user.refreshToken))) {
-      return false;
+      throw new ForbiddenException("Access Denied");
     }
 
-    return true;
+    return user;
   }
 
   async updateVerify(user: User) {
