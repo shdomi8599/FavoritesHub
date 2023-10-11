@@ -56,21 +56,9 @@ export class ApiController {
         return { message: "not verify", userId: user.id };
       }
 
-      const cookieRefreshToken = req?.cookies?.refreshToken;
       const tokens = await this.authService.login(user);
       const { accessToken, refreshToken } = tokens;
       await this.usersService.updateloginTime(user);
-
-      if (
-        cookieRefreshToken &&
-        (await this.usersService.validRefreshToken(
-          req.user,
-          cookieRefreshToken,
-        ))
-      ) {
-        return { accessToken, userId: user.id };
-      }
-
       await this.usersService.updateRefreshToken(user, refreshToken);
 
       res.cookie("refreshToken", refreshToken, {
@@ -132,9 +120,9 @@ export class ApiController {
     status: 200,
     description: "유저 이메일 보내기에 사용되는 API입니다.",
   })
-  async getAuthMail(@Body() dto: { userMail: string }) {
-    const { userMail } = dto;
-    const user = await this.usersService.findOneToMail(userMail);
+  async getAuthMail(@Body() dto: { username: string }) {
+    const { username } = dto;
+    const user = await this.usersService.findOneToMail(username);
     const verifyCode = generateRandomNumber();
     myCache.set(user.id, verifyCode, 180);
     await this.authService.mail(user, verifyCode);
@@ -145,9 +133,9 @@ export class ApiController {
     status: 200,
     description: "유저 이메일 인증에 사용되는 API입니다.",
   })
-  async postAuthVerify(@Body() dto: { userMail: string; verifyCode: string }) {
-    const { userMail, verifyCode } = dto;
-    const user = await this.usersService.findOneToMail(userMail);
+  async postAuthVerify(@Body() dto: { username: string; verifyCode: string }) {
+    const { username, verifyCode } = dto;
+    const user = await this.usersService.findOneToMail(username);
     const cashingVerifyCode = myCache.get(user.id) as string;
     const isVerify = await this.authService.verify(
       cashingVerifyCode,
@@ -168,10 +156,10 @@ export class ApiController {
   })
   async postAuthVerifyLogin(
     @Res({ passthrough: true }) res,
-    @Body() dto: { userMail: string },
+    @Body() dto: { username: string },
   ) {
-    const { userMail } = dto;
-    const user = await this.usersService.findOneToMail(userMail);
+    const { username } = dto;
+    const user = await this.usersService.findOneToMail(username);
     const { accessToken, refreshToken } = await this.authService.login(user);
 
     res.cookie("refreshToken", refreshToken, {
@@ -221,10 +209,10 @@ export class ApiController {
     description: "유저 비밀번호 변경에 사용되는 API입니다.",
   })
   async updateUserPassword(
-    @Body() dto: { userMail: string; newPassword: string },
+    @Body() dto: { username: string; newPassword: string },
   ) {
-    const { userMail, newPassword } = dto;
-    const user = await this.usersService.findOneToMail(userMail);
+    const { username, newPassword } = dto;
+    const user = await this.usersService.findOneToMail(username);
     await this.usersService.updatePassword(user, newPassword);
     return { message: "success" };
   }
