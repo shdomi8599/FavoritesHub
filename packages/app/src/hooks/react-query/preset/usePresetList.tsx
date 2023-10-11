@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 export const usePresetList = (userId: number, accessToken: string) => {
   const data = useQuery<Preset[]>(
     ["presetList", userId],
-    () => getPresetList(userId, accessToken),
+    () => getPresetList(accessToken),
     {
       enabled: !!accessToken,
     },

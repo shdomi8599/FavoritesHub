@@ -156,7 +156,7 @@ export default function Main() {
     const callbackEvent = async () => {
       try {
         setIsLoading(true);
-        const preset = await postPresetDefault(userId, presetId, accessToken);
+        const preset = await postPresetDefault(presetId, accessToken);
         await resetPresetList();
         setViewPreset(preset);
       } finally {

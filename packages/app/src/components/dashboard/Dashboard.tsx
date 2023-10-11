@@ -49,7 +49,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
 
   // 이벤트
   const logoutEvent = async () => {
-    const { message } = await postAuthLogout(userId);
+    const { message } = await postAuthLogout(accessToken);
 
     if (message === "success") {
       setUserMail("");

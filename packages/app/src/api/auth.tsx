@@ -7,8 +7,9 @@ export const postUserExist = async (mail: string) => {
 };
 
 export const postAuthLogin = async (mail: string, password: string) => {
+  const username = mail;
   const { accessToken, message, userId } = await api
-    .post<ApiResultAccessToken>("/auth/login", { mail, password })
+    .post<ApiResultAccessToken>("/auth/login", { username, password })
     .then((res) => res.data);
 
   return {
@@ -18,10 +19,12 @@ export const postAuthLogin = async (mail: string, password: string) => {
   };
 };
 
-export const postAuthLogout = async (userId: number) => {
+export const postAuthLogout = async (accessToken: string) => {
   const { message } = await api
-    .post<ApiResultMessage>("/auth/logout", {
-      userId,
+    .delete<ApiResultMessage>("/auth/logout", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     })
     .then((res) => res.data);
 
@@ -45,6 +48,7 @@ export const postAuthVerify = async (userMail: string, verifyCode: string) => {
   return { message };
 };
 
+// 이거 어떻게 할지 고민해야함
 export const postAuthVerifyLogin = async (userMail: string) => {
   const { accessToken, userId } = await api
     .post<ApiResultAccessToken>("/auth/verify/login", {

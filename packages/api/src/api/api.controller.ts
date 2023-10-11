@@ -8,16 +8,17 @@ import {
   Put,
   Request,
   Res,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import NodeCache from "node-cache";
 import { AuthService } from "src/auth/auth.service";
+import { JwtAuthGuard, LocalAuthGuard } from "src/auth/guard";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
-import { Favorite, Preset, User } from "src/source/entity";
+import { Favorite, Preset } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
 import { generateRandomNumber } from "src/util";
-import { ReqPostAuthLoginDto } from "./dto/req/auth";
 import { ReqPostFavoriteAddDto, ReqPutPavoriteDto } from "./dto/req/favorite";
 import { ReqPostPresetAddDto, ReqPutPresetDto } from "./dto/req/preset";
 import { ReqPostUserSignUpDto } from "./dto/req/user";
@@ -40,42 +41,35 @@ export class ApiController {
     private readonly favoritesService: FavoritesService,
   ) {}
 
-  // @UseGuards(AuthGuard("local"))
+  @UseGuards(LocalAuthGuard)
   @Post("auth/login")
   @ApiResponse({
     status: 201,
     description: "유저 로그인에 사용되는 API입니다.",
     type: ResPostAuthLoginDto,
   })
-  async postAuthLogin(
-    @Request() req,
-    @Res({ passthrough: true }) res,
-    @Body() dto: ReqPostAuthLoginDto,
-  ) {
+  async login(@Request() req, @Res({ passthrough: true }) res) {
+    const user = req.user;
     try {
-      const cookieRefreshToken = req?.cookies?.refreshToken;
-
-      const { mail, password } = dto;
-
-      let user: User;
-      if (cookieRefreshToken) {
-        user = await this.usersService.validRefreshToken(
-          mail,
-          cookieRefreshToken,
-        );
-      } else {
-        user = await this.usersService.findOneToMail(mail);
-      }
-      await this.usersService.checkPassword(user, password);
-
       const { verify } = user;
-
       if (!verify) {
         return { message: "not verify", userId: user.id };
       }
 
+      const cookieRefreshToken = req?.cookies?.refreshToken;
       const tokens = await this.authService.login(user);
       const { accessToken, refreshToken } = tokens;
+      await this.usersService.updateloginTime(user);
+
+      if (
+        cookieRefreshToken &&
+        (await this.usersService.validRefreshToken(
+          req.user,
+          cookieRefreshToken,
+        ))
+      ) {
+        return { accessToken, userId: user.id };
+      }
 
       await this.usersService.updateRefreshToken(user, refreshToken);
 
@@ -84,8 +78,6 @@ export class ApiController {
         secure: process.env.NODE_ENV === "production" ? true : false,
       });
 
-      await this.usersService.updateloginTime(user);
-
       return { accessToken, userId: user.id };
     } catch (e) {
       const { message } = e;
@@ -93,7 +85,7 @@ export class ApiController {
     }
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Get("auth/refreshToken")
   @ApiResponse({
     status: 200,
@@ -107,18 +99,15 @@ export class ApiController {
     return { refreshToken };
   }
 
-  // @UseGuards(AuthGuard("jwt"))
-  @Post("auth/logout")
+  @UseGuards(JwtAuthGuard)
+  @Delete("auth/logout")
   @ApiResponse({
     status: 201,
     description: "로그아웃 API입니다.",
     type: ResSuccessMessageDto,
   })
-  async postAuthLogout(
-    @Res({ passthrough: true }) res,
-    @Body() dto: { userId: number },
-  ) {
-    const { userId } = dto;
+  async postAuthLogout(@Request() req, @Res({ passthrough: true }) res) {
+    const { userId } = req.user;
     res.clearCookie("refreshToken");
     const user = await this.usersService.findOneToId(userId);
     await this.usersService.updateRefreshToken(user, "");
@@ -138,7 +127,6 @@ export class ApiController {
     return { accessToken };
   }
 
-  // @UseGuards(AuthGuard("jwt"))
   @Post("auth/mail")
   @ApiResponse({
     status: 200,
@@ -152,7 +140,6 @@ export class ApiController {
     await this.authService.mail(user, verifyCode);
   }
 
-  // @UseGuards(AuthGuard("jwt"))
   @Post("auth/verify")
   @ApiResponse({
     status: 200,
@@ -173,7 +160,7 @@ export class ApiController {
     return { message: "not verify" };
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Post("auth/verify/login")
   @ApiResponse({
     status: 200,
@@ -199,11 +186,10 @@ export class ApiController {
     return { accessToken, userId: user.id };
   }
 
-  // @UseGuards(AuthGuard("local"))
   @Post("user/exist")
   @ApiResponse({
     status: 200,
-    description: "유저 조회 API입니다.",
+    description: "회원 가입 유효성 검사에 사용할 유저 조회 API입니다.",
   })
   async postExistUser(@Body() dto: { mail: string }) {
     const { mail } = dto;
@@ -211,7 +197,6 @@ export class ApiController {
     return user;
   }
 
-  // @UseGuards(AuthGuard("local"))
   @Post("user")
   @ApiResponse({
     status: 201,
@@ -230,7 +215,6 @@ export class ApiController {
     }
   }
 
-  // @UseGuards(AuthGuard("jwt"))
   @Put("user")
   @ApiResponse({
     status: 200,
@@ -245,14 +229,15 @@ export class ApiController {
     return { message: "success" };
   }
 
-  // @UseGuards(AuthGuard("jwt"))
-  @Delete("user/:userId")
+  @UseGuards(JwtAuthGuard)
+  @Delete("user")
   @ApiResponse({
     status: 200,
     description: "유저 회원탈퇴에 사용되는 API입니다.",
     type: ResSuccessMessageDto,
   })
-  async deleteUser(@Param("userId") userId: number) {
+  async deleteUser(@Request() req) {
+    const { userId } = req.user;
     const presets = await this.presetsService.findAll(userId);
 
     if (presets && presets.length > 0) {
@@ -264,19 +249,20 @@ export class ApiController {
     await this.usersService.remove(userId);
   }
 
-  // @UseGuards(AuthGuard("jwt"))
-  @Get("preset/list/:userId")
+  @UseGuards(JwtAuthGuard)
+  @Get("preset/list")
   @ApiResponse({
     status: 200,
     description: "유저 프리셋 리스트 조회에 사용되는 API입니다.",
     type: [Preset],
   })
-  async getPresetList(@Param("userId") userId: number) {
+  async getPresetList(@Request() req) {
+    const { userId } = req.user;
     const presets = await this.presetsService.findAll(userId);
     return presets;
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Get("preset/:presetId")
   @ApiResponse({
     status: 200,
@@ -288,17 +274,15 @@ export class ApiController {
     return preset;
   }
 
-  // @UseGuards(AuthGuard("jwt"))
-  @Post("preset/:userId")
+  @UseGuards(JwtAuthGuard)
+  @Post("preset")
   @ApiResponse({
     status: 201,
     description: "프리셋 생성에 사용되는 API입니다.",
     type: ResSuccessMessageDto,
   })
-  async postPresetAdd(
-    @Param("userId") userId: number,
-    @Body() dto: ReqPostPresetAddDto,
-  ) {
+  async postPresetAdd(@Request() req, @Body() dto: ReqPostPresetAddDto) {
+    const { userId } = req.user;
     try {
       const user = await this.usersService.findOneToId(userId);
       const { presetName } = dto;
@@ -318,7 +302,7 @@ export class ApiController {
     }
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Delete("preset/:presetId")
   @ApiResponse({
     status: 200,
@@ -337,18 +321,19 @@ export class ApiController {
     await this.presetsService.remove(presetId);
   }
 
-  // @UseGuards(AuthGuard("jwt"))
-  @Put("preset/:userId/:presetId")
+  @UseGuards(JwtAuthGuard)
+  @Put("preset/:presetId")
   @ApiResponse({
     status: 200,
     description: "프리셋 수정에 사용되는 API입니다.",
     type: ResSuccessMessageDto,
   })
   async putPreset(
-    @Param("userId") userId: number,
+    @Request() req,
     @Param("presetId") presetId: number,
     @Body() dto: ReqPutPresetDto,
   ) {
+    const { userId } = req.user;
     try {
       const { newPresetName } = dto;
       await this.presetsService.update(userId, presetId, newPresetName);
@@ -366,21 +351,19 @@ export class ApiController {
     }
   }
 
-  // @UseGuards(AuthGuard("jwt"))
-  @Post("preset/default/:userId/:presetId")
+  @UseGuards(JwtAuthGuard)
+  @Post("preset/default/:presetId")
   @ApiResponse({
     status: 200,
     description: "프리셋 디폴트 변경에 사용되는 API입니다.",
   })
-  async postDefaultPreset(
-    @Param("userId") userId: number,
-    @Param("presetId") presetId: number,
-  ) {
+  async postDefaultPreset(@Request() req, @Param("presetId") presetId: number) {
+    const { userId } = req.user;
     const preset = await this.presetsService.updateDefault(userId, presetId);
     return preset;
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Get("favorite/list/:presetId")
   @ApiResponse({
     status: 200,
@@ -392,7 +375,7 @@ export class ApiController {
     return favorites;
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Get("favorite/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -404,7 +387,7 @@ export class ApiController {
     return favorite;
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Post("favorite/:presetId")
   @ApiResponse({
     status: 201,
@@ -436,7 +419,7 @@ export class ApiController {
     }
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Delete("favorite/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -447,7 +430,7 @@ export class ApiController {
     await this.favoritesService.remove(favoriteId);
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Put("favorite/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -463,7 +446,7 @@ export class ApiController {
     return { message: "success" };
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Get("favorite/visited/:favoriteId")
   @ApiResponse({
     status: 200,
@@ -474,7 +457,7 @@ export class ApiController {
     await this.favoritesService.updateVisitedTime(favoriteId);
   }
 
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Get("favorite/star/:favoriteId")
   @ApiResponse({
     status: 201,

@@ -1,37 +1,46 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as nodemailer from "nodemailer";
-import {
-  JWT_ACCESS_SECRET,
-  JWT_REFRESH_SECRET,
-  nodemailerOption,
-} from "src/constants";
+import { nodemailerOption } from "src/constants";
 import { User } from "src/source/entity/User";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UsersService,
+  ) {}
 
-  async getAccessToken(mail: string) {
-    const payload = { sub: mail };
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.usersService.findOneToMail(username);
+    await this.usersService.checkPassword(user, password);
+    if (user) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, presets, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  async getAccessToken(user: User) {
+    const payload = { username: user.mail, sub: user.id };
     return await this.jwtService.signAsync(payload, {
-      secret: JWT_ACCESS_SECRET,
       expiresIn: "15m",
     });
   }
 
-  async getRefreshToken(mail: string) {
-    const payload = { sub: mail };
+  async getRefreshToken(user: User) {
+    const payload = { username: user.mail, sub: user.id };
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: JWT_REFRESH_SECRET,
       expiresIn: "7d",
     });
     return refreshToken;
   }
 
   async login(user: User) {
-    const accessToken = await this.getAccessToken(user.mail);
-    const refreshToken = await this.getRefreshToken(user.mail);
+    const accessToken = await this.getAccessToken(user);
+    const refreshToken = await this.getRefreshToken(user);
 
     return {
       accessToken,

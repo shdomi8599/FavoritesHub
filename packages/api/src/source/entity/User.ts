@@ -1,11 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 import { Preset } from "./Preset";
 
 @Entity("users")
@@ -67,11 +61,5 @@ export class User {
   })
   createdAt: Date;
 
-  @OneToMany(() => Preset, (preset) => preset.user)
-  @ApiProperty({
-    example: [Preset],
-    description: "프리셋 리스트입니다.",
-    required: true,
-  })
   presets: Preset[];
 }

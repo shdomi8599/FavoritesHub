@@ -25,11 +25,7 @@ export const usePresetEvent = ({
   const presetAdd = async (presetName: string) => {
     try {
       setIsLoding(true);
-      const { message, preset } = await postPresetAdd(
-        userId,
-        accessToken,
-        presetName,
-      );
+      const { message, preset } = await postPresetAdd(accessToken, presetName);
 
       if (message === "max") {
         return errorAlert("프리셋은 15개가 최대입니다.", "프리셋 추가");
@@ -53,7 +49,6 @@ export const usePresetEvent = ({
     try {
       setIsLoding(true);
       const { message } = await putPresetEdit(
-        userId,
         selectedPresetId,
         accessToken,
         newPresetName,
