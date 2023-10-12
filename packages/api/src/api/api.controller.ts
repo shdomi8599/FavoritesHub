@@ -129,7 +129,6 @@ export class ApiController {
     return { message: "success" };
   }
 
-  // @UseGuards(AuthGuard("jwt-refresh"))
   @Get("auth/accessToken")
   @ApiResponse({
     status: 200,
@@ -175,26 +174,15 @@ export class ApiController {
     return { message: "not verify" };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post("auth/verify/login")
   @ApiResponse({
     status: 200,
     description: "유저 이메일 인증 직후 로그인에 사용되는 API입니다.",
   })
-  async postAuthVerifyLogin(
-    @Res({ passthrough: true }) res,
-    @Body() dto: { username: string },
-  ) {
+  async postAuthVerifyLogin(@Body() dto: { username: string }) {
     const { username } = dto;
     const user = await this.usersService.findOneToMail(username);
-    const { accessToken, refreshToken } = await this.authService.login(user);
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-    });
-
-    await this.usersService.updateRefreshToken(user, refreshToken);
+    const accessToken = await this.authService.getAccessToken(user);
 
     await this.usersService.updateloginTime(user);
 
