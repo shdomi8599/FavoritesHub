@@ -179,12 +179,25 @@ export class ApiController {
     status: 200,
     description: "유저 이메일 인증 직후 로그인에 사용되는 API입니다.",
   })
-  async postAuthVerifyLogin(@Body() dto: { username: string }) {
-    const { username } = dto;
+  async postAuthVerifyLogin(
+    @Body() dto: { username: string; isRefreshToken: boolean },
+    @Res({ passthrough: true }) res,
+  ) {
+    const { username, isRefreshToken } = dto;
     const user = await this.usersService.findOneToMail(username);
-    const accessToken = await this.authService.getAccessToken(user);
+    const tokens = await this.authService.login(user);
+    const { accessToken, refreshToken } = tokens;
 
     await this.usersService.updateloginTime(user);
+
+    if (isRefreshToken) {
+      await this.usersService.updateRefreshToken(user, refreshToken);
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+      });
+    }
 
     return { accessToken, userId: user.id };
   }

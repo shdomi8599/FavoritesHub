@@ -7,8 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
-import { useHandler } from "@/hooks";
-import { isPasswordForgotState } from "@/states";
+import { isPasswordForgotState, isRefreshTokenState } from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import {
@@ -20,7 +19,7 @@ import {
 } from "@mui/material";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SetterOrUpdater, useSetRecoilState } from "recoil";
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from "recoil";
 
 interface Props {
   openAuthModal: () => void;
@@ -37,8 +36,13 @@ export default function LoginForm({
   setUserId,
   setUserMail,
 }: Props) {
-  const { isBoolean: isRefreshToken, handleBoolean: handleRefreshToken } =
-    useHandler(false);
+  const [isRefreshToken, setIsRefreshToken] =
+    useRecoilState(isRefreshTokenState);
+
+  const handleRefreshToken = () => {
+    setIsRefreshToken(!isRefreshToken);
+  };
+
   const setIsForgot = useSetRecoilState(isPasswordForgotState);
 
   const {

@@ -22,6 +22,7 @@ interface Props extends AuthProps {
   setUserMail: SetterOrUpdater<string>;
   userMail: string;
   isForgot: boolean;
+  isRefreshToken: boolean;
 }
 
 export default function MailVerifyForm({
@@ -29,6 +30,7 @@ export default function MailVerifyForm({
   setAccessToken,
   userMail,
   isForgot,
+  isRefreshToken,
   handleAuthModal,
   setUserId,
   setUserMail,
@@ -64,7 +66,10 @@ export default function MailVerifyForm({
       return handleAuthModal("updatePassword");
     }
 
-    const { accessToken, userId } = await postAuthVerifyLogin(userMail);
+    const { accessToken, userId } = await postAuthVerifyLogin(
+      userMail,
+      isRefreshToken,
+    );
 
     setUserMail(userMail);
     setUserId(userId);

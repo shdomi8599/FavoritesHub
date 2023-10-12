@@ -64,11 +64,14 @@ export const postAuthVerify = async (username: string, verifyCode: string) => {
   return { message };
 };
 
-// 이거 어떻게 할지 고민해야함
-export const postAuthVerifyLogin = async (username: string) => {
+export const postAuthVerifyLogin = async (
+  username: string,
+  isRefreshToken: boolean,
+) => {
   const { accessToken, userId } = await api
     .post<ApiResultAccessToken>("/auth/verify/login", {
       username,
+      isRefreshToken,
     })
     .then((res) => res.data);
 

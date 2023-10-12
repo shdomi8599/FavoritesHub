@@ -1,7 +1,7 @@
 import { useAuth, useAuthModal } from "@/hooks";
-import { isPasswordForgotState } from "@/states";
+import { isPasswordForgotState, isRefreshTokenState } from "@/states";
 import { Box, Modal } from "@mui/material";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
 import {
   ForgotPasswordForm,
@@ -11,6 +11,7 @@ import {
 } from "./form";
 
 export default function AuthModal() {
+  const isRefreshToken = useRecoilValue(isRefreshTokenState);
   const { setUserId, setAccessToken, userMail, setUserMail } = useAuth();
   const { isAuthModal, offAuthModal, handleAuthModal, authModal } =
     useAuthModal();
@@ -41,6 +42,7 @@ export default function AuthModal() {
         setUserId={setUserId}
         userMail={userMail}
         isForgot={isForgot}
+        isRefreshToken={isRefreshToken}
       />
     ),
     updatePassword: (

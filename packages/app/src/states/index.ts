@@ -77,6 +77,11 @@ export const accessTokenState = atom({
   default: "",
 });
 
+export const isRefreshTokenState = atom({
+  key: "isRefreshTokenState",
+  default: false,
+});
+
 export const userIdState = atom({
   key: "userIdState",
   default: 0,
