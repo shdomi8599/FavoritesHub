@@ -7,6 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
+import { useHandler } from "@/hooks";
 import { isPasswordForgotState } from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
@@ -36,6 +37,8 @@ export default function LoginForm({
   setUserId,
   setUserMail,
 }: Props) {
+  const { isBoolean: isRefreshToken, handleBoolean: handleRefreshToken } =
+    useHandler(false);
   const setIsForgot = useSetRecoilState(isPasswordForgotState);
 
   const {
@@ -71,6 +74,7 @@ export default function LoginForm({
     const { accessToken, message, userId } = await postAuthLogin(
       mail,
       password,
+      isRefreshToken,
     );
 
     if (message === "not exact") {
@@ -127,7 +131,13 @@ export default function LoginForm({
             type="password"
           />
           <FormControlLabel
-            control={<Checkbox value="auto-login" color="primary" />}
+            control={
+              <Checkbox
+                onClick={handleRefreshToken}
+                value="auto-login"
+                color="primary"
+              />
+            }
             label="자동 로그인"
           />
           <ModalButton>로그인</ModalButton>

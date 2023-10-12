@@ -15,11 +15,18 @@ export const getAuthRefreshToken = async () => {
   return user;
 };
 
-export const postAuthLogin = async (username: string, password: string) => {
+export const postAuthLogin = async (
+  username: string,
+  password: string,
+  isRefreshToken: boolean,
+) => {
   const { accessToken, message, userId } = await api
-    .post<ApiResultAccessToken>("/auth/login", { username, password })
+    .post<ApiResultAccessToken>("/auth/login", {
+      username,
+      password,
+      isRefreshToken,
+    })
     .then((res) => res.data);
-  console.log(accessToken);
 
   return {
     accessToken,

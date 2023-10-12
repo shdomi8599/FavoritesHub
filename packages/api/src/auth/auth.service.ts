@@ -36,11 +36,9 @@ export class AuthService {
   }
 
   async decodedRefreshToken(refreshToken: string) {
-    console.log(refreshToken);
     const decodedRefreshToken = await this.jwtService.verify(refreshToken, {
       secret: JWT_REFRESH_SECRET,
     });
-    console.log(decodedRefreshToken);
     return decodedRefreshToken;
   }
 

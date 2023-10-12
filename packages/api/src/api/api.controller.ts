@@ -48,7 +48,12 @@ export class ApiController {
     description: "유저 로그인에 사용되는 API입니다.",
     type: ResPostAuthLoginDto,
   })
-  async login(@Request() req, @Res({ passthrough: true }) res) {
+  async login(
+    @Request() req,
+    @Res({ passthrough: true }) res,
+    @Body() dto: { isRefreshToken: boolean },
+  ) {
+    const { isRefreshToken } = dto;
     const user = req.user;
     try {
       const { verify } = user;
@@ -59,12 +64,15 @@ export class ApiController {
       const { accessToken, refreshToken } = tokens;
 
       await this.usersService.updateloginTime(user);
-      await this.usersService.updateRefreshToken(user, refreshToken);
 
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
-      });
+      if (isRefreshToken) {
+        await this.usersService.updateRefreshToken(user, refreshToken);
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
+        });
+      }
 
       return { accessToken, userId: user.id };
     } catch (e) {
