@@ -43,7 +43,7 @@ export const isPresetEventState = atom({
 });
 
 export const presetModalState = atom<PresetModalState>({
-  key: "authModalState",
+  key: "presetModalState",
   default: "add",
 });
 
@@ -63,7 +63,7 @@ export const favoriteModalState = atom<FavoriteModalState>({
 });
 
 export const selectedFavoriteIdState = atom({
-  key: "selectedPresetState",
+  key: "selectedFavoriteIdState",
   default: 0,
 });
 
