@@ -107,7 +107,8 @@ export class PresetsService {
     await this.exist(presets, newPresetName);
 
     preset.presetName = newPresetName;
-    await this.presetTable.save(preset);
+    const newPreset = await this.presetTable.save(preset);
+    return newPreset;
   }
 
   async updateDefault(userId: number, presetId: number) {

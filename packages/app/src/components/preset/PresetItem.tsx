@@ -1,4 +1,4 @@
-import { isPresetAddState } from "@/states";
+import { isPresetEventState } from "@/states";
 import { Preset } from "@/types";
 import {
   Dashboard as DashboardIcon,
@@ -33,9 +33,9 @@ export default function PresetItem({
   deletePresetEvent,
 }: Props) {
   const { presetName, id, defaultPreset } = preset;
-  const setIsPresetAdd = useSetRecoilState(isPresetAddState);
+  const setIsPresetEvent = useSetRecoilState(isPresetEventState);
   useEffect(() => {
-    setIsPresetAdd(false);
+    setIsPresetEvent(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

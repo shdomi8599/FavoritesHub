@@ -1,5 +1,5 @@
 import { postPresetAdd, putPresetEdit } from "@/api/preset";
-import { isPresetAddState, viewPresetState } from "@/states";
+import { isPresetEventState, viewPresetState } from "@/states";
 import { errorAlert, successAlert } from "@/util";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
@@ -21,7 +21,7 @@ export const usePresetEvent = ({
 }: Props) => {
   const [isLoding, setIsLoding] = useState(false);
   const setViewPreset = useSetRecoilState(viewPresetState);
-  const setIsPresetAdd = useSetRecoilState(isPresetAddState);
+  const setIsPresetEvent = useSetRecoilState(isPresetEventState);
   const presetAdd = async (presetName: string) => {
     try {
       setIsLoding(true);
@@ -35,7 +35,7 @@ export const usePresetEvent = ({
         return errorAlert("이미 존재하는 이름입니다.", "프리셋 추가");
       }
 
-      setIsPresetAdd(true);
+      setIsPresetEvent(true);
       offPresetModal();
       resetPresetList();
       successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
@@ -48,7 +48,7 @@ export const usePresetEvent = ({
   const presetEdit = async (newPresetName: string) => {
     try {
       setIsLoding(true);
-      const { message } = await putPresetEdit(
+      const { message, preset } = await putPresetEdit(
         selectedPresetId,
         accessToken,
         newPresetName,
@@ -69,9 +69,11 @@ export const usePresetEvent = ({
       }
 
       if (message === "success") {
+        setIsPresetEvent(true);
         offPresetModal();
         resetPresetList();
         successAlert("프리셋이 수정되었습니다.", "프리셋 수정");
+        setViewPreset(preset!);
       }
     } finally {
       setIsLoding(false);

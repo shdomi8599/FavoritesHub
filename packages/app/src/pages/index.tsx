@@ -220,6 +220,7 @@ export default function Main() {
       <MainContainer
         sx={{
           px: 2,
+          mt: 1,
         }}
       >
         <MainTitle

@@ -37,8 +37,8 @@ export const isPresetModalState = atom({
   default: false,
 });
 
-export const isPresetAddState = atom({
-  key: "isPresetAddState",
+export const isPresetEventState = atom({
+  key: "isPresetEventState",
   default: false,
 });
 

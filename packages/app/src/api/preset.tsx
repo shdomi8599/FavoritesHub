@@ -1,4 +1,9 @@
-import { ApiResultMessage, Preset, ResPostPresetAdd } from "@/types";
+import {
+  ApiResultMessage,
+  Preset,
+  ResPostPresetAdd,
+  ResPostPresetPut,
+} from "@/types";
 import { api } from ".";
 
 export const getPresetList = async (accessToken: string) => {
@@ -49,8 +54,8 @@ export const putPresetEdit = async (
   newPresetName: string,
 ) => {
   const body = { newPresetName };
-  const { message } = await api
-    .put<ApiResultMessage>(`/preset/${presetId}`, body, {
+  const { message, preset } = await api
+    .put<ResPostPresetPut>(`/preset/${presetId}`, body, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -59,6 +64,7 @@ export const putPresetEdit = async (
 
   return {
     message,
+    preset,
   };
 };
 

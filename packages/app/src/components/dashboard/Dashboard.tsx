@@ -9,7 +9,7 @@ import {
 } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
-import { isLoadingState, isPresetAddState, viewPresetState } from "@/states";
+import { isLoadingState, isPresetEventState, viewPresetState } from "@/states";
 import { confirmAlert } from "@/util";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -38,7 +38,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const { handleSignUpModal } = useAuthModal();
   const { resetPresetList } = useResetQuery(userId);
   const { ref: barRef, barHeight } = useBarHeight();
-  const isPresetAdd = useRecoilValue(isPresetAddState);
+  const isPresetEvent = useRecoilValue(isPresetEventState);
   const setIsLoading = useSetRecoilState(isLoadingState);
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
   const { addPresetModal, editPresetModal } = usePresetModal();
@@ -98,10 +98,10 @@ export default function Dashboard({ children }: { children: ReactNode }) {
      * 그리고 viewPreset을 새로 추가된 데이터로 변경하기 위해
      * 이펙트 최상단에서 현재 프리셋을 저장하고 만약 preset add가 실제로 일어났다면
      * currentViewPreset을 다시 세팅하도록 해놨음.
-     * isPresetAdd상태의 초기화는 새롭게 생겨나는 PresetItem 컴포넌트에 존재하는
+     * isPresetEvent상태의 초기화는 새롭게 생겨나는 PresetItem 컴포넌트에 존재하는
      * 이펙트를 통해 초기화 되도록 로직을 구성함
      */
-    if (isPresetAdd) {
+    if (isPresetEvent) {
       setViewPreset(currentViewPreset);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,6 +115,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
         setAccessToken(accessToken!);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

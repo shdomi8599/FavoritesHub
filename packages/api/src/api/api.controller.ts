@@ -351,8 +351,12 @@ export class ApiController {
     const { userId } = req.user;
     try {
       const { newPresetName } = dto;
-      await this.presetsService.update(userId, presetId, newPresetName);
-      return { message: "success" };
+      const preset = await this.presetsService.update(
+        userId,
+        presetId,
+        newPresetName,
+      );
+      return { message: "success", preset };
     } catch (e) {
       const { message } = e;
 

@@ -53,6 +53,10 @@ export interface ResPostPresetAdd extends ApiResultMessage {
   preset?: Preset;
 }
 
+export interface ResPostPresetPut extends ApiResultMessage {
+  preset?: Preset;
+}
+
 export interface ApiResultAccessToken {
   accessToken?: string;
   message?: Message;
