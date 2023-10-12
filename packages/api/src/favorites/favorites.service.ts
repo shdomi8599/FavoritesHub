@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import extractDomain from "extract-domain";
-import isValidDomain from "is-valid-domain";
 import { Favorite } from "src/source/entity/Favorite";
 import { Preset } from "src/source/entity/Preset";
 import { Repository } from "typeorm";
@@ -40,15 +38,11 @@ export class FavoritesService {
     return favorite;
   }
 
-  async add(preset: Preset, favoriteName: string, address: string) {
-    const { domain, title, description, imgHref } =
-      await this.getDomainData(address);
-
-    const path = address.split(domain)[1];
-
+  async freeAdd(preset: Preset, favoriteName: string, address: string) {
     const favorites = await this.findAll(preset.id);
+
     const existData = favorites.find(
-      (favorite) => favorite.path === path && favorite.domain === domain,
+      (favorite) => favorite.address === address,
     );
 
     if (existData) {
@@ -57,11 +51,39 @@ export class FavoritesService {
 
     const favoriteData = {
       favoriteName,
-      domain,
+      address,
+      title: "",
+      description: "",
+      imgHref: "",
+      star: false,
+    };
+
+    const newFavorite = this.favoriteTable.create({
+      ...favoriteData,
+      preset,
+    });
+    await this.favoriteTable.save(newFavorite);
+  }
+
+  async add(preset: Preset, favoriteName: string, address: string) {
+    const favorites = await this.findAll(preset.id);
+
+    const existData = favorites.find(
+      (favorite) => favorite.address === address,
+    );
+
+    if (existData) {
+      throw new Error("exist");
+    }
+
+    const { title, description, imgHref } = await this.getAddressData(address);
+
+    const favoriteData = {
+      favoriteName,
+      address,
       title,
       description,
       imgHref,
-      path,
       star: false,
     };
 
@@ -78,10 +100,9 @@ export class FavoritesService {
   }
 
   async update(favoriteId: number, favoriteData: Favorite) {
-    const { domain, path, favoriteName } = favoriteData;
+    const { address, favoriteName } = favoriteData;
     const favorite = await this.findOne(favoriteId);
-    favorite.domain = domain;
-    favorite.path = path;
+    favorite.address = address;
     favorite.favoriteName = favoriteName;
     await this.favoriteTable.save(favorite);
   }
@@ -98,58 +119,70 @@ export class FavoritesService {
     await this.favoriteTable.save(favorite);
   }
 
-  async getDomainData(address: string) {
-    const domain = (await extractDomain(address)) as string;
-    const isDomain = isValidDomain(domain);
+  async getAddressData(address: string) {
+    if (!address.includes("https://")) {
+      address = "https://" + address;
+    }
+    const response = await axios(address);
+    console.log(response);
+    const html = response.data;
 
-    if (!isDomain) {
-      throw new Error("not exact");
+    const $ = cheerio.load(html);
+
+    const title = $("title").text();
+
+    let description = "";
+    let imgHref = "";
+
+    const links: { rel: string; href: string }[] = [];
+    $("link").each((index, element) => {
+      const rel = $(element).attr("rel");
+      const href = $(element).attr("href");
+      links.push({ rel, href });
+    });
+
+    const metas: { name: string; content: string }[] = [];
+    $("meta").each((index, element) => {
+      const name = $(element).attr("name");
+      const content = $(element).attr("content");
+      metas.push({ name, content });
+    });
+
+    for (const link of links) {
+      const { rel, href } = link;
+      if (
+        rel.includes("icon") ||
+        href.includes("png") ||
+        href.includes("jpg") ||
+        href.includes("webp") ||
+        href.includes("jpeg")
+      ) {
+        imgHref = href;
+        break;
+      }
     }
 
-    try {
-      const response = await axios(`https://${domain}`);
-      const html = response.data;
+    if (!imgHref) {
+      for (const meta of metas) {
+        if (imgHref && description) break;
+        const { name, content } = meta;
 
-      const $ = cheerio.load(html);
-
-      const title = $("title").text();
-
-      let imgHref = "";
-      let localHref = "";
-      const hrefs: string[] = [];
-      $("link").each((index, element) => {
-        const rel = $(element).attr("rel");
-        const href = $(element).attr("href");
-        if (rel?.includes("icon")) {
-          hrefs.push(href);
+        if (
+          content.includes("https") ||
+          content.includes("png") ||
+          content.includes("jpg") ||
+          content.includes("webp") ||
+          content.includes("jpeg")
+        ) {
+          imgHref = content;
         }
-      });
 
-      for (const href of hrefs) {
-        if (href.includes("https")) {
-          imgHref = href;
-          break;
-        }
-        localHref = href;
-      }
-
-      if (!imgHref && localHref) {
-        imgHref = domain + localHref;
-      }
-
-      let description = "";
-      $("meta").each((index, element) => {
-        const name = $(element).attr("name");
-        const content = $(element).attr("content");
-        if (!description && name?.includes("description")) {
+        if (name.includes("description")) {
           description = content;
         }
-      });
-
-      return { domain, title, description, imgHref };
-    } catch (error) {
-      // 코스 에러가 뜨는 사이트는 어떻게 처리할 지 고민 중
-      throw new Error("cors");
+      }
     }
+
+    return { address, title, description, imgHref };
   }
 }

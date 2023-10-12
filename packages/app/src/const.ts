@@ -52,6 +52,10 @@ export const favoriteFormOptions: Record<string, RegisterOptions> = {
   },
   address: {
     required: true,
+    pattern: {
+      value: /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/[^\s]*)?$/,
+      message: "URL주소가 올바르지 않습니다.",
+    },
   },
 };
 

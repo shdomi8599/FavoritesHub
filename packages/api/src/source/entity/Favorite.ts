@@ -25,18 +25,10 @@ export class Favorite {
   @Column({ charset: "utf8" })
   @ApiProperty({
     example: "naver.com",
-    description: "도메인을 전달해주세요.",
+    description: "주소를 전달해주세요.",
     required: true,
   })
-  domain: string;
-
-  @Column({ charset: "utf8" })
-  @ApiProperty({
-    example: "/",
-    description: "도메인 뒤의 라우트 부분을 전달해주세요.",
-    required: true,
-  })
-  path: string;
+  address: string;
 
   @Column({ charset: "utf8" })
   title: string;

@@ -80,11 +80,10 @@ export interface Preset {
 export interface Favorite {
   id: number;
   favoriteName: string;
-  domain: string;
+  address: string;
   createdAt: string;
   description: string;
   imgHref: string;
-  path: string;
   lastVisitedAt: string;
   star: boolean;
   title: string;

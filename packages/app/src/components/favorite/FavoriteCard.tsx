@@ -25,9 +25,8 @@ function FavoriteCard({
   const {
     id,
     star,
-    path,
     title,
-    domain,
+    address,
     imgHref,
     createdAt,
     description,
@@ -39,10 +38,28 @@ function FavoriteCard({
     return moment(date).format("YYYY년 MMMM Do, a h:mm:ss");
   };
 
-  const address = `https://${domain + path}`;
+  function extractURLs(text: string) {
+    const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
+    const urls = text.match(urlRegex);
+
+    if (urls) {
+      return urls.map((url: string) => {
+        if (url.startsWith("https://")) {
+          return url.replace("https://", "").split("/")[0];
+        } else {
+          return url.split("/")[0];
+        }
+      });
+    } else {
+      return "";
+    }
+  }
+
   const formatCreatedAt = formatDate(createdAt);
   const formatLastVisitedAt = formatDate(lastVisitedAt);
-  const imgSrc = imgHref.includes("https") ? imgHref : `https://${imgHref}`;
+  const imgSrc = imgHref.includes("https")
+    ? imgHref
+    : `https://${extractURLs(address) + imgHref}`;
 
   const openSite = () => {
     favoriteVisited(id);
@@ -66,7 +83,7 @@ function FavoriteCard({
           <CardTopContainer
             star={star}
             title={title}
-            imgSrc={imgSrc}
+            imgSrc={!imgHref ? imgHref : imgSrc}
             favoriteName={favoriteName}
             handleStar={handleStar}
             deleteEvent={deleteEvent}

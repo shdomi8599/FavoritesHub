@@ -9,7 +9,12 @@ import {
 } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
-import { isLoadingState, isPresetEventState, viewPresetState } from "@/states";
+import {
+  isLoadingState,
+  isPresetEventState,
+  presetLengthState,
+  viewPresetState,
+} from "@/states";
 import { confirmAlert } from "@/util";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -40,6 +45,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   const { ref: barRef, barHeight } = useBarHeight();
   const isPresetEvent = useRecoilValue(isPresetEventState);
   const setIsLoading = useSetRecoilState(isLoadingState);
+  const setPresetLength = useSetRecoilState(presetLengthState);
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
   const { addPresetModal, editPresetModal } = usePresetModal();
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
@@ -85,6 +91,7 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   }, [accessToken, setIsLogin, setUserId]);
 
   useEffect(() => {
+    setPresetLength(presets?.length || 0);
     const currentViewPreset = viewPreset;
     const defaultPreset = presets?.find(({ defaultPreset }) => defaultPreset)!;
     if (!defaultPreset && presets) {
@@ -108,13 +115,15 @@ export default function Dashboard({ children }: { children: ReactNode }) {
   }, [presets, setViewPreset]);
 
   useEffect(() => {
-    getAuthRefreshToken().then((res) => {
-      if (res) {
-        const { accessToken, userId } = res;
-        setUserId(userId);
-        setAccessToken(accessToken!);
-      }
-    });
+    getAuthRefreshToken()
+      .then((res) => {
+        if (res) {
+          const { accessToken, userId } = res;
+          setUserId(userId);
+          setAccessToken(accessToken!);
+        }
+      })
+      .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -418,21 +418,21 @@ export class ApiController {
     @Param("presetId") presetId: number,
     @Body() dto: ReqPostFavoriteAddDto,
   ) {
+    const { favoriteName, address } = dto;
+    const preset = await this.presetsService.findOne(presetId);
     try {
-      const { favoriteName, address } = dto;
-      const preset = await this.presetsService.findOne(presetId);
       await this.favoritesService.add(preset, favoriteName, address);
       return { message: "success" };
     } catch (e) {
       const { message } = e;
-      if (message === "not exact") {
-        return { message: "not exact" };
+      if (
+        message.includes("http") ||
+        message.includes("NOT") ||
+        message.includes("getaddrinfo")
+      ) {
+        await this.favoritesService.freeAdd(preset, favoriteName, address);
+        return { message: "success" };
       }
-
-      if (message === "cors") {
-        return { message: "cors" };
-      }
-
       if (message === "exist") {
         return { message: "exist" };
       }

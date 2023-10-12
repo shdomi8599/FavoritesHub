@@ -47,6 +47,11 @@ export const presetModalState = atom<PresetModalState>({
   default: "add",
 });
 
+export const presetLengthState = atom({
+  key: "presetLengthState",
+  default: 0,
+});
+
 export const selectedPresetIdState = atom({
   key: "selectedPresetState",
   default: 0,

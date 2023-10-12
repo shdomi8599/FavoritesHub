@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import {
   Clear as ClearIcon,
+  QuestionMark as QuestionMarkIcon,
   StarBorder as StarBorderIcon,
   Star as StarIcon,
 } from "@mui/icons-material";
@@ -26,17 +27,16 @@ export default function CardTopContainer({
   deleteEvent,
 }: Props) {
   const [color] = useState(randomColor());
-  const isNotImgSrc = imgSrc === "https://";
   return (
     <TopContainer>
       <TopImgBox>
-        {isNotImgSrc ? (
+        {!imgSrc ? (
           <TopCustomImg
             sx={{
               backgroundColor: color,
             }}
           >
-            {title[0]}
+            {title ? title[0] : <QuestionMarkIcon />}
           </TopCustomImg>
         ) : (
           <TopImg src={imgSrc} alt="" />
