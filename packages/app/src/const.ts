@@ -59,7 +59,7 @@ export const favoriteFormOptions: Record<string, RegisterOptions> = {
   },
 };
 
-export const SearchTags = ["전체", "별칭", "도메인", "타이틀", "설명"];
+export const SearchTags = ["전체", "별칭", "주소", "타이틀", "설명"];
 
 export const SearchSelects = [
   { label: "등록순", value: "createdAt" },

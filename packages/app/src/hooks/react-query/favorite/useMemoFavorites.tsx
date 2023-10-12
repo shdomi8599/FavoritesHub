@@ -26,7 +26,7 @@ export const useMemoFavorites = (data: Favorite[]) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const titleItems = useMemo(() => getUniqueItems("title"), [data]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const domainItems = useMemo(() => getUniqueItems("domain"), [data]);
+  const addressItems = useMemo(() => getUniqueItems("address"), [data]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const descriptionItems = useMemo(() => getUniqueItems("description"), [data]);
   const favoriteNameItems = useMemo(
@@ -35,5 +35,5 @@ export const useMemoFavorites = (data: Favorite[]) => {
     [data],
   );
 
-  return { titleItems, domainItems, descriptionItems, favoriteNameItems };
+  return { titleItems, addressItems, descriptionItems, favoriteNameItems };
 };

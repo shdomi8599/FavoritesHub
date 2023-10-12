@@ -97,11 +97,11 @@ export default function Main() {
     if (tags.length === 0) {
       return favorites;
     }
-    const { domain, description, favoriteName, title } = favorite;
+    const { address, description, favoriteName, title } = favorite;
     const loweredInputValue = inputValue.toLowerCase();
     if (tags.includes("전체")) {
       return (
-        domain.toLowerCase().includes(loweredInputValue) ||
+        address.toLowerCase().includes(loweredInputValue) ||
         description.toLowerCase().includes(loweredInputValue) ||
         favoriteName.toLowerCase().includes(loweredInputValue) ||
         title.toLowerCase().includes(loweredInputValue)
@@ -110,8 +110,8 @@ export default function Main() {
     if (tags.includes("타이틀")) {
       return title.toLowerCase().includes(loweredInputValue);
     }
-    if (tags.includes("도메인")) {
-      return domain.toLowerCase().includes(loweredInputValue);
+    if (tags.includes("주소")) {
+      return address.toLowerCase().includes(loweredInputValue);
     }
     if (tags.includes("설명")) {
       return description.toLowerCase().includes(loweredInputValue);
@@ -121,24 +121,19 @@ export default function Main() {
     }
   });
 
-  const { titleItems, domainItems, descriptionItems, favoriteNameItems } =
+  const { titleItems, descriptionItems, favoriteNameItems, addressItems } =
     useMemoFavorites(viewData!);
 
   const getAutoBarData = () => {
     const selectedItems = [];
     if (tags.includes("전체")) {
-      selectedItems.push(
-        titleItems,
-        domainItems,
-        descriptionItems,
-        favoriteNameItems,
-      );
+      selectedItems.push(titleItems, descriptionItems, favoriteNameItems);
     } else {
       if (tags.includes("타이틀")) {
         selectedItems.push(titleItems);
       }
-      if (tags.includes("도메인")) {
-        selectedItems.push(domainItems);
+      if (tags.includes("주소")) {
+        selectedItems.push(addressItems);
       }
       if (tags.includes("설명")) {
         selectedItems.push(descriptionItems);
