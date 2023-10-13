@@ -34,6 +34,7 @@ import {
   IconButton,
   styled,
 } from "@mui/material";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
@@ -199,6 +200,9 @@ export default function Main() {
 
   return isLogin ? (
     <>
+      <Head>
+        <title>Favorites Hub</title>
+      </Head>
       <Container
         maxWidth={"md"}
         sx={{

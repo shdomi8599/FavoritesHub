@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import Image from "next/image";
 import { MutableRefObject } from "react";
 import BarUserModal from "./BarUserModal";
 
@@ -60,12 +61,13 @@ export default function DashboardBar({
         >
           <MenuIcon />
         </IconButton>
+        <Image src="/logo/logo.png" alt="logo" width={30} height={30} />
         <Typography
           component="h1"
           variant="h6"
           color="inherit"
           noWrap
-          sx={{ flexGrow: 1 }}
+          sx={{ flexGrow: 1, ml: 0.5 }}
         >
           Favorites Hub
         </Typography>
