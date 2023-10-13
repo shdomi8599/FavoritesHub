@@ -74,7 +74,7 @@ export class ApiController {
         });
       }
 
-      return { accessToken, userId: user.id };
+      return { accessToken, userId: user.id, mail: user.mail };
     } catch (e) {
       const { message } = e;
       return { message };
@@ -111,7 +111,7 @@ export class ApiController {
       secure: process.env.NODE_ENV === "production" ? true : false,
     });
 
-    return { accessToken, userId: user.id };
+    return { accessToken, userId: user.id, mail: user.mail };
   }
 
   @UseGuards(JwtAuthGuard)

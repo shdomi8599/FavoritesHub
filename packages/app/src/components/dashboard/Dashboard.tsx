@@ -128,9 +128,10 @@ export default function Dashboard({
     getAuthRefreshToken()
       .then((res) => {
         if (res) {
-          const { accessToken, userId } = res;
+          const { accessToken, userId, mail } = res;
           setUserId(userId);
           setAccessToken(accessToken!);
+          setUserMail(mail);
         }
       })
       .catch(() => {})

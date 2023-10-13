@@ -69,6 +69,7 @@ export interface ApiResultAccessToken {
   accessToken?: string;
   message?: Message;
   userId: number;
+  mail: string;
 }
 
 export interface DashBoardChildProps {
