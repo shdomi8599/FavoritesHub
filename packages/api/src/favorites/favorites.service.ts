@@ -128,7 +128,7 @@ export class FavoritesService {
 
   async getAddressData(address: string) {
     const response = await axios(address);
-    const html = response.data;
+    const html = response?.data;
 
     const $ = cheerio.load(html);
 
@@ -154,34 +154,33 @@ export class FavoritesService {
     for (const link of links) {
       const { rel, href } = link;
       if (
-        rel.includes("icon") ||
-        href.includes("png") ||
-        href.includes("jpg") ||
-        href.includes("webp") ||
-        href.includes("jpeg")
+        rel?.includes("icon") ||
+        href?.includes("png") ||
+        href?.includes("jpg") ||
+        href?.includes("webp") ||
+        href?.includes("jpeg")
       ) {
         imgHref = href;
         break;
       }
     }
 
-    if (!imgHref) {
-      for (const meta of metas) {
-        if (imgHref && description) break;
-        const { name, content } = meta;
+    for (const meta of metas) {
+      const { name, content } = meta;
 
+      if (name?.includes("description")) {
+        description = content;
+      }
+
+      if (!imgHref) {
         if (
-          content.includes("https") ||
-          content.includes("png") ||
-          content.includes("jpg") ||
-          content.includes("webp") ||
-          content.includes("jpeg")
+          content?.includes("https") ||
+          content?.includes("png") ||
+          content?.includes("jpg") ||
+          content?.includes("webp") ||
+          content?.includes("jpeg")
         ) {
           imgHref = content;
-        }
-
-        if (name.includes("description")) {
-          description = content;
         }
       }
     }
