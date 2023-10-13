@@ -34,8 +34,8 @@ export default function BarUserModal({
   return (
     <UserContentBox top={contentBoxTop}>
       <CloseBox>
-        <IconButton>
-          <CloseIcon onClick={handleOpen} />
+        <IconButton onClick={handleOpen}>
+          <CloseIcon />
         </IconButton>
       </CloseBox>
       <MailBox>{userMail}</MailBox>
