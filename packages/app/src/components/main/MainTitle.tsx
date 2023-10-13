@@ -24,6 +24,9 @@ export default function MainTitle({
         textOverflow: "ellipsis",
         overflow: "hidden",
         whiteSpace: "nowrap",
+        "@media screen and (max-width: 600px)": {
+          width: "100%",
+        },
       }}
     >
       {defaultPreset ? (

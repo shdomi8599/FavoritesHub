@@ -232,6 +232,10 @@ export default function Main() {
         sx={{
           px: 2,
           mt: 1,
+          "@media screen and (max-width: 600px)": {
+            flexDirection: "column",
+            gap: 1.5,
+          },
         }}
       >
         <MainTitle
@@ -245,6 +249,10 @@ export default function Main() {
             justifyContent: "center",
             alignItems: "center",
             gap: "1rem",
+            "@media screen and (max-width: 600px)": {
+              width: "100%",
+              justifyContent: "flex-end",
+            },
           }}
         >
           <IconButton onClick={handleStar}>
