@@ -53,15 +53,30 @@ export default function CardTopContainer({
             <Box>{favoriteName}</Box>
           </TopNameBox>
         )}
-        <IconButton onClick={editEvent}>
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            editEvent();
+          }}
+        >
           <ModeIcon />
         </IconButton>
       </TopImgBox>
       <TopIconContainer>
-        <IconButton onClick={deleteEvent}>
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteEvent();
+          }}
+        >
           <ClearIcon />
         </IconButton>
-        <IconButton onClick={handleStar}>
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            handleStar();
+          }}
+        >
           {star ? <StarIcon sx={{ color: "#e96363d2" }} /> : <StarBorderIcon />}
         </IconButton>
       </TopIconContainer>

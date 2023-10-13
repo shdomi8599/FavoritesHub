@@ -1,3 +1,4 @@
+import { useHandler } from "@/hooks";
 import { Favorite } from "@/types";
 import { Card, CardContent, Grid } from "@mui/material";
 import moment from "moment";
@@ -24,6 +25,12 @@ function FavoriteCard({
   deleteFavoriteEvent,
   editFavoriteModal,
 }: Props) {
+  const {
+    isBoolean: isHover,
+    onBoolean: onHover,
+    offBoolean: offHover,
+  } = useHandler(false);
+
   const {
     id,
     star,
@@ -82,9 +89,22 @@ function FavoriteCard({
 
   return (
     <Grid item xs={12} md={4} lg={3}>
-      <Card sx={cardStyle}>
+      <Card
+        onClick={openSite}
+        onMouseEnter={onHover}
+        onMouseLeave={offHover}
+        raised={isHover}
+        sx={cardStyle}
+      >
         <CardContent
-          sx={{ display: "flex", flexDirection: "column", height: 150 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: 150,
+            backfaceVisibility: "hidden",
+            transform: "translateZ(0)",
+            WebkitFontSmoothing: "subpixel-antialiased",
+          }}
         >
           <CardTopContainer
             star={star}
@@ -119,4 +139,6 @@ const cardStyle = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
+  transition: "all 0.5s",
+  cursor: "pointer",
 };

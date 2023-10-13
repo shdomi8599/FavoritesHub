@@ -13,10 +13,15 @@ export const useHandler = (initialBoolean: boolean) => {
     }
   };
 
+  const onBoolean = () => {
+    setisBoolean(true);
+  };
+
   return {
     isBoolean,
     handleBoolean,
     setisBoolean,
+    onBoolean,
     offBoolean,
   };
 };

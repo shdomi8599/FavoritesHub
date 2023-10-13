@@ -17,7 +17,10 @@ export default function CardBottomContainer({
     >
       <Button
         size="small"
-        onClick={openSite}
+        onClick={(e) => {
+          e.stopPropagation();
+          openSite();
+        }}
         sx={{ minWidth: "50px" }}
         variant="contained"
       >
