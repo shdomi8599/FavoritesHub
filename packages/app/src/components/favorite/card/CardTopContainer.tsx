@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import {
   Clear as ClearIcon,
+  Mode as ModeIcon,
   QuestionMark as QuestionMarkIcon,
   StarBorder as StarBorderIcon,
   Star as StarIcon,
@@ -16,6 +17,7 @@ type Props = {
   favoriteName: string;
   handleStar: () => void;
   deleteEvent: () => void;
+  editEvent: () => void;
 };
 
 export default function CardTopContainer({
@@ -23,6 +25,7 @@ export default function CardTopContainer({
   title,
   imgSrc,
   favoriteName,
+  editEvent,
   handleStar,
   deleteEvent,
 }: Props) {
@@ -41,9 +44,18 @@ export default function CardTopContainer({
         ) : (
           <TopImg src={imgSrc} alt="" />
         )}
-        <TopNameBox title={favoriteName} sx={{ fontSize: 14 }} enterDelay={300}>
-          <Box>{favoriteName}</Box>
-        </TopNameBox>
+        {favoriteName && (
+          <TopNameBox
+            title={favoriteName}
+            sx={{ fontSize: 14, ml: 1 }}
+            enterDelay={300}
+          >
+            <Box>{favoriteName}</Box>
+          </TopNameBox>
+        )}
+        <IconButton onClick={editEvent}>
+          <ModeIcon />
+        </IconButton>
       </TopImgBox>
       <TopIconContainer>
         <IconButton onClick={deleteEvent}>
@@ -66,7 +78,6 @@ const TopContainer = styled(Box)(() => ({
 const TopImgBox = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
-  gap: "8px",
   textOverflow: "ellipsis",
   overflow: "hidden",
   whiteSpace: "nowrap",
@@ -84,8 +95,8 @@ const TopImg = styled("img")(() => ({
 }));
 
 const TopCustomImg = styled(Box)(() => ({
-  width: "2rem",
-  height: "2rem",
+  minWidth: "2rem",
+  minHeight: "2rem",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

@@ -4,24 +4,26 @@ import {
   ModalFormInput,
   ModalTitle,
 } from "@/components/modal";
-import { presetFormOptions } from "@/const";
-import { PresetAddFormInput } from "@/types";
+import { favoriteEditOptions } from "@/const";
+import { FavoriteEditFormInput } from "@/types";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
-  presetEdit: (presetName: string) => void;
+  favoriteEdit: (favoriteName: string) => Promise<void>;
+  isLoading: boolean;
 }
 
-export default function EditForm() {
+export default function EditForm({ favoriteEdit, isLoading }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
-  } = useForm<PresetAddFormInput>();
+  } = useForm<FavoriteEditFormInput>();
 
-  const onSubmit: SubmitHandler<PresetAddFormInput> = async (data) => {
-    const { presetName } = data;
+  const onSubmit: SubmitHandler<FavoriteEditFormInput> = async (data) => {
+    const { favoriteName } = data;
+    await favoriteEdit(favoriteName);
   };
 
   return (
@@ -33,18 +35,18 @@ export default function EditForm() {
           alignItems: "center",
         }}
       >
-        <ModalTitle name="즐겨찾기 수정" />
+        <ModalTitle name="별칭 수정" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
           <ModalFormInput
             register={register}
-            name="presetName"
-            error={errors?.presetName}
+            name="favoriteName"
+            error={errors?.favoriteName}
             isSubmitted={isSubmitted}
-            option={presetFormOptions["presetName"]}
-            label={"즐겨찾기 수정"}
+            option={favoriteEditOptions["favoriteName"]}
+            label={"별칭 수정"}
             autoFocus={true}
           />
-          <ModalButton>추가하기</ModalButton>
+          <ModalButton disabled={isLoading}>수정하기</ModalButton>
         </ModalForm>
       </Box>
     </Container>

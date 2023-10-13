@@ -11,6 +11,7 @@ import {
 
 type Props = {
   favoriteVisited: (favoriteId: number) => void;
+  editFavoriteModal: (favoriteId: number) => void;
   favoriteHandleStar: (favoriteId: number) => void;
   deleteFavoriteEvent: (favoriteId: number) => void;
   favorite: Favorite;
@@ -21,6 +22,7 @@ function FavoriteCard({
   favoriteVisited,
   favoriteHandleStar,
   deleteFavoriteEvent,
+  editFavoriteModal,
 }: Props) {
   const {
     id,
@@ -38,7 +40,7 @@ function FavoriteCard({
     return moment(date).format("YYYY년 MMMM Do, a h:mm:ss");
   };
 
-  function extractURLs(text: string) {
+  const extractURLs = (text: string) => {
     const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
     const urls = text.match(urlRegex);
 
@@ -53,7 +55,7 @@ function FavoriteCard({
     } else {
       return "";
     }
-  }
+  };
 
   const formatCreatedAt = formatDate(createdAt);
   const formatLastVisitedAt = formatDate(lastVisitedAt);
@@ -74,6 +76,10 @@ function FavoriteCard({
     deleteFavoriteEvent(id);
   };
 
+  const editEvent = () => {
+    editFavoriteModal(id);
+  };
+
   return (
     <Grid item xs={12} md={4} lg={3}>
       <Card sx={cardStyle}>
@@ -86,6 +92,7 @@ function FavoriteCard({
             imgSrc={!imgHref ? imgHref : imgSrc}
             favoriteName={favoriteName}
             handleStar={handleStar}
+            editEvent={editEvent}
             deleteEvent={deleteEvent}
           />
           <CardMiddleContainer

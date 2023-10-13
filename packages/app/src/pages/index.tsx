@@ -56,7 +56,8 @@ export default function Main() {
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setViewPreset = useSetRecoilState(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
-  const { viewPreset, addFavoriteModal } = useFavoriteModal();
+  const { viewPreset, addFavoriteModal, editFavoriteModal } =
+    useFavoriteModal();
   const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
 
   // 데이터
@@ -265,6 +266,7 @@ export default function Main() {
             key={index}
             favorite={favorite}
             favoriteVisited={favoriteVisited}
+            editFavoriteModal={editFavoriteModal}
             favoriteHandleStar={favoriteHandleStar}
             deleteFavoriteEvent={deleteFavoriteEvent}
           />

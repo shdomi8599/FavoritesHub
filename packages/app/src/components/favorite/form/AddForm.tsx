@@ -11,10 +11,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
   favoriteAdd: (favoriteName: string, address: string) => void;
-  isLoding: boolean;
+  isLoading: boolean;
 }
 
-export default function AddForm({ favoriteAdd, isLoding }: Props) {
+export default function AddForm({ favoriteAdd, isLoading }: Props) {
   const {
     register,
     handleSubmit,
@@ -55,7 +55,7 @@ export default function AddForm({ favoriteAdd, isLoding }: Props) {
             isSubmitted={isSubmitted}
             option={favoriteFormOptions["address"]}
           />
-          <ModalButton disabled={isLoding}>추가하기</ModalButton>
+          <ModalButton disabled={isLoading}>추가하기</ModalButton>
         </ModalForm>
       </Box>
     </Container>

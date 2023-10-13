@@ -461,9 +461,8 @@ export class ApiController {
     @Param("favoriteId") favoriteId: number,
     @Body() dto: ReqPutPavoriteDto,
   ) {
-    const { favoriteData } = dto;
-    await this.favoritesService.update(favoriteId, favoriteData);
-    return { message: "success" };
+    const { newFavoriteName } = dto;
+    await this.favoritesService.update(favoriteId, newFavoriteName);
   }
 
   @UseGuards(JwtAuthGuard)

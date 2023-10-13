@@ -1,16 +1,19 @@
-import { postFavoriteAdd } from "@/api/favorite";
+import { postFavoriteAdd, putFavoriteEdit } from "@/api/favorite";
 import { useAuth } from "@/hooks";
 import { useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
+import { selectedFavoriteIdState } from "@/states";
 import { errorAlert, successAlert } from "@/util";
 import { Box, Modal } from "@mui/material";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
 import { AddForm, EditForm } from "./form";
 
 export default function FavoriteModal() {
   const { userId, accessToken } = useAuth();
-  const [isLoding, setIsLoding] = useState(false);
+  const [isLoading, setIsLoding] = useState(false);
+  const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
   const { viewPreset, isFavoriteModal, offFavoriteModal, favoriteModal } =
     useFavoriteModal();
 
@@ -51,9 +54,25 @@ export default function FavoriteModal() {
     }
   };
 
+  const favoriteEdit = async (favoriteName: string) => {
+    try {
+      setIsLoding(true);
+      await putFavoriteEdit(selectedFavoriteId, accessToken, favoriteName);
+
+      resetFavoriteList(viewPreset?.id);
+      offFavoriteModal();
+      successAlert(
+        "즐겨찾기 별칭 수정이 완료되었습니다.",
+        "즐겨찾기 별칭 수정",
+      );
+    } finally {
+      setIsLoding(false);
+    }
+  };
+
   const modalData: { [key: string]: JSX.Element } = {
-    add: <AddForm favoriteAdd={favoriteAdd} isLoding={isLoding} />,
-    edit: <EditForm />,
+    add: <AddForm favoriteAdd={favoriteAdd} isLoading={isLoading} />,
+    edit: <EditForm favoriteEdit={favoriteEdit} isLoading={isLoading} />,
   };
 
   return (

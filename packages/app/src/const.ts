@@ -59,6 +59,17 @@ export const favoriteFormOptions: Record<string, RegisterOptions> = {
   },
 };
 
+export const favoriteEditOptions: Record<string, RegisterOptions> = {
+  favoriteName: {
+    required: true,
+    pattern: {
+      value: /^[\p{L}0-9가-힣ㄱ-ㅎㅏ-ㅣ\x20]{1,20}$/iu,
+      message:
+        "즐겨찾기 이름은 1~20글자 사이의 특수문자가 제외된 문자여야 합니다.",
+    },
+  },
+};
+
 export const SearchTags = ["전체", "별칭", "주소", "타이틀", "설명"];
 
 export const SearchSelects = [

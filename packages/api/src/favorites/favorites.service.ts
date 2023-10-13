@@ -99,12 +99,11 @@ export class FavoritesService {
     await this.favoriteTable.delete(favorite);
   }
 
-  async update(favoriteId: number, favoriteData: Favorite) {
-    const { address, favoriteName } = favoriteData;
+  async update(favoriteId: number, newFavoriteName: string) {
     const favorite = await this.findOne(favoriteId);
-    favorite.address = address;
-    favorite.favoriteName = favoriteName;
-    await this.favoriteTable.save(favorite);
+    favorite.favoriteName = newFavoriteName;
+    const newFavorite = await this.favoriteTable.save(favorite);
+    return newFavorite;
   }
 
   async updateVisitedTime(favoriteId: number) {

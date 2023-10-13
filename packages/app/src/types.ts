@@ -30,6 +30,10 @@ export interface PresetAddFormInput {
   presetName: string;
 }
 
+export interface FavoriteEditFormInput {
+  favoriteName: string;
+}
+
 export interface FavoriteAddFormInput {
   favoriteName: string;
   address: string;
@@ -55,6 +59,10 @@ export interface ResPostPresetAdd extends ApiResultMessage {
 
 export interface ResPostPresetPut extends ApiResultMessage {
   preset?: Preset;
+}
+
+export interface ResPostFavoritePut {
+  favorite: Favorite;
 }
 
 export interface ApiResultAccessToken {
