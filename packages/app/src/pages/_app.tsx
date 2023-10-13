@@ -3,6 +3,7 @@ import Dashboard from "@/components/dashboard/Dashboard";
 import FavoriteModal from "@/components/favorite/FavoriteModal";
 import Loading from "@/components/loading/Loading";
 import PresetModal from "@/components/preset/PresetModal";
+import { useHandler } from "@/hooks";
 import "@/styles/globals.css";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -13,6 +14,8 @@ import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { isBoolean: isMount, handleBoolean: handleMount } = useHandler(false);
+
   const [queryClient] = useState(
     new QueryClient({
       defaultOptions: { queries: { staleTime: Infinity } },
@@ -38,11 +41,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <Loading />
-        <Dashboard>
+        <Dashboard handleMount={handleMount}>
           <FavoriteModal />
           <PresetModal />
           <AuthModal />
-          <Component {...pageProps} />
+          {isMount && <Component {...pageProps} />}
         </Dashboard>
       </QueryClientProvider>
     </RecoilRoot>

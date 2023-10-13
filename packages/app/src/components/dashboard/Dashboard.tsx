@@ -23,7 +23,13 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
-export default function Dashboard({ children }: { children: ReactNode }) {
+export default function Dashboard({
+  children,
+  handleMount,
+}: {
+  children: ReactNode;
+  handleMount: () => void;
+}) {
   // 훅
   const {
     userId,
@@ -123,7 +129,8 @@ export default function Dashboard({ children }: { children: ReactNode }) {
           setAccessToken(accessToken!);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(handleMount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
