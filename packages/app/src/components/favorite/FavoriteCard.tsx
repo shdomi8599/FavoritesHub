@@ -110,7 +110,7 @@ function FavoriteCard({
           sx={{
             display: "flex",
             flexDirection: "column",
-            height: 150,
+            height: 120,
             backfaceVisibility: "hidden",
             transform: "translateZ(0)",
             WebkitFontSmoothing: "subpixel-antialiased",
@@ -146,7 +146,7 @@ export default memo(FavoriteCard);
 
 const cardStyle = {
   minWidth: 275,
-  height: 200,
+  height: 180,
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
