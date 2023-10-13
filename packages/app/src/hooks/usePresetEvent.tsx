@@ -40,6 +40,10 @@ export const usePresetEvent = ({
       resetPresetList();
       successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
       setViewPreset(preset!);
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
     } finally {
       setIsLoding(false);
     }
@@ -74,6 +78,10 @@ export const usePresetEvent = ({
         resetPresetList();
         successAlert("프리셋이 수정되었습니다.", "프리셋 수정");
         setViewPreset(preset!);
+      }
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
       }
     } finally {
       setIsLoding(false);

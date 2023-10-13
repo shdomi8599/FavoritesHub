@@ -70,7 +70,13 @@ export default function Main() {
   );
 
   const upFavoriteVisitedCount = async (id: number) => {
-    await upVisitedCountFavorite(id, accessToken);
+    try {
+      await upVisitedCountFavorite(id, accessToken);
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
+    }
   };
 
   const getFilterData = () => {
@@ -167,6 +173,10 @@ export default function Main() {
         const preset = await postPresetDefault(presetId, accessToken);
         await resetPresetList();
         setViewPreset(preset);
+      } catch (e: any) {
+        if (e?.code === 401) {
+          location.reload();
+        }
       } finally {
         setIsLoading(false);
       }
@@ -185,19 +195,35 @@ export default function Main() {
       await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
       await deleteFavorite(favoriteId, accessToken);
       resetFavoriteList(viewPreset.id);
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const favoriteVisited = async (favoriteId: number) => {
-    await getFavoriteVisited(favoriteId, accessToken);
-    resetFavoriteList(viewPreset.id);
+    try {
+      await getFavoriteVisited(favoriteId, accessToken);
+      resetFavoriteList(viewPreset.id);
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
+    }
   };
 
   const favoriteHandleStar = async (favoriteId: number) => {
-    await getFavoriteHandleStar(favoriteId, accessToken);
-    resetFavoriteList(viewPreset.id);
+    try {
+      await getFavoriteHandleStar(favoriteId, accessToken);
+      resetFavoriteList(viewPreset.id);
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
+    }
   };
 
   useEffect(() => {

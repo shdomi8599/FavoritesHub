@@ -86,7 +86,7 @@ export const upVisitedCountFavorite = async (
   favoriteId: number,
   accessToken: string,
 ) => {
-  await api.get(`/favorite/visitedCount/${favoriteId}`, {
+  await api(`/favorite/visitedCount/${favoriteId}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

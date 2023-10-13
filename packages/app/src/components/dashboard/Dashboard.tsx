@@ -75,6 +75,10 @@ export default function Dashboard({
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
       await postPresetDelete(id, accessToken);
       resetPresetList();
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
     } finally {
       setIsLoading(false);
     }

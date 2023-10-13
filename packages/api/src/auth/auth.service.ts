@@ -31,7 +31,7 @@ export class AuthService {
     const payload = { username: user.mail, sub: user.id };
     return await this.jwtService.signAsync(payload, {
       secret: JWT_ACCESS_SECRET,
-      expiresIn: "15m",
+      expiresIn: "7d",
     });
   }
 

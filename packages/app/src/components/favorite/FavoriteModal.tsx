@@ -49,6 +49,10 @@ export default function FavoriteModal() {
         offFavoriteModal();
         successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
       }
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
     } finally {
       setIsLoding(false);
     }
@@ -65,6 +69,10 @@ export default function FavoriteModal() {
         "즐겨찾기 별칭 수정이 완료되었습니다.",
         "즐겨찾기 별칭 수정",
       );
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
     } finally {
       setIsLoding(false);
     }
