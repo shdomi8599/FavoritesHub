@@ -49,6 +49,10 @@ export class FavoritesService {
       throw new Error("exist");
     }
 
+    if (!address.includes("https")) {
+      address = "https://" + address;
+    }
+
     const favoriteData = {
       favoriteName,
       address,
@@ -74,6 +78,10 @@ export class FavoritesService {
 
     if (existData) {
       throw new Error("exist");
+    }
+
+    if (!address.includes("https://")) {
+      address = "https://" + address;
     }
 
     const { title, description, imgHref } = await this.getAddressData(address);
@@ -119,9 +127,6 @@ export class FavoritesService {
   }
 
   async getAddressData(address: string) {
-    if (!address.includes("https://")) {
-      address = "https://" + address;
-    }
     const response = await axios(address);
     const html = response.data;
 
