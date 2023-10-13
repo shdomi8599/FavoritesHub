@@ -108,3 +108,15 @@ export const putUpdatePassword = async (username: string, password: string) => {
     message,
   };
 };
+
+export const getGoogleLogin = async () => {
+  const { accessToken, userId, mail } = await api("/auth/google/login").then(
+    (res) => res.data,
+  );
+
+  return {
+    accessToken,
+    userId,
+    mail,
+  };
+};

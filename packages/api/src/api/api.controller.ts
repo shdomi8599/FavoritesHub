@@ -13,7 +13,7 @@ import {
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import NodeCache from "node-cache";
 import { AuthService } from "src/auth/auth.service";
-import { JwtAuthGuard, LocalAuthGuard } from "src/auth/guard";
+import { GoogleAuthGuard, JwtAuthGuard, LocalAuthGuard } from "src/auth/guard";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
 import { Favorite, Preset } from "src/source/entity";
@@ -40,6 +40,25 @@ export class ApiController {
     private readonly presetsService: PresetsService,
     private readonly favoritesService: FavoritesService,
   ) {}
+
+  @UseGuards(GoogleAuthGuard)
+  @Get("auth/google")
+  async googleAuth() {}
+
+  @UseGuards(GoogleAuthGuard)
+  @Get("auth/google/callback")
+  async googleAuthRedirect(@Request() req, @Res() res) {
+    const googleUser = req.user;
+    const { email, refreshToken, accessToken } = googleUser;
+
+    const user = await this.usersService.add(email, email);
+
+    await this.usersService.updateloginTime(user);
+
+    res.redirect("http://localhost:3000");
+
+    return { accessToken, userId: user.id, mail: user.mail };
+  }
 
   @UseGuards(LocalAuthGuard)
   @Post("auth/login")

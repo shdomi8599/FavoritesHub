@@ -39,6 +39,7 @@ export class UsersService {
     user.refreshToken = "";
     user.verify = false;
     await this.userTable.save(user);
+    return user;
   }
 
   async remove(userId: number) {

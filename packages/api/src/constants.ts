@@ -1,6 +1,12 @@
 import "dotenv/config";
 
-const { NODE_MAILER_USER, NODE_MAILER_PASS } = process.env;
+export const {
+  NODE_MAILER_USER,
+  NODE_MAILER_PASS,
+  OAUTH_GOOGLE_ID,
+  OAUTH_GOOGLE_SECRET,
+  OAUTH_GOOGLE_REDIRECT,
+} = process.env;
 
 export const JWT_ACCESS_SECRET = "S+Hcvoy/Z08Ljqd7qglf8w1l+bbCjuvq30mQ3cZP21Q=";
 export const JWT_REFRESH_SECRET =

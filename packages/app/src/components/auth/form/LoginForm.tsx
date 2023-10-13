@@ -1,4 +1,4 @@
-import { postAuthLogin, postUserExist } from "@/api/auth";
+import { getGoogleLogin, postAuthLogin, postUserExist } from "@/api/auth";
 import {
   ModalButton,
   ModalForm,
@@ -12,6 +12,7 @@ import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import {
   Box,
+  Button,
   Checkbox,
   Container,
   FormControlLabel,
@@ -104,6 +105,11 @@ export default function LoginForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const googleLogin = async () => {
+    const { accessToken, userId, mail } = await getGoogleLogin();
+    console.log({ accessToken, userId, mail });
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -145,6 +151,9 @@ export default function LoginForm({
             label="자동 로그인"
           />
           <ModalButton>로그인</ModalButton>
+          <Button onClick={googleLogin} variant="contained">
+            구글 로그인 버튼
+          </Button>
           <Grid container>
             <Grid item xs>
               <ModalLink clickEvent={passwordEvent}>비밀번호 재설정</ModalLink>
