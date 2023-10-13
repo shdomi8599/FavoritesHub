@@ -3,12 +3,14 @@ import { Box, Tooltip, Typography, styled } from "@mui/material";
 type Props = {
   title: string;
   address: string;
+  copyURL: () => void;
   description: string;
   formatCreatedAt: string;
 };
 
 export default function CardMiddleContainer({
   title,
+  copyURL,
   address,
   description,
   formatCreatedAt,
@@ -41,6 +43,10 @@ export default function CardMiddleContainer({
           sx={{
             mb: 1.3,
             ...hideText,
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            copyURL();
           }}
         >
           {address}

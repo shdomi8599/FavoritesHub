@@ -1,5 +1,6 @@
 import { useHandler } from "@/hooks";
 import { Favorite } from "@/types";
+import { successToast } from "@/util/alert";
 import { Card, CardContent, Grid } from "@mui/material";
 import moment from "moment";
 import "moment/locale/ko";
@@ -91,6 +92,11 @@ function FavoriteCard({
     editFavoriteModal(id);
   };
 
+  const copyURL = () => {
+    navigator.clipboard.writeText(address);
+    successToast("주소가 복사되었습니다.");
+  };
+
   return (
     <Grid item xs={12} md={4} lg={3}>
       <Card
@@ -121,6 +127,7 @@ function FavoriteCard({
           />
           <CardMiddleContainer
             title={title}
+            copyURL={copyURL}
             address={address}
             description={description}
             formatCreatedAt={formatCreatedAt}
