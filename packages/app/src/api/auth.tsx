@@ -20,19 +20,27 @@ export const postAuthLogin = async (
   password: string,
   isRefreshToken: boolean,
 ) => {
-  const { accessToken, message, userId } = await api
-    .post<ApiResultAccessToken>("/auth/login", {
-      username,
-      password,
-      isRefreshToken,
-    })
-    .then((res) => res.data);
+  try {
+    const { accessToken, message, userId } = await api
+      .post<ApiResultAccessToken>("/auth/login", {
+        username,
+        password,
+        isRefreshToken,
+      })
+      .then((res) => res.data);
 
-  return {
-    accessToken,
-    message,
-    userId,
-  };
+    return {
+      accessToken,
+      message,
+      userId,
+    };
+  } catch {
+    return {
+      accessToken: "",
+      message: "not exact",
+      userId: 0,
+    };
+  }
 };
 
 export const postAuthLogout = async (accessToken: string) => {
