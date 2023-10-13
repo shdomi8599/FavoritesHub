@@ -75,7 +75,18 @@ export const deleteFavorite = async (
   favoriteId: number,
   accessToken: string,
 ) => {
-  await api.delete<ApiResultMessage>(`/favorite/${favoriteId}`, {
+  await api.delete(`/favorite/${favoriteId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+export const upVisitedCountFavorite = async (
+  favoriteId: number,
+  accessToken: string,
+) => {
+  await api.get(`/favorite/visitedCount/${favoriteId}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

@@ -17,7 +17,7 @@ export default function CardMiddleContainer({
     <MiddleContainer>
       <Box
         sx={{
-          fontSize: 8,
+          fontSize: 9,
           my: 0.5,
         }}
         color="text.secondary"

@@ -11,10 +11,11 @@ import {
 } from "./card";
 
 type Props = {
-  favoriteVisited: (favoriteId: number) => void;
+  favoriteVisited: (favoriteId: number) => Promise<void>;
   editFavoriteModal: (favoriteId: number) => void;
   favoriteHandleStar: (favoriteId: number) => void;
   deleteFavoriteEvent: (favoriteId: number) => void;
+  upFavoriteVisitedCount: (favoriteId: number) => Promise<void>;
   favorite: Favorite;
 };
 
@@ -23,6 +24,7 @@ function FavoriteCard({
   favoriteVisited,
   favoriteHandleStar,
   deleteFavoriteEvent,
+  upFavoriteVisitedCount,
   editFavoriteModal,
 }: Props) {
   const {
@@ -39,6 +41,7 @@ function FavoriteCard({
     imgHref,
     createdAt,
     description,
+    visitedCount,
     favoriteName,
     lastVisitedAt,
   } = favorite;
@@ -70,8 +73,9 @@ function FavoriteCard({
     ? imgHref
     : `https://${extractURLs(address) + imgHref}`;
 
-  const openSite = () => {
-    favoriteVisited(id);
+  const openSite = async () => {
+    await upFavoriteVisitedCount(id);
+    await favoriteVisited(id);
     window.open(address, "_blank");
   };
 
@@ -123,7 +127,7 @@ function FavoriteCard({
           />
         </CardContent>
         <CardBottomContainer
-          openSite={openSite}
+          visitedCount={visitedCount}
           formatLastVisitedAt={formatLastVisitedAt}
         />
       </Card>

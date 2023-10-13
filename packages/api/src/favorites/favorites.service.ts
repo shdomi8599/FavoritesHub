@@ -123,7 +123,6 @@ export class FavoritesService {
       address = "https://" + address;
     }
     const response = await axios(address);
-    console.log(response);
     const html = response.data;
 
     const $ = cheerio.load(html);
@@ -183,5 +182,11 @@ export class FavoritesService {
     }
 
     return { address, title, description, imgHref };
+  }
+
+  async upVisitedCount(favoriteId: number) {
+    const favorite = await this.findOne(favoriteId);
+    favorite.visitedCount = favorite.visitedCount + 1;
+    await this.favoriteTable.save(favorite);
   }
 }

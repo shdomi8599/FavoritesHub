@@ -2,6 +2,7 @@ import {
   deleteFavorite,
   getFavoriteHandleStar,
   getFavoriteVisited,
+  upVisitedCountFavorite,
 } from "@/api/favorite";
 import { postPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
@@ -66,6 +67,10 @@ export default function Main() {
     viewPreset?.id,
     accessToken,
   );
+
+  const upFavoriteVisitedCount = async (id: number) => {
+    await upVisitedCountFavorite(id, accessToken);
+  };
 
   const getFilterData = () => {
     let data: Favorite[] = [];
@@ -269,6 +274,7 @@ export default function Main() {
             editFavoriteModal={editFavoriteModal}
             favoriteHandleStar={favoriteHandleStar}
             deleteFavoriteEvent={deleteFavoriteEvent}
+            upFavoriteVisitedCount={upFavoriteVisitedCount}
           />
         ))}
       </Grid>

@@ -45,6 +45,12 @@ export class Favorite {
   })
   star: boolean;
 
+  @Column({ default: 0 })
+  @ApiProperty({
+    description: "즐겨찾기의 카운트입니다.",
+  })
+  visitedCount: number;
+
   @Column({ type: "timestamp", default: () => "now()" })
   lastVisitedAt: Date;
 

@@ -479,11 +479,21 @@ export class ApiController {
   @UseGuards(JwtAuthGuard)
   @Get("favorite/star/:favoriteId")
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: "즐겨찾기 별표 핸들러 API입니다.",
     type: ResSuccessMessageDto,
   })
   async getFavoriteHandleStar(@Param("favoriteId") favoriteId: number) {
     await this.favoritesService.handleStar(favoriteId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("favorite/visitedCount/:favoriteId")
+  @ApiResponse({
+    status: 201,
+    description: "즐겨찾기 카운팅 API입니다.",
+  })
+  async getFavoriteUpVisitedCount(@Param("favoriteId") favoriteId: number) {
+    await this.favoritesService.upVisitedCount(favoriteId);
   }
 }
