@@ -79,7 +79,7 @@ export default function Main() {
     if (selectValue === "createdAt") {
       data = favorites?.sort((a, b) => {
         return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       })!;
     }
@@ -87,9 +87,15 @@ export default function Main() {
     if (selectValue === "lastVisitedAt") {
       data = favorites?.sort((a, b) => {
         return (
-          new Date(a.lastVisitedAt).getTime() -
-          new Date(b.lastVisitedAt).getTime()
+          new Date(b.lastVisitedAt).getTime() -
+          new Date(a.lastVisitedAt).getTime()
         );
+      })!;
+    }
+
+    if (selectValue === "visitedCount") {
+      data = favorites?.sort((a, b) => {
+        return b.visitedCount - a.visitedCount;
       })!;
     }
 
