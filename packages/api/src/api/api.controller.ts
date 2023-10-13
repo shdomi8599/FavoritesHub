@@ -425,17 +425,11 @@ export class ApiController {
       return { message: "success" };
     } catch (e) {
       const { message } = e;
-      if (
-        message.includes("http") ||
-        message.includes("NOT") ||
-        message.includes("getaddrinfo")
-      ) {
-        await this.favoritesService.freeAdd(preset, favoriteName, address);
-        return { message: "success" };
-      }
       if (message === "exist") {
         return { message: "exist" };
       }
+      await this.favoritesService.freeAdd(preset, favoriteName, address);
+      return { message: "success" };
     }
   }
 
