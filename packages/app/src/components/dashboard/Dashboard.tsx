@@ -131,13 +131,10 @@ export default function Dashboard({
       deleteCookie("googleId");
     }
 
-    console.log(isGoogleFailed);
     getAuthRefreshToken()
       .then((res) => {
-        console.log(res);
         if (res) {
           const { accessToken, userId, mail } = res;
-          console.log({ accessToken, userId, mail });
           setUserId(userId);
           setAccessToken(accessToken!);
           setUserMail(mail);
