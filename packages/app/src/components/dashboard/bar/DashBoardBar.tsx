@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useHandler, useOutSideRef } from "@/hooks";
 import { DashBoardChildProps } from "@/types";
 import {
@@ -13,7 +14,6 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Image from "next/image";
 import { MutableRefObject } from "react";
 import BarUserModal from "./BarUserModal";
 
@@ -61,7 +61,7 @@ export default function DashboardBar({
         >
           <MenuIcon />
         </IconButton>
-        <Image src="/logo/logo.png" alt="logo" width={30} height={30} />
+        <img src="/logo/logo.png" alt="logo" width={30} height={30} />
         <Typography
           component="h1"
           variant="h6"
