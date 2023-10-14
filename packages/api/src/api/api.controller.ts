@@ -11,7 +11,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import "dotenv/config";
 import NodeCache from "node-cache";
 import { AuthService } from "src/auth/auth.service";
 import { GoogleAuthGuard, JwtAuthGuard, LocalAuthGuard } from "src/auth/guard";
@@ -29,11 +28,6 @@ import {
   ResPostAuthLoginDto,
 } from "./dto/res/auth";
 import { ResSuccessMessageDto } from "./dto/res/resSuccessMessage.dto";
-
-const { CLIENT_ADDRESS, NODE_ENV } = process.env;
-
-const baseURL =
-  NODE_ENV === "production" ? CLIENT_ADDRESS : "http://localhost:3000";
 
 const myCache = new NodeCache({ checkperiod: 120 });
 
@@ -72,11 +66,11 @@ export class ApiController {
           secure: process.env.NODE_ENV === "production" ? true : false,
         });
 
-        return res.redirect(baseURL);
+        return res.redirect("https://stackoverflo.site");
       }
       // 일반 회원 이메일이라면
       res.cookie("googleId", 1);
-      return res.redirect(baseURL);
+      return res.redirect("https://stackoverflo.site");
     }
 
     try {
@@ -93,7 +87,7 @@ export class ApiController {
         secure: process.env.NODE_ENV === "production" ? true : false,
       });
 
-      return res.redirect(baseURL);
+      return res.redirect("https://stackoverflo.site");
     } catch (e) {
       const { message } = e;
       return { message };
