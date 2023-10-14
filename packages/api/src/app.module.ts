@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ApiController } from "./api/api.controller";
 import { AuthModule } from "./auth/auth.module";
@@ -15,6 +16,10 @@ import { UsersModule } from "./users/users.module";
     PresetsModule,
     FavoritesModule,
     TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env`,
+    }),
   ],
   controllers: [ApiController],
   providers: [GoogleStrategy],
