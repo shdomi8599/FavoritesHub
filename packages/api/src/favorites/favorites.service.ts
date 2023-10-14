@@ -174,7 +174,6 @@ export class FavoritesService {
 
       if (!imgHref) {
         if (
-          content?.includes("https") ||
           content?.includes("png") ||
           content?.includes("jpg") ||
           content?.includes("webp") ||
