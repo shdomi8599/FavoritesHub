@@ -6,6 +6,7 @@ export const {
   OAUTH_GOOGLE_ID,
   OAUTH_GOOGLE_SECRET,
   OAUTH_GOOGLE_REDIRECT,
+  RANDOM_PASSWORD,
 } = process.env;
 
 export const JWT_ACCESS_SECRET = "S+Hcvoy/Z08Ljqd7qglf8w1l+bbCjuvq30mQ3cZP21Q=";

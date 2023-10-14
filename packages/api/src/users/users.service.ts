@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
+import { RANDOM_PASSWORD } from "src/constants";
 import { User } from "src/source/entity/User";
 import { Repository } from "typeorm";
 
@@ -37,9 +38,19 @@ export class UsersService {
     user.mail = mail;
     user.password = hashedPassword;
     user.refreshToken = "";
-    user.verify = false;
     await this.userTable.save(user);
     return user;
+  }
+
+  async googleAdd(mail: string) {
+    const hashedPassword = await bcrypt.hash(RANDOM_PASSWORD, 10);
+    const user = new User();
+    user.mail = mail;
+    user.password = hashedPassword;
+    user.refreshToken = "";
+    user.googleId = true;
+    const newUser = await this.userTable.save(user);
+    return newUser;
   }
 
   async remove(userId: number) {

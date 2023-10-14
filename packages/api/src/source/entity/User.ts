@@ -1,5 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Preset } from "./Preset";
 
 @Entity("users")
@@ -37,6 +43,9 @@ export class User {
   })
   verify: boolean;
 
+  @Column({ default: false })
+  googleId: boolean;
+
   @Column()
   @ApiProperty({
     example: "dqwdwd1d1w322423dsw1e12d21d12",
@@ -49,7 +58,6 @@ export class User {
   @ApiProperty({
     example: "2022-05-20 17:20:00",
     description: "마지막 접속 시간입니다.",
-    required: true,
   })
   lastLogin: Date;
 
@@ -57,9 +65,9 @@ export class User {
   @ApiProperty({
     example: "2022-05-20 17:20:00",
     description: "아이디를 생성한 시간입니다.",
-    required: true,
   })
   createdAt: Date;
 
+  @OneToMany(() => Preset, (preset) => preset.user)
   presets: Preset[];
 }

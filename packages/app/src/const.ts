@@ -1,5 +1,9 @@
 import { RegisterOptions } from "react-hook-form";
 
+export const { NEXT_PUBLIC_BASE_URL } = process.env;
+
+export const preloadList = ["/google/btn-hover.png"];
+
 export const authInputLabel: Record<string, string> = {
   mail: "이메일",
   password: "비밀번호",

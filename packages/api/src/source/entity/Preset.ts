@@ -38,18 +38,8 @@ export class Preset {
   defaultPreset: boolean;
 
   @ManyToOne(() => User, (user) => user.presets)
-  @ApiProperty({
-    example: User,
-    description: "유저 데이터입니다.",
-    required: true,
-  })
   user: User;
 
   @OneToMany(() => Favorite, (favorite) => favorite.preset)
-  @ApiProperty({
-    example: [Favorite],
-    description: "즐겨찾기 데이터입니다.",
-    required: true,
-  })
   favorites: Favorite[];
 }

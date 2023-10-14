@@ -15,7 +15,7 @@ import {
   presetLengthState,
   viewPresetState,
 } from "@/states";
-import { confirmAlert } from "@/util";
+import { confirmAlert, deleteCookie, errorAlert, getCookie } from "@/util";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useEffect } from "react";
@@ -125,6 +125,13 @@ export default function Dashboard({
   }, [presets, setViewPreset]);
 
   useEffect(() => {
+    const isGoogleFailed = getCookie("googleId");
+    console.log(isGoogleFailed);
+    if (Number(isGoogleFailed) === 1) {
+      errorAlert("이미 일반 회원으로 가입된 이메일입니다.", "구글 로그인");
+      deleteCookie("googleId");
+    }
+
     getAuthRefreshToken()
       .then((res) => {
         if (res) {

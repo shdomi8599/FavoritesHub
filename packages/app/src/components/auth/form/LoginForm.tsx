@@ -1,4 +1,6 @@
-import { getGoogleLogin, postAuthLogin, postUserExist } from "@/api/auth";
+/* eslint-disable @next/next/no-img-element */
+import { baseURL } from "@/api";
+import { postAuthLogin, postUserExist } from "@/api/auth";
 import {
   ModalButton,
   ModalForm,
@@ -12,11 +14,12 @@ import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import {
   Box,
-  Button,
   Checkbox,
   Container,
   FormControlLabel,
   Grid,
+  Tooltip,
+  styled,
 } from "@mui/material";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -105,11 +108,6 @@ export default function LoginForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const googleLogin = async () => {
-    const { accessToken, userId, mail } = await getGoogleLogin();
-    console.log({ accessToken, userId, mail });
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -140,20 +138,22 @@ export default function LoginForm({
             label={authInputLabel["password"]}
             type="password"
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                onClick={handleRefreshToken}
-                value="auto-login"
-                color="primary"
-              />
-            }
-            label="자동 로그인"
-          />
+          <Tooltip title="일반 회원만 가능합니다.">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onClick={handleRefreshToken}
+                  value="auto-login"
+                  color="primary"
+                />
+              }
+              label="자동 로그인"
+            />
+          </Tooltip>
           <ModalButton>로그인</ModalButton>
-          <Button onClick={googleLogin} variant="contained">
-            구글 로그인 버튼
-          </Button>
+          <GoogleBox>
+            <GoogleBtn href={`${baseURL}/auth/google`} />
+          </GoogleBox>
           <Grid container>
             <Grid item xs>
               <ModalLink clickEvent={passwordEvent}>비밀번호 재설정</ModalLink>
@@ -167,3 +167,23 @@ export default function LoginForm({
     </Container>
   );
 }
+
+const GoogleBox = styled(Box)(() => ({
+  width: "100%",
+  display: "flex",
+  justifyContent: "center",
+  marginBottom: "8px",
+}));
+
+const GoogleBtn = styled("a")(() => ({
+  width: "180px",
+  display: "block",
+  height: "43px",
+  backgroundImage: `url(/google/btn.png)`,
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "100% 100%",
+  cursor: "pointer",
+  "&:hover": {
+    backgroundImage: `url(/google/btn-hover.png)`,
+  },
+}));

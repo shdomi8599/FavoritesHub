@@ -49,15 +49,49 @@ export class ApiController {
   @Get("auth/google/callback")
   async googleAuthRedirect(@Request() req, @Res() res) {
     const googleUser = req.user;
-    const { email, refreshToken, accessToken } = googleUser;
+    const { email } = googleUser;
+    const user = await this.usersService.findOneToMail(email);
 
-    const user = await this.usersService.add(email, email);
+    if (user) {
+      // 이미 구글 유저라면
+      if (user.googleId) {
+        const tokens = await this.authService.login(user);
+        const { refreshToken } = tokens;
 
-    await this.usersService.updateloginTime(user);
+        await this.usersService.updateloginTime(user);
+        await this.usersService.updateRefreshToken(user, refreshToken);
 
-    res.redirect("http://localhost:3000");
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
+        });
 
-    return { accessToken, userId: user.id, mail: user.mail };
+        return res.redirect("http://localhost:3000");
+      }
+      // 일반 회원 이메일이라면
+      res.cookie("googleId", 1);
+      return res.redirect("http://localhost:3000");
+    }
+
+    try {
+      const user = await this.usersService.googleAdd(email);
+
+      const tokens = await this.authService.login(user);
+      const { refreshToken } = tokens;
+
+      await this.usersService.updateloginTime(user);
+      await this.usersService.updateRefreshToken(user, refreshToken);
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+      });
+
+      return res.redirect("http://localhost:3000");
+    } catch (e) {
+      const { message } = e;
+      return { message };
+    }
   }
 
   @UseGuards(LocalAuthGuard)
