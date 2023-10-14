@@ -46,7 +46,8 @@ type Message =
   | "not verify"
   | "same"
   | "max"
-  | "cors";
+  | "cors"
+  | "googleId";
 
 export interface ApiResultMessage {
   message?: Message;

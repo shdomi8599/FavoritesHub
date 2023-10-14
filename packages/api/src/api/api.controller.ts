@@ -107,7 +107,14 @@ export class ApiController {
     @Body() dto: { isRefreshToken: boolean },
   ) {
     const { isRefreshToken } = dto;
-    const user = req.user;
+    const result = req.user;
+    if (result?.message === "googleId") {
+      return { message: "googleId" };
+    }
+    if (result?.message === "not exact") {
+      return { message: "not exact" };
+    }
+    const user = result;
     try {
       const { verify } = user;
       if (!verify) {

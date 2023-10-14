@@ -85,6 +85,10 @@ export default function LoginForm({
       isRefreshToken,
     );
 
+    if (message === "googleId") {
+      return errorAlert("구글 이메일로 가입된 아이디입니다.", "로그인");
+    }
+
     if (message === "not exact") {
       return errorAlert("비밀번호가 일치하지 않습니다.", "비밀번호 확인");
     }

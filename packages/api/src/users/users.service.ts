@@ -59,9 +59,13 @@ export class UsersService {
   }
 
   async checkPassword(user: User, password: string) {
+    const isGoogleId = user.googleId;
+    if (isGoogleId) {
+      return { message: "googleId" };
+    }
     const isExactPassword = await bcrypt.compare(password, user.password);
     if (!isExactPassword) {
-      throw new Error("not exact");
+      return { message: "not exact" };
     }
   }
 
