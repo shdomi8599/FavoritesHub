@@ -126,7 +126,6 @@ export default function Dashboard({
 
   useEffect(() => {
     const isGoogleFailed = getCookie("googleId");
-    console.log(isGoogleFailed);
     if (Number(isGoogleFailed) === 1) {
       errorAlert("이미 일반 회원으로 가입된 이메일입니다.", "구글 로그인");
       deleteCookie("googleId");
