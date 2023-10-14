@@ -1,3 +1,8 @@
+import dotenv from "dotenv";
+import "dotenv/config";
+
+dotenv.config();
+
 export const {
   NODE_MAILER_USER,
   NODE_MAILER_PASS,
