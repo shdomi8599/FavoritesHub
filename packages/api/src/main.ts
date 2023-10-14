@@ -3,12 +3,13 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
+import { CLIENT_ADDRESS } from "./constants";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const corsOptions: CorsOptions = {
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", CLIENT_ADDRESS],
     credentials: true,
   };
 
