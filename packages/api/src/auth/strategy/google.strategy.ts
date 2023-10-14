@@ -9,7 +9,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     super({
       clientID: OAUTH_GOOGLE_ID,
       clientSecret: OAUTH_GOOGLE_SECRET,
-      callbackURL: "http://stackoverflo.site/api/auth/google/callback",
+      callbackURL: "http://stackoverflo.site:8080/api/auth/google/callback",
       scope: ["email", "profile"],
     });
   }
