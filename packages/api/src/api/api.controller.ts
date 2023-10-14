@@ -11,10 +11,10 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import "dotenv/config";
 import NodeCache from "node-cache";
 import { AuthService } from "src/auth/auth.service";
 import { GoogleAuthGuard, JwtAuthGuard, LocalAuthGuard } from "src/auth/guard";
-import { baseURL } from "src/constants";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
 import { Favorite, Preset } from "src/source/entity";
@@ -29,6 +29,11 @@ import {
   ResPostAuthLoginDto,
 } from "./dto/res/auth";
 import { ResSuccessMessageDto } from "./dto/res/resSuccessMessage.dto";
+
+const { CLIENT_ADDRESS, NODE_ENV } = process.env;
+
+const baseURL =
+  NODE_ENV === "production" ? CLIENT_ADDRESS : "http://localhost:3000";
 
 const myCache = new NodeCache({ checkperiod: 120 });
 
