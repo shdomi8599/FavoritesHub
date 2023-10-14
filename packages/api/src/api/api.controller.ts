@@ -14,6 +14,7 @@ import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import NodeCache from "node-cache";
 import { AuthService } from "src/auth/auth.service";
 import { GoogleAuthGuard, JwtAuthGuard, LocalAuthGuard } from "src/auth/guard";
+import { baseClientURL } from "src/constants";
 import { FavoritesService } from "src/favorites/favorites.service";
 import { PresetsService } from "src/presets/presets.service";
 import { Favorite, Preset } from "src/source/entity";
@@ -66,11 +67,11 @@ export class ApiController {
           secure: process.env.NODE_ENV === "production" ? true : false,
         });
 
-        return res.redirect("https://stackoverflo.site");
+        return res.redirect(baseClientURL);
       }
       // 일반 회원 이메일이라면
       res.cookie("googleId", 1);
-      return res.redirect("https://stackoverflo.site");
+      return res.redirect(baseClientURL);
     }
 
     try {
@@ -87,7 +88,7 @@ export class ApiController {
         secure: process.env.NODE_ENV === "production" ? true : false,
       });
 
-      return res.redirect("https://stackoverflo.site");
+      return res.redirect(baseClientURL);
     } catch (e) {
       const { message } = e;
       return { message };

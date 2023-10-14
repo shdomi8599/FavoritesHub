@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Profile, Strategy } from "passport-google-oauth20";
-import { OAUTH_GOOGLE_ID, OAUTH_GOOGLE_SECRET } from "src/constants";
+import { OAUTH_GOOGLE_ID, OAUTH_GOOGLE_SECRET, baseURL } from "src/constants";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
@@ -9,7 +9,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     super({
       clientID: OAUTH_GOOGLE_ID,
       clientSecret: OAUTH_GOOGLE_SECRET,
-      callbackURL: "https://stackoverflo.site/api/auth/google/callback",
+      callbackURL: `${baseURL}/auth/google/callback`,
       scope: ["email", "profile"],
     });
   }
