@@ -64,6 +64,10 @@ export class AuthService {
     };
   }
 
+  async verify(cashingVerifyCode: string, verifyCode: string) {
+    return cashingVerifyCode === verifyCode;
+  }
+
   async mail(user: User, verifyCode: string) {
     const transporter = nodemailer.createTransport(nodemailerOption);
 
@@ -72,16 +76,20 @@ export class AuthService {
       from: "FavoritesHub@gmail.com",
       to: mail,
       subject: "이메일 인증을 완료해주세요.",
-      html: `<div>
-      <h2>FavoritesHub 이메일 인증</h2>
-      <div class="phone" style="font-size: 1.1em;">인증번호 : ${verifyCode}</div>
-      </div>
+      html: `
+        <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+          <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);">
+            <h2 style="color: #333; padding: 20px 0;">FavoritesHub 이메일 인증</h2>
+            <p style="font-size: 1.1em; margin: 20px 0;">안녕하세요! FavoritesHub을 이용해 주셔서 감사합니다.</p>
+            <p style="font-size: 1.1em; margin: 20px 0;">아래의 인증번호를 입력하여 계정을 인증해주세요:</p>
+            <div style="font-size: 1.5em; background-color: #007BFF; color: #fff; padding: 10px; border-radius: 5px;">${verifyCode}</div>
+            <p style="font-size: 1em; margin: 20px 0;">이 인증번호는 계정 보안을 위해 개인적으로 유지해 주시기 바랍니다.</p>
+            <p style="font-size: 1em; padding: 20px 0;">감사합니다.</p>
+          </div>
+        </div>
       `,
     };
-    await transporter.sendMail(mailOptions);
-  }
 
-  async verify(cashingVerifyCode: string, verifyCode: string) {
-    return cashingVerifyCode === verifyCode;
+    await transporter.sendMail(mailOptions);
   }
 }
