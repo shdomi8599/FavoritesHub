@@ -1,3 +1,4 @@
+import { mainBlueColor } from "@/const";
 import {
   Star as StarIcon,
   StarOutline as StarOutlineIcon,
@@ -33,7 +34,7 @@ export default function MainTitle({
         <Typography
           sx={{
             p: 0.5,
-            backgroundColor: "#1976d2",
+            backgroundColor: mainBlueColor,
             color: "white",
             borderRadius: "50%",
             display: "flex",

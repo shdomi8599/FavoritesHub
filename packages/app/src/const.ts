@@ -4,6 +4,10 @@ export const { NEXT_PUBLIC_BASE_URL } = process.env;
 
 export const preloadList = ["/google/btn-hover.png"];
 
+export const mainBlueColor = "#1976d2";
+
+export const mainRedColor = "#e26a6ad2";
+
 export const authInputLabel: Record<string, string> = {
   mail: "이메일",
   password: "비밀번호",

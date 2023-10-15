@@ -1,3 +1,4 @@
+import { mainBlueColor, mainRedColor } from "@/const";
 import { isPresetEventState } from "@/states";
 import { Preset } from "@/types";
 import {
@@ -45,9 +46,9 @@ export default function PresetItem({
           sx={{
             color:
               viewPreset?.id === id
-                ? "#1976d2"
+                ? mainBlueColor
                 : defaultPreset
-                ? "#e96363d2"
+                ? mainRedColor
                 : "",
           }}
         />
