@@ -32,17 +32,17 @@ export default function DashboardDrawer({
   presets,
   isLogin,
   viewPreset,
-  toolBarOpen,
+  isDashboard,
   logoutEvent,
-  handleDrawer,
   setViewPreset,
   addPresetModal,
   editPresetModal,
   handleModalOpen,
   deletePresetEvent,
+  handleIsDashboard,
 }: Props) {
   return (
-    <Drawer variant="permanent" open={toolBarOpen}>
+    <Drawer variant="permanent" open={isDashboard}>
       <Toolbar
         sx={{
           display: "flex",
@@ -51,7 +51,7 @@ export default function DashboardDrawer({
           px: [1],
         }}
       >
-        <IconButton onClick={handleDrawer}>
+        <IconButton onClick={handleIsDashboard}>
           <ChevronLeftIcon />
         </IconButton>
       </Toolbar>
@@ -68,12 +68,12 @@ export default function DashboardDrawer({
             onClick={addPresetModal}
           >
             <AddCircleOutlineIcon />
-            {toolBarOpen && (
+            {isDashboard && (
               <Typography sx={{ marginLeft: "1px" }}>프리셋 추가</Typography>
             )}
           </Button>
         ) : (
-          toolBarOpen && (
+          isDashboard && (
             <Box
               sx={{
                 width: "100%",
@@ -96,7 +96,7 @@ export default function DashboardDrawer({
           />
         ))}
       </List>
-      {toolBarOpen && (
+      {isDashboard && (
         <>
           <Divider />
           <ToolBarLoginBox>

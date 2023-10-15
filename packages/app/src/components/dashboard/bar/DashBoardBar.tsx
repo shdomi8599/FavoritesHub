@@ -29,11 +29,11 @@ export default function DashboardBar({
   isLogin,
   userMail,
   barHeight,
-  toolBarOpen,
+  isDashboard,
   isMinWidth600,
   logoutEvent,
-  handleDrawer,
   handleModalOpen,
+  handleIsDashboard,
 }: Props) {
   const {
     isBoolean: isOpen,
@@ -43,7 +43,7 @@ export default function DashboardBar({
   const { ref } = useOutSideRef(offContent);
   const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
   return (
-    <Container ref={barRef} open={toolBarOpen}>
+    <Container ref={barRef} open={isDashboard}>
       <Toolbar
         sx={{
           pr: "24px",
@@ -52,11 +52,11 @@ export default function DashboardBar({
         <IconButton
           edge="start"
           color="inherit"
-          aria-label="toolBarOpen drawer"
-          onClick={handleDrawer}
+          aria-label="isDashboard drawer"
+          onClick={handleIsDashboard}
           sx={{
             marginRight: "36px",
-            ...(toolBarOpen && { display: "none" }),
+            ...(isDashboard && { display: "none" }),
           }}
         >
           <MenuIcon />

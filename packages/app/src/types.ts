@@ -74,9 +74,9 @@ export interface ApiResultAccessToken {
 }
 
 export interface DashBoardChildProps {
-  handleDrawer: () => void;
+  handleIsDashboard: () => void;
   isLogin: boolean;
-  toolBarOpen: boolean;
+  isDashboard: boolean;
   handleModalOpen: () => void;
   logoutEvent: () => void;
 }

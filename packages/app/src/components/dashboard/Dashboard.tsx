@@ -1,15 +1,10 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
 import { postPresetDelete } from "@/api/preset";
-import {
-  useAuth,
-  useAuthModal,
-  useBarHeight,
-  useHandler,
-  usePresetModal,
-} from "@/hooks";
+import { useAuth, useAuthModal, useBarHeight, usePresetModal } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import {
+  isDashboardState,
   isLoadingState,
   isPresetEventState,
   presetLengthState,
@@ -41,11 +36,7 @@ export default function Dashboard({
     setUserMail,
     setAccessToken,
   } = useAuth();
-  const {
-    isBoolean: toolBarOpen,
-    setisBoolean: setToolBartoolBarOpen,
-    handleBoolean: handleDrawer,
-  } = useHandler(true);
+  const [isDashboard, setIsDashboard] = useRecoilState(isDashboardState);
   const { handleSignUpModal } = useAuthModal();
   const { resetPresetList } = useResetQuery(userId);
   const { ref: barRef, barHeight } = useBarHeight();
@@ -58,6 +49,11 @@ export default function Dashboard({
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
+
+  // 핸들러
+  const handleIsDashboard = () => {
+    setIsDashboard(!isDashboard);
+  };
 
   // 이벤트
   const logoutEvent = async () => {
@@ -87,9 +83,9 @@ export default function Dashboard({
   // 이펙트
   useEffect(() => {
     if (isMaxWidth900) {
-      setToolBartoolBarOpen(false);
+      setIsDashboard(false);
     }
-  }, [isMaxWidth900, setToolBartoolBarOpen]);
+  }, [isMaxWidth900, setIsDashboard]);
 
   useEffect(() => {
     if (accessToken) {
@@ -152,24 +148,24 @@ export default function Dashboard({
         isLogin={isLogin}
         userMail={userMail}
         barHeight={barHeight}
-        toolBarOpen={toolBarOpen}
+        isDashboard={isDashboard}
         isMinWidth600={isMinWidth600}
         logoutEvent={logoutEvent}
-        handleDrawer={handleDrawer}
         handleModalOpen={handleSignUpModal}
+        handleIsDashboard={handleIsDashboard}
       />
       <DashboardDrawer
         isLogin={isLogin}
         presets={presets!}
         viewPreset={viewPreset}
-        toolBarOpen={toolBarOpen}
+        isDashboard={isDashboard}
         logoutEvent={logoutEvent}
-        handleDrawer={handleDrawer}
         setViewPreset={setViewPreset}
         addPresetModal={addPresetModal}
         editPresetModal={editPresetModal}
         handleModalOpen={handleSignUpModal}
         deletePresetEvent={deletePresetEvent}
+        handleIsDashboard={handleIsDashboard}
       />
       <Main component="main" barheight={barHeight}>
         {children}

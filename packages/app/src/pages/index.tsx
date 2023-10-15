@@ -1,9 +1,3 @@
-import {
-  deleteFavorite,
-  getFavoriteHandleStar,
-  getFavoriteVisited,
-  upVisitedCountFavorite,
-} from "@/api/favorite";
 import { postPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
@@ -11,16 +5,18 @@ import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
 import SearchSelect from "@/components/search/SearchSelect";
 import { SearchSelects } from "@/const";
-import { useAuth, useAuthModal, useHandler } from "@/hooks";
 import {
-  useFavoriteList,
-  useMemoFavorites,
-  useResetQuery,
-} from "@/hooks/react-query";
+  useAuth,
+  useAuthModal,
+  useFavoriteEvent,
+  useFavoriteFilter,
+  useHandler,
+} from "@/hooks";
+import { useFavoriteList, useResetQuery } from "@/hooks/react-query";
+import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { isLoadingState, viewPresetState } from "@/states";
-import { Favorite } from "@/types";
-import { callbackSuccessAlert, confirmAlert } from "@/util";
+import { isDashboardState, isLoadingState, viewPresetState } from "@/states";
+import { callbackSuccessAlert } from "@/util";
 import {
   Search as SearchIcon,
   StarBorder as StarBorderIcon,
@@ -36,7 +32,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 export default function Main() {
   // 상태
@@ -55,6 +51,9 @@ export default function Main() {
     setUserMail,
     setAccessToken,
   } = useAuth();
+  const { isMaxWidth600 } = useBreakPoints();
+  const isDashboard = useRecoilValue(isDashboardState);
+  const isHideContent = isDashboard && isMaxWidth600;
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setViewPreset = useSetRecoilState(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
@@ -69,100 +68,26 @@ export default function Main() {
     accessToken,
   );
 
-  const upFavoriteVisitedCount = async (id: number) => {
-    try {
-      await upVisitedCountFavorite(id, accessToken);
-    } catch (e: any) {
-      if (e?.code === 401) {
-        location.reload();
-      }
-    }
-  };
-
-  const getFilterData = () => {
-    let data: Favorite[] = [];
-
-    if (selectValue === "createdAt") {
-      data = favorites?.sort((a, b) => {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      })!;
-    }
-
-    if (selectValue === "lastVisitedAt") {
-      data = favorites?.sort((a, b) => {
-        return (
-          new Date(b.lastVisitedAt).getTime() -
-          new Date(a.lastVisitedAt).getTime()
-        );
-      })!;
-    }
-
-    if (selectValue === "visitedCount") {
-      data = favorites?.sort((a, b) => {
-        return b.visitedCount - a.visitedCount;
-      })!;
-    }
-
-    if (isStar) {
-      data = favorites?.filter((favorite) => favorite.star)!;
-    }
-
-    return data;
-  };
-
-  const viewData = getFilterData()?.filter((favorite) => {
-    if (tags.length === 0) {
-      return favorites;
-    }
-    const { address, description, favoriteName, title } = favorite;
-    const loweredInputValue = inputValue.toLowerCase();
-    if (tags.includes("전체")) {
-      return (
-        address.toLowerCase().includes(loweredInputValue) ||
-        description.toLowerCase().includes(loweredInputValue) ||
-        favoriteName.toLowerCase().includes(loweredInputValue) ||
-        title.toLowerCase().includes(loweredInputValue)
-      );
-    }
-    if (tags.includes("타이틀")) {
-      return title.toLowerCase().includes(loweredInputValue);
-    }
-    if (tags.includes("주소")) {
-      return address.toLowerCase().includes(loweredInputValue);
-    }
-    if (tags.includes("설명")) {
-      return description.toLowerCase().includes(loweredInputValue);
-    }
-    if (tags.includes("별칭")) {
-      return favoriteName.toLowerCase().includes(loweredInputValue);
-    }
+  const { viewData, autoBarData } = useFavoriteFilter({
+    selectValue,
+    favorites,
+    isStar,
+    tags,
+    inputValue,
   });
 
-  const { titleItems, descriptionItems, favoriteNameItems, addressItems } =
-    useMemoFavorites(viewData!);
-
-  const getAutoBarData = () => {
-    const selectedItems = [];
-    if (tags.includes("전체")) {
-      selectedItems.push(titleItems, descriptionItems, favoriteNameItems);
-    } else {
-      if (tags.includes("타이틀")) {
-        selectedItems.push(titleItems);
-      }
-      if (tags.includes("주소")) {
-        selectedItems.push(addressItems);
-      }
-      if (tags.includes("설명")) {
-        selectedItems.push(descriptionItems);
-      }
-      if (tags.includes("별칭")) {
-        selectedItems.push(favoriteNameItems);
-      }
-    }
-    return selectedItems.flat();
-  };
+  // 이벤트
+  const {
+    deleteFavoriteEvent,
+    favoriteVisited,
+    favoriteHandleStar,
+    upFavoriteVisitedCount,
+  } = useFavoriteEvent({
+    id: viewPreset?.id,
+    accessToken,
+    setIsLoading,
+    resetFavoriteList,
+  });
 
   const HandleDefaultPreset = async () => {
     const { id: presetId } = viewPreset;
@@ -189,43 +114,6 @@ export default function Main() {
     );
   };
 
-  const deleteFavoriteEvent = async (favoriteId: number) => {
-    try {
-      setIsLoading(true);
-      await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
-      await deleteFavorite(favoriteId, accessToken);
-      resetFavoriteList(viewPreset.id);
-    } catch (e: any) {
-      if (e?.code === 401) {
-        location.reload();
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const favoriteVisited = async (favoriteId: number) => {
-    try {
-      await getFavoriteVisited(favoriteId, accessToken);
-      resetFavoriteList(viewPreset.id);
-    } catch (e: any) {
-      if (e?.code === 401) {
-        location.reload();
-      }
-    }
-  };
-
-  const favoriteHandleStar = async (favoriteId: number) => {
-    try {
-      await getFavoriteHandleStar(favoriteId, accessToken);
-      resetFavoriteList(viewPreset.id);
-    } catch (e: any) {
-      if (e?.code === 401) {
-        location.reload();
-      }
-    }
-  };
-
   useEffect(() => {
     setInputValue("");
   }, [tags]);
@@ -244,15 +132,19 @@ export default function Main() {
           mt: 2,
         }}
       >
-        <SearchIcon fontSize="large" />
-        <SearchTag tags={tags} setTags={setTags} />
-        <SearchAutoBar
-          tags={tags}
-          label={searchLabel}
-          inputValue={inputValue}
-          data={getAutoBarData()}
-          setInputValue={setInputValue}
-        />
+        {!isHideContent && (
+          <>
+            <SearchIcon fontSize="large" />
+            <SearchTag tags={tags} setTags={setTags} />
+            <SearchAutoBar
+              tags={tags}
+              label={searchLabel}
+              inputValue={inputValue}
+              data={autoBarData}
+              setInputValue={setInputValue}
+            />
+          </>
+        )}
       </Container>
       <MainContainer
         sx={{
@@ -281,26 +173,30 @@ export default function Main() {
             },
           }}
         >
-          <IconButton onClick={handleStar}>
-            {isStar ? (
-              <StarIcon fontSize="large" sx={{ color: "#e96363d2" }} />
-            ) : (
-              <StarBorderIcon fontSize="large" />
-            )}
-          </IconButton>
-          <SearchSelect
-            label={"날짜"}
-            selectValue={selectValue}
-            menuItems={SearchSelects}
-            setSelectValue={setSelectValue}
-          />
-          <Button
-            onClick={addFavoriteModal}
-            variant="contained"
-            sx={{ minWidth: 105 }}
-          >
-            즐겨찾기 추가
-          </Button>
+          {!isHideContent && (
+            <>
+              <IconButton onClick={handleStar}>
+                {isStar ? (
+                  <StarIcon fontSize="large" sx={{ color: "#e96363d2" }} />
+                ) : (
+                  <StarBorderIcon fontSize="large" />
+                )}
+              </IconButton>
+              <SearchSelect
+                label={"날짜"}
+                selectValue={selectValue}
+                menuItems={SearchSelects}
+                setSelectValue={setSelectValue}
+              />
+              <Button
+                onClick={addFavoriteModal}
+                variant="contained"
+                sx={{ minWidth: 105 }}
+              >
+                즐겨찾기 추가
+              </Button>
+            </>
+          )}
         </Box>
       </MainContainer>
       <Grid

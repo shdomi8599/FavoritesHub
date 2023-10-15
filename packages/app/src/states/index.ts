@@ -101,3 +101,8 @@ export const isLoadingState = atom({
   key: "isLoadingState",
   default: false,
 });
+
+export const isDashboardState = atom({
+  key: "isDashboardState",
+  default: false,
+});
