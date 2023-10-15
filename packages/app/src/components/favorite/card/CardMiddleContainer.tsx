@@ -37,7 +37,7 @@ export default function CardMiddleContainer({
           {title}
         </Typography>
       </Tooltip>
-      <Tooltip title={address} enterDelay={300}>
+      <Tooltip title={"복사하려면 클릭하세요."} enterDelay={300}>
         <Box
           color="text.secondary"
           sx={{
