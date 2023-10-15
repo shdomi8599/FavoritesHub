@@ -21,6 +21,7 @@ import {
   Tooltip,
   styled,
 } from "@mui/material";
+import Head from "next/head";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from "recoil";
@@ -113,62 +114,69 @@ export default function LoginForm({
   }, []);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <ModalTitle name="로그인" />
-        <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <ModalFormInput
-            register={register}
-            name="mail"
-            error={errors?.mail}
-            isSubmitted={isSubmitted}
-            option={authFormOptions["mail"]}
-            label={authInputLabel["mail"]}
-            autoFocus={true}
-            type="email"
-          />
-          <ModalFormInput
-            register={register}
-            name="password"
-            error={errors?.password}
-            isSubmitted={isSubmitted}
-            option={authFormOptions["password"]}
-            label={authInputLabel["password"]}
-            type="password"
-          />
-          <Tooltip title="일반 회원만 가능합니다.">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onClick={handleRefreshToken}
-                  value="auto-login"
-                  color="primary"
-                />
-              }
-              label="자동 로그인"
+    <>
+      <Head>
+        <link rel="preload" href={"/google/btn-hover.png"} as="image" />
+      </Head>
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <ModalTitle name="로그인" />
+          <ModalForm submitEvent={handleSubmit(onSubmit)}>
+            <ModalFormInput
+              register={register}
+              name="mail"
+              error={errors?.mail}
+              isSubmitted={isSubmitted}
+              option={authFormOptions["mail"]}
+              label={authInputLabel["mail"]}
+              autoFocus={true}
+              type="email"
             />
-          </Tooltip>
-          <ModalButton>로그인</ModalButton>
-          <GoogleBox>
-            <GoogleBtn href={`${baseURL}/auth/google`} />
-          </GoogleBox>
-          <Grid container>
-            <Grid item xs>
-              <ModalLink clickEvent={passwordEvent}>비밀번호 재설정</ModalLink>
+            <ModalFormInput
+              register={register}
+              name="password"
+              error={errors?.password}
+              isSubmitted={isSubmitted}
+              option={authFormOptions["password"]}
+              label={authInputLabel["password"]}
+              type="password"
+            />
+            <Tooltip title="일반 회원만 가능합니다.">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onClick={handleRefreshToken}
+                    value="auto-login"
+                    color="primary"
+                  />
+                }
+                label="자동 로그인"
+              />
+            </Tooltip>
+            <ModalButton>로그인</ModalButton>
+            <GoogleBox>
+              <GoogleBtn href={`${baseURL}/auth/google`} />
+            </GoogleBox>
+            <Grid container>
+              <Grid item xs>
+                <ModalLink clickEvent={passwordEvent}>
+                  비밀번호 재설정
+                </ModalLink>
+              </Grid>
+              <Grid item>
+                <ModalLink clickEvent={signUpEvent}>회원가입</ModalLink>
+              </Grid>
             </Grid>
-            <Grid item>
-              <ModalLink clickEvent={signUpEvent}>회원가입</ModalLink>
-            </Grid>
-          </Grid>
-        </ModalForm>
-      </Box>
-    </Container>
+          </ModalForm>
+        </Box>
+      </Container>
+    </>
   );
 }
 

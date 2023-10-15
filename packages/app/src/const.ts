@@ -2,8 +2,6 @@ import { RegisterOptions } from "react-hook-form";
 
 export const { NEXT_PUBLIC_BASE_URL } = process.env;
 
-export const preloadList = ["/google/btn-hover.png"];
-
 export const mainBlueColor = "#1976d2";
 
 export const mainRedColor = "#e26a6ad2";
