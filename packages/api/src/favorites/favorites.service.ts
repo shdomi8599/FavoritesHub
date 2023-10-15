@@ -127,6 +127,7 @@ export class FavoritesService {
   }
 
   async getAddressData(address: string) {
+    const imgHref = `https://www.google.com/s2/favicons?sz=256&domain=${address}`;
     const response = await axios(address);
     const html = response?.data;
 
@@ -135,14 +136,6 @@ export class FavoritesService {
     const title = $("title").text();
 
     let description = "";
-    let imgHref = "";
-
-    const links: { rel: string; href: string }[] = [];
-    $("link").each((index, element) => {
-      const rel = $(element).attr("rel");
-      const href = $(element).attr("href");
-      links.push({ rel, href });
-    });
 
     const metas: { name: string; content: string }[] = [];
     $("meta").each((index, element) => {
@@ -151,36 +144,11 @@ export class FavoritesService {
       metas.push({ name, content });
     });
 
-    for (const link of links) {
-      const { rel, href } = link;
-      if (
-        rel?.includes("icon") ||
-        href?.includes("png") ||
-        href?.includes("jpg") ||
-        href?.includes("webp") ||
-        href?.includes("jpeg")
-      ) {
-        imgHref = href;
-        break;
-      }
-    }
-
     for (const meta of metas) {
       const { name, content } = meta;
 
       if (name?.includes("description")) {
         description = content;
-      }
-
-      if (!imgHref) {
-        if (
-          content?.includes("png") ||
-          content?.includes("jpg") ||
-          content?.includes("webp") ||
-          content?.includes("jpeg")
-        ) {
-          imgHref = content;
-        }
       }
     }
 
