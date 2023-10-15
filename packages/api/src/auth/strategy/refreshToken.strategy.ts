@@ -21,7 +21,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
         },
       ]),
       ignoreExpiration: false,
-      secretOrKey: JWT_REFRESH_SECRET,
+      secretOrKey: `${JWT_REFRESH_SECRET}=`,
       passReqToCallback: true,
     });
   }

@@ -33,14 +33,14 @@ export class AuthService {
   async getAccessToken(user: User) {
     const payload = { username: user.mail, sub: user.id };
     return await this.jwtService.signAsync(payload, {
-      secret: JWT_ACCESS_SECRET,
+      secret: `${JWT_ACCESS_SECRET}=`,
       expiresIn: "7d",
     });
   }
 
   async decodedRefreshToken(refreshToken: string) {
     const decodedRefreshToken = await this.jwtService.verify(refreshToken, {
-      secret: JWT_REFRESH_SECRET,
+      secret: `${JWT_REFRESH_SECRET}=`,
     });
     return decodedRefreshToken;
   }
@@ -49,7 +49,7 @@ export class AuthService {
     const payload = { username: user.mail, sub: user.id };
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: "7d",
-      secret: JWT_REFRESH_SECRET,
+      secret: `${JWT_REFRESH_SECRET}=`,
     });
     return refreshToken;
   }

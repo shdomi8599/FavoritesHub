@@ -13,6 +13,8 @@ export const {
   CLIENT_ADDRESS,
   SERVER_ADDRESS,
   NODE_ENV,
+  JWT_ACCESS_SECRET,
+  JWT_REFRESH_SECRET,
 } = process.env;
 
 export const baseClientURL =
@@ -22,10 +24,6 @@ export const baseURL =
   NODE_ENV === "production"
     ? `${SERVER_ADDRESS}/api`
     : "http://localhost:8080/api";
-
-export const JWT_ACCESS_SECRET = "S+Hcvoy/Z08Ljqd7qglf8w1l+bbCjuvq30mQ3cZP21Q=";
-export const JWT_REFRESH_SECRET =
-  "zeOPjBWjs8kVK3dsCi9OFc24CIN/VTZ3Svw6jXv7MF4=";
 
 export const nodemailerOption = {
   service: "gmail",
