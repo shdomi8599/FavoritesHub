@@ -7,7 +7,7 @@ type Props = {
 
 const ModalContentBox = forwardRef(({ children }: Props, ref) => {
   return (
-    <ContentBox ref={ref} sx={{ boxShadow: 3 }}>
+    <ContentBox tabIndex={-1} ref={ref} sx={{ boxShadow: 3 }}>
       {children}
     </ContentBox>
   );

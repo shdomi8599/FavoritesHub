@@ -1,6 +1,6 @@
 import { useAuth, useAuthModal } from "@/hooks";
 import { isPasswordForgotState, isRefreshTokenState } from "@/states";
-import { Box, Modal } from "@mui/material";
+import { Modal } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
 import {
@@ -54,10 +54,8 @@ export default function AuthModal() {
   };
 
   return (
-    <Box>
-      <Modal open={isAuthModal} onClose={offAuthModal}>
-        <ModalContentBox>{modalData[authModal]}</ModalContentBox>
-      </Modal>
-    </Box>
+    <Modal open={isAuthModal} onClose={offAuthModal}>
+      <ModalContentBox>{modalData[authModal]}</ModalContentBox>
+    </Modal>
   );
 }
