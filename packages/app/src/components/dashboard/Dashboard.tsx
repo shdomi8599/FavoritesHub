@@ -62,6 +62,7 @@ export default function Dashboard({
     if (message === "success") {
       setUserMail("");
       setAccessToken("");
+      resetPresetList();
     }
   };
 
