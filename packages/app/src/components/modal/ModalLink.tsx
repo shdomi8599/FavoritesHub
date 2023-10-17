@@ -1,4 +1,4 @@
-import Link from "@mui/material/Link";
+import { Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 interface Props {
@@ -8,12 +8,14 @@ interface Props {
 
 export default function ModalLink({ clickEvent, children }: Props) {
   return (
-    <Link onClick={clickEvent} sx={LinkStyle} variant="body2">
+    <Typography onClick={clickEvent} sx={LinkStyle} variant="body2">
       {children}
-    </Link>
+    </Typography>
   );
 }
 
 const LinkStyle = {
   cursor: "pointer",
+  color: "#1976d2",
+  textDecoration: "underline",
 };
