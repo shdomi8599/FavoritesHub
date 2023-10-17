@@ -118,117 +118,121 @@ export default function Main() {
     setInputValue("");
   }, [tags]);
 
-  return isLogin ? (
+  return (
     <>
       <Head>
         <title>Favorites Hub</title>
       </Head>
-      <Container
-        maxWidth={"md"}
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          display: "flex",
-          mt: 2,
-        }}
-      >
-        {!isHideContent && (
-          <>
-            <SearchIcon fontSize="large" />
-            <SearchTag tags={tags} setTags={setTags} />
-            <SearchAutoBar
-              tags={tags}
-              label={searchLabel}
-              inputValue={inputValue}
-              data={autoBarData}
-              setInputValue={setInputValue}
+      {isLogin ? (
+        <>
+          <Container
+            maxWidth={"md"}
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              mt: 2,
+            }}
+          >
+            {!isHideContent && (
+              <>
+                <SearchIcon fontSize="large" />
+                <SearchTag tags={tags} setTags={setTags} />
+                <SearchAutoBar
+                  tags={tags}
+                  label={searchLabel}
+                  inputValue={inputValue}
+                  data={autoBarData}
+                  setInputValue={setInputValue}
+                />
+              </>
+            )}
+          </Container>
+          <MainContainer
+            sx={{
+              px: 2,
+              mt: 1,
+              "@media screen and (max-width: 600px)": {
+                flexDirection: "column",
+                gap: 1.5,
+              },
+            }}
+          >
+            <MainTitle
+              presetName={viewPreset?.presetName}
+              defaultPreset={viewPreset?.defaultPreset}
+              HandleDefaultPreset={HandleDefaultPreset}
             />
-          </>
-        )}
-      </Container>
-      <MainContainer
-        sx={{
-          px: 2,
-          mt: 1,
-          "@media screen and (max-width: 600px)": {
-            flexDirection: "column",
-            gap: 1.5,
-          },
-        }}
-      >
-        <MainTitle
-          presetName={viewPreset?.presetName}
-          defaultPreset={viewPreset?.defaultPreset}
-          HandleDefaultPreset={HandleDefaultPreset}
-        />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "1rem",
-            "@media screen and (max-width: 600px)": {
-              width: "100%",
-              justifyContent: "flex-end",
-            },
-          }}
-        >
-          {!isHideContent && (
-            <>
-              <IconButton onClick={handleStar}>
-                {isStar ? (
-                  <StarIcon fontSize="large" sx={{ color: "#e96363d2" }} />
-                ) : (
-                  <StarBorderIcon fontSize="large" />
-                )}
-              </IconButton>
-              <SearchSelect
-                label={"날짜"}
-                selectValue={selectValue}
-                menuItems={SearchSelects}
-                setSelectValue={setSelectValue}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "1rem",
+                "@media screen and (max-width: 600px)": {
+                  width: "100%",
+                  justifyContent: "flex-end",
+                },
+              }}
+            >
+              {!isHideContent && (
+                <>
+                  <IconButton onClick={handleStar}>
+                    {isStar ? (
+                      <StarIcon fontSize="large" sx={{ color: "#e96363d2" }} />
+                    ) : (
+                      <StarBorderIcon fontSize="large" />
+                    )}
+                  </IconButton>
+                  <SearchSelect
+                    label={"날짜"}
+                    selectValue={selectValue}
+                    menuItems={SearchSelects}
+                    setSelectValue={setSelectValue}
+                  />
+                  <Button
+                    onClick={addFavoriteModal}
+                    variant="contained"
+                    sx={{ minWidth: 105 }}
+                  >
+                    즐겨찾기 추가
+                  </Button>
+                </>
+              )}
+            </Box>
+          </MainContainer>
+          <Grid
+            container
+            spacing={4}
+            sx={{
+              p: 2,
+            }}
+          >
+            {viewData?.map((favorite, index) => (
+              <FavoriteCard
+                key={index}
+                favorite={favorite}
+                favoriteVisited={favoriteVisited}
+                editFavoriteModal={editFavoriteModal}
+                favoriteHandleStar={favoriteHandleStar}
+                deleteFavoriteEvent={deleteFavoriteEvent}
+                upFavoriteVisitedCount={upFavoriteVisitedCount}
               />
-              <Button
-                onClick={addFavoriteModal}
-                variant="contained"
-                sx={{ minWidth: 105 }}
-              >
-                즐겨찾기 추가
-              </Button>
-            </>
-          )}
-        </Box>
-      </MainContainer>
-      <Grid
-        container
-        spacing={4}
-        sx={{
-          p: 2,
-        }}
-      >
-        {viewData?.map((favorite, index) => (
-          <FavoriteCard
-            key={index}
-            favorite={favorite}
-            favoriteVisited={favoriteVisited}
-            editFavoriteModal={editFavoriteModal}
-            favoriteHandleStar={favoriteHandleStar}
-            deleteFavoriteEvent={deleteFavoriteEvent}
-            upFavoriteVisitedCount={upFavoriteVisitedCount}
+            ))}
+          </Grid>
+        </>
+      ) : (
+        <LoginContainer>
+          <LoginForm
+            setUserId={setUserId}
+            setUserMail={setUserMail}
+            openAuthModal={openAuthModal}
+            setAccessToken={setAccessToken}
+            handleAuthModal={handleAuthModal}
           />
-        ))}
-      </Grid>
+        </LoginContainer>
+      )}
     </>
-  ) : (
-    <LoginContainer>
-      <LoginForm
-        setUserId={setUserId}
-        setUserMail={setUserMail}
-        openAuthModal={openAuthModal}
-        setAccessToken={setAccessToken}
-        handleAuthModal={handleAuthModal}
-      />
-    </LoginContainer>
   );
 }
 
