@@ -433,7 +433,7 @@ export class ApiController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post("preset/default/:presetId")
+  @Get("preset/default/:presetId")
   @ApiResponse({
     status: 200,
     description: "프리셋 디폴트 변경에 사용되는 API입니다.",

@@ -1,4 +1,4 @@
-import { postPresetDefault } from "@/api/preset";
+import { getPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
 import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
@@ -95,7 +95,7 @@ export default function Main() {
     const callbackEvent = async () => {
       try {
         setIsLoading(true);
-        const preset = await postPresetDefault(presetId, accessToken);
+        const preset = await getPresetDefault(presetId, accessToken);
         await resetPresetList();
         setViewPreset(preset);
       } catch (e: any) {
