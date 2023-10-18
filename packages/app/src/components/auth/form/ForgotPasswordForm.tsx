@@ -75,8 +75,8 @@ export default function ForgotPasswordForm({
             type="email"
           />
           <ModalButton>이메일 인증</ModalButton>
-          <Grid container>
-            <Grid item xs>
+          <Grid container justifyContent={"space-between"}>
+            <Grid item>
               <ModalLink clickEvent={handleClose}>로그인</ModalLink>
             </Grid>
             <Grid item>

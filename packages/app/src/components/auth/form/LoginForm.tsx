@@ -163,8 +163,8 @@ export default function LoginForm({
             <GoogleBox>
               <GoogleBtn href={`${baseURL}/auth/google`} />
             </GoogleBox>
-            <Grid container>
-              <Grid item xs>
+            <Grid container justifyContent={"space-between"}>
+              <Grid item>
                 <ModalLink clickEvent={passwordEvent}>
                   비밀번호 재설정
                 </ModalLink>

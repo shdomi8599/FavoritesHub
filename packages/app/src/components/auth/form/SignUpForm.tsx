@@ -88,8 +88,8 @@ export default function SignUpForm({
             type="password"
           />
           <ModalButton>회원가입</ModalButton>
-          <Grid container>
-            <Grid item xs>
+          <Grid container justifyContent={"space-between"}>
+            <Grid item>
               <ModalLink clickEvent={handleClose}>로그인</ModalLink>
             </Grid>
             <Grid item>
