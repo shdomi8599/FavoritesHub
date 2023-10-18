@@ -2,17 +2,19 @@ import { postFavoriteAdd, putFavoriteEdit } from "@/api/favorite";
 import { useAuth } from "@/hooks";
 import { useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { selectedFavoriteIdState } from "@/states";
-import { errorAlert, successAlert } from "@/util";
+import { localFavoriteAdd } from "@/localEvent/favorite";
+import { guestFavoritesState, selectedFavoriteIdState } from "@/states";
+import { errorAlert, setLocalStorageItem, successAlert } from "@/util";
 import { Box, Modal } from "@mui/material";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ModalContentBox } from "../modal";
 import { AddForm, EditForm } from "./form";
 
 export default function FavoriteModal() {
-  const { userId, accessToken } = useAuth();
+  const { userId, accessToken, isGuest } = useAuth();
   const [isLoading, setIsLoding] = useState(false);
+  const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
   const { viewPreset, isFavoriteModal, offFavoriteModal, favoriteModal } =
     useFavoriteModal();
@@ -20,6 +22,26 @@ export default function FavoriteModal() {
   const { resetFavoriteList } = useResetQuery(userId);
 
   const favoriteAdd = async (favoriteName: string, address: string) => {
+    if (isGuest) {
+      const result = localFavoriteAdd(favoriteName, address);
+
+      if (result) {
+        const { favoriteList, favorite } = result;
+
+        if (favoriteList) {
+          setLocalStorageItem("favoriteList", [...favoriteList, favorite]);
+          setGuestFavorites([...favoriteList, favorite]);
+        } else {
+          setLocalStorageItem("favoriteList", [favorite]);
+          setGuestFavorites([favorite]);
+        }
+
+        offFavoriteModal();
+        successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
+      }
+
+      return;
+    }
     try {
       setIsLoding(true);
       const { message } = await postFavoriteAdd(

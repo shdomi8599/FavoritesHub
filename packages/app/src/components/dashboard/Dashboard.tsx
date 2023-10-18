@@ -13,7 +13,6 @@ import {
   presetLengthState,
   viewPresetState,
 } from "@/states";
-import { Preset } from "@/types";
 import {
   confirmAlert,
   deleteCookie,
@@ -169,11 +168,6 @@ export default function Dashboard({
 
           if (!accessToken && !userId && pathname !== "/login") {
             moveGuest();
-            const presets: Preset[] = getLocalStorageItem("presetList");
-            const defaultPreset = presets?.find(
-              ({ defaultPreset }) => defaultPreset,
-            )!;
-            setViewPreset(defaultPreset);
           }
 
           setUserId(userId);
@@ -195,6 +189,10 @@ export default function Dashboard({
       }
     }
   }, [isGuest, isPresetEvent, setGuestPresets, setIsPresetEvent]);
+
+  useEffect(() => {
+    setPresetLength(guestPresets?.length || 0);
+  }, [guestPresets, setPresetLength]);
 
   return (
     <Box sx={{ display: "flex" }}>

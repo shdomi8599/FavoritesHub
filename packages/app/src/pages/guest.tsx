@@ -9,17 +9,19 @@ import {
   useFavoriteFilter,
   useHandler,
 } from "@/hooks";
-import { useFavoriteList, useResetQuery } from "@/hooks/react-query";
+import { useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { localHandleDefaultPreset } from "@/localEvent/preset";
 import {
+  guestFavoritesState,
   guestPresetsState,
   isDashboardState,
   isLoadingState,
   viewPresetState,
 } from "@/states";
-import { callbackSuccessAlert } from "@/util";
+import { Favorite, Preset } from "@/types";
+import { callbackSuccessAlert, getLocalStorageItem } from "@/util";
 import {
   Search as SearchIcon,
   StarBorder as StarBorderIcon,
@@ -35,7 +37,7 @@ import {
 } from "@mui/material";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 export default function Guest() {
   // 상태
@@ -52,18 +54,15 @@ export default function Guest() {
   const isHideContent = isDashboard && isMaxWidth600;
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setViewPreset = useSetRecoilState(viewPresetState);
-  const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
+  const { resetFavoriteList } = useResetQuery(userId);
   const { viewPreset, addFavoriteModal, editFavoriteModal } =
     useFavoriteModal();
 
   // 데이터
+  const [guestFavorites, setGuestFavorites] =
+    useRecoilState(guestFavoritesState);
+  const favorites = [...guestFavorites];
   const setGuestPresets = useSetRecoilState(guestPresetsState);
-  const { data: favorites } = useFavoriteList(
-    userId,
-    viewPreset?.id,
-    accessToken,
-  );
-
   const { viewData, autoBarData } = useFavoriteFilter({
     selectValue,
     favorites,
@@ -115,6 +114,20 @@ export default function Guest() {
   useEffect(() => {
     setInputValue("");
   }, [tags]);
+
+  useEffect(() => {
+    const presets: Preset[] = getLocalStorageItem("presetList");
+    const defaultPreset = presets?.find(({ defaultPreset }) => defaultPreset)!;
+    setViewPreset(defaultPreset);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    if (favorites) {
+      setGuestFavorites([...favorites]);
+    }
+  }, []);
 
   return (
     <>
