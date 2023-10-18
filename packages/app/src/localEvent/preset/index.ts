@@ -28,8 +28,8 @@ export const localHandleDefaultPreset = (presetId: number) => {
 
 export const localPresetAdd = (presetName: string) => {
   const presetList: Preset[] = getLocalStorageItem("presetList");
-  if (presetList?.length === 15) {
-    return errorAlert("프리셋은 15개가 최대입니다.", "프리셋 추가");
+  if (presetList?.length === 1) {
+    return errorAlert("게스트 프리셋은 1개가 최대입니다.", "프리셋 추가");
   }
 
   const findPreset = presetList?.find(
