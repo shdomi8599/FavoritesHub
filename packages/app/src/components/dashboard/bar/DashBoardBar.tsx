@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useHandler, useOutSideRef } from "@/hooks";
+import { useRouters } from "@/hooks/useRouters";
 import { DashBoardChildProps } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
@@ -40,6 +41,7 @@ export default function DashboardBar({
     handleBoolean: handleOpen,
     offBoolean: offContent,
   } = useHandler(false);
+  const { moveGuest } = useRouters();
   const { ref } = useOutSideRef(offContent);
   const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
   return (
@@ -69,7 +71,7 @@ export default function DashboardBar({
           noWrap
           sx={{ flexGrow: 1, ml: 0.5 }}
         >
-          Favorites Hub
+          <span>Favorites Hub</span>
         </Typography>
         <UserIconBox ref={ref}>
           <IconButton onClick={handleOpen}>

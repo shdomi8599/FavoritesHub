@@ -57,37 +57,23 @@ export default function DashboardDrawer({
       </Toolbar>
       <Divider />
       <List component="nav" sx={{ height: "90%", pt: 0 }}>
-        {isLogin ? (
-          <Button
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              height: "5vh",
-            }}
-            onClick={addPresetModal}
-          >
-            <AddCircleOutlineIcon />
-            {isDashboard && (
-              <Typography sx={{ marginLeft: "1px" }}>프리셋 추가</Typography>
-            )}
-          </Button>
-        ) : (
-          isDashboard && (
-            <Box
-              sx={{
-                width: "100%",
-                textAlign: "center",
-                pt: 1,
-              }}
-            >
-              <Typography>로그인이 필요합니다.</Typography>
-            </Box>
-          )
-        )}
+        <Button
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            height: "5vh",
+          }}
+          onClick={addPresetModal}
+        >
+          <AddCircleOutlineIcon />
+          {isDashboard && (
+            <Typography sx={{ marginLeft: "1px" }}>프리셋 추가</Typography>
+          )}
+        </Button>
         {presets?.map((preset) => (
           <PresetItem
-            key={preset.id}
+            key={preset?.id}
             preset={preset}
             viewPreset={viewPreset}
             setViewPreset={setViewPreset}

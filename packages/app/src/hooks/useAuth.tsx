@@ -11,11 +11,13 @@ export const useAuth = () => {
   const [userMail, setUserMail] = useRecoilState(userMailState);
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
   const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
+  const isGuest = !userId && !accessToken;
 
   return {
     userId,
     userMail,
     isLogin,
+    isGuest,
     accessToken,
     setUserId,
     setIsLogin,

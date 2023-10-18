@@ -57,9 +57,9 @@ export default function Main() {
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setViewPreset = useSetRecoilState(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
+  const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
   const { viewPreset, addFavoriteModal, editFavoriteModal } =
     useFavoriteModal();
-  const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
 
   // 데이터
   const { data: favorites } = useFavoriteList(
@@ -148,7 +148,7 @@ export default function Main() {
               </>
             )}
           </Container>
-          <MainContainer
+          <CenterContainer
             sx={{
               px: 2,
               mt: 1,
@@ -200,7 +200,7 @@ export default function Main() {
                 </>
               )}
             </Box>
-          </MainContainer>
+          </CenterContainer>
           <Grid
             container
             spacing={4}
@@ -243,7 +243,7 @@ const LoginContainer = styled(Box)(() => ({
   justifyContent: "center",
 }));
 
-const MainContainer = styled(Box)(() => ({
+const CenterContainer = styled(Box)(() => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",

@@ -7,6 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
+import { useRouters } from "@/hooks/useRouters";
 import { AuthProps, SignUpFormInput } from "@/types";
 import { errorAlert } from "@/util";
 import { callbackSuccessAlert } from "@/util/alert";
@@ -17,6 +18,7 @@ export default function SignUpForm({
   handleAuthModal,
   handleClose,
 }: AuthProps) {
+  const { moveLogin } = useRouters();
   const {
     register,
     handleSubmit,
@@ -43,7 +45,7 @@ export default function SignUpForm({
       callbackSuccessAlert(
         "회원가입을 축하합니다.",
         "로그인 하러가기",
-        handleClose,
+        moveLogin,
       );
     }
   };
@@ -90,7 +92,14 @@ export default function SignUpForm({
           <ModalButton>회원가입</ModalButton>
           <Grid container justifyContent={"space-between"}>
             <Grid item>
-              <ModalLink clickEvent={handleClose}>로그인</ModalLink>
+              <ModalLink
+                clickEvent={() => {
+                  handleClose();
+                  moveLogin();
+                }}
+              >
+                로그인
+              </ModalLink>
             </Grid>
             <Grid item>
               <ModalLink clickEvent={() => handleAuthModal("password")}>

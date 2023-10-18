@@ -106,3 +106,9 @@ export const isDashboardState = atom({
   key: "isDashboardState",
   default: false,
 });
+
+// 게스트용
+export const guestPresetsState = atom<Preset[]>({
+  key: "guestPresetsState",
+  default: [],
+});

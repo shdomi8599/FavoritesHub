@@ -9,6 +9,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
+import { useRouters } from "@/hooks/useRouters";
 import { isPasswordForgotState, isRefreshTokenState } from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
@@ -41,6 +42,7 @@ export default function LoginForm({
   setUserId,
   setUserMail,
 }: Props) {
+  const { moveHome } = useRouters();
   const [isRefreshToken, setIsRefreshToken] =
     useRecoilState(isRefreshTokenState);
 
@@ -106,6 +108,7 @@ export default function LoginForm({
 
     setUserId(userId);
     setAccessToken(accessToken!);
+    moveHome();
   };
 
   useEffect(() => {
