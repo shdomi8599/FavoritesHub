@@ -19,17 +19,24 @@ type Props = {
   handleModalOpen: () => void;
   isLogin: boolean;
   contentBoxTop: number;
+  pathname: string;
   userMail: string;
+  isGuest: boolean;
   logoutEvent: () => void;
+  moveGuest: () => void;
+  moveLogin: () => void;
 };
 
 export default function BarUserModal({
   handleOpen,
   handleModalOpen,
   isLogin,
+  pathname,
   contentBoxTop,
   logoutEvent,
   userMail,
+  moveLogin,
+  moveGuest,
 }: Props) {
   return (
     <UserContentBox top={contentBoxTop}>
@@ -44,17 +51,60 @@ export default function BarUserModal({
           <AccordionTypography>계정 관리</AccordionTypography>
         </AccordionSummary>
         <AccordionDetails>
-          <AccordionTypography sx={{ gap: "4px" }}>
+          <AccordionTypography sx={{ gap: "4px", display: "flex" }}>
             {isLogin ? (
               <>
                 <DirectionsRunIcon />
                 <span onClick={logoutEvent}>로그아웃</span>
               </>
+            ) : pathname === "/guest" ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={moveLogin}
+                >
+                  <AccountCircleIcon fontSize="large" />
+                  <span>로그인</span>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleModalOpen}
+                >
+                  <AccountCircleIcon fontSize="large" />
+                  <span>회원가입</span>
+                </Box>
+              </Box>
             ) : (
-              <>
-                <AccountCircleIcon />
-                <span onClick={handleModalOpen}>회원가입</span>
-              </>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={moveGuest}
+              >
+                <AccountCircleIcon fontSize="large" />
+                <span>게스트</span>
+              </Box>
             )}
           </AccordionTypography>
         </AccordionDetails>

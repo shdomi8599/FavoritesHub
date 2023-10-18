@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { useHandler, useOutSideRef } from "@/hooks";
-import { useRouters } from "@/hooks/useRouters";
 import { DashBoardChildProps } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
@@ -27,11 +26,15 @@ interface Props extends DashBoardChildProps {
 
 export default function DashboardBar({
   barRef,
+  isGuest,
   isLogin,
   userMail,
+  pathname,
   barHeight,
   isDashboard,
   isMinWidth600,
+  moveLogin,
+  moveGuest,
   logoutEvent,
   handleModalOpen,
   handleIsDashboard,
@@ -41,7 +44,6 @@ export default function DashboardBar({
     handleBoolean: handleOpen,
     offBoolean: offContent,
   } = useHandler(false);
-  const { moveGuest } = useRouters();
   const { ref } = useOutSideRef(offContent);
   const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
   return (
@@ -79,8 +81,12 @@ export default function DashboardBar({
           </IconButton>
           {isOpen && (
             <BarUserModal
+              isGuest={isGuest}
+              pathname={pathname}
               userMail={userMail}
               isLogin={isLogin}
+              moveLogin={moveLogin}
+              moveGuest={moveGuest}
               handleOpen={handleOpen}
               contentBoxTop={contentBoxTop}
               handleModalOpen={handleModalOpen}

@@ -201,19 +201,27 @@ export default function Dashboard({
       <DashboardBar
         barRef={barRef}
         isLogin={isLogin}
+        isGuest={isGuest}
+        pathname={pathname}
         userMail={userMail}
         barHeight={barHeight}
         isDashboard={isDashboard}
         isMinWidth600={isMinWidth600}
+        moveGuest={moveGuest}
+        moveLogin={moveLogin}
         logoutEvent={logoutEvent}
         handleModalOpen={handleSignUpModal}
         handleIsDashboard={handleIsDashboard}
       />
       <DashboardDrawer
         isLogin={isLogin}
+        isGuest={isGuest}
+        pathname={pathname}
         presets={isGuest ? guestPresets : presets!}
         viewPreset={viewPreset}
         isDashboard={isDashboard}
+        moveGuest={moveGuest}
+        moveLogin={moveLogin}
         logoutEvent={logoutEvent}
         setViewPreset={setViewPreset}
         addPresetModal={addPresetModal}
