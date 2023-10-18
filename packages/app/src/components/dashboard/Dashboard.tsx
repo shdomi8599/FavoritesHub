@@ -4,6 +4,7 @@ import { useAuth, useAuthModal, useBarHeight, usePresetModal } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useRouters } from "@/hooks/useRouters";
+import { localPresetDelete } from "@/localEvent/preset";
 import {
   guestPresetsState,
   isDashboardState,
@@ -12,6 +13,7 @@ import {
   presetLengthState,
   viewPresetState,
 } from "@/states";
+import { Preset } from "@/types";
 import {
   confirmAlert,
   deleteCookie,
@@ -86,23 +88,19 @@ export default function Dashboard({
       try {
         setIsLoading(true);
         await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-        const findPreset = guestPresets.find((preset) => preset.id === id);
-        const newPreset = guestPresets.filter(
-          (preset) => preset.id !== findPreset?.id,
-        );
-        setLocalStorageItem("presetList", [...newPreset]);
-        setGuestPresets([...newPreset]);
-
-        const findDefaultPreset = newPreset.find(
-          (preset) => preset.defaultPreset,
-        );
-        setViewPreset(findDefaultPreset!);
-
-        return;
+        const result = localPresetDelete(guestPresets, id);
+        if (result) {
+          const { newPreset, findDefaultPreset } = result;
+          setLocalStorageItem("presetList", [...newPreset]);
+          setGuestPresets([...newPreset]);
+          setViewPreset(findDefaultPreset!);
+        }
       } finally {
         setIsLoading(false);
+        return;
       }
     }
+
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
@@ -168,9 +166,16 @@ export default function Dashboard({
       .then((res) => {
         if (res) {
           const { accessToken, userId, mail } = res;
+
           if (!accessToken && !userId && pathname !== "/login") {
             moveGuest();
+            const presets: Preset[] = getLocalStorageItem("presetList");
+            const defaultPreset = presets?.find(
+              ({ defaultPreset }) => defaultPreset,
+            )!;
+            setViewPreset(defaultPreset);
           }
+
           setUserId(userId);
           setAccessToken(accessToken!);
           setUserMail(mail);

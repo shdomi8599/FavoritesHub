@@ -12,14 +12,14 @@ import {
 import { useFavoriteList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
+import { localHandleDefaultPreset } from "@/localEvent/preset";
 import {
   guestPresetsState,
   isDashboardState,
   isLoadingState,
   viewPresetState,
 } from "@/states";
-import { Preset } from "@/types";
-import { callbackSuccessAlert, getLocalStorageItem } from "@/util";
+import { callbackSuccessAlert } from "@/util";
 import {
   Search as SearchIcon,
   StarBorder as StarBorderIcon,
@@ -94,26 +94,11 @@ export default function Guest() {
     const callbackEvent = async () => {
       try {
         setIsLoading(true);
-        const presetList: Preset[] = getLocalStorageItem("presetList");
-        const currentDefaultPreset = presetList?.find(
-          (preset) => preset.defaultPreset,
-        )!;
-        currentDefaultPreset.defaultPreset = false;
-
-        const findPreset = presetList?.find((preset) => preset.id === presetId);
-        const newPresetList = presetList?.filter(
-          (preset) => preset.id !== findPreset?.id,
-        );
-
-        if (findPreset) {
-          findPreset.defaultPreset = true;
-          newPresetList.unshift(findPreset);
-        }
-        setGuestPresets(newPresetList);
-        setViewPreset(findPreset!);
-      } catch (e: any) {
-        if (e?.code === 401) {
-          location.reload();
+        const result = localHandleDefaultPreset(presetId);
+        if (result) {
+          const { newPresetList, findPreset } = result;
+          setGuestPresets(newPresetList);
+          setViewPreset(findPreset!);
         }
       } finally {
         setIsLoading(false);
