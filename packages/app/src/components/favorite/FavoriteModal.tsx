@@ -2,9 +2,10 @@ import { postFavoriteAdd, putFavoriteEdit } from "@/api/favorite";
 import { useAuth } from "@/hooks";
 import { useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { localFavoriteAdd } from "@/localEvent/favorite";
+import { localFavoriteAdd, localFavoriteEdit } from "@/localEvent/favorite";
 import { guestFavoritesState, selectedFavoriteIdState } from "@/states";
-import { errorAlert, setLocalStorageItem, successAlert } from "@/util";
+import { Favorite } from "@/types";
+import { errorAlert, getLocalStorageItem, successAlert } from "@/util";
 import { Box, Modal } from "@mui/material";
 import { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -21,27 +22,17 @@ export default function FavoriteModal() {
 
   const { resetFavoriteList } = useResetQuery(userId);
 
+  const guestFavoriteAdd = async (favoriteName: string, address: string) => {
+    await localFavoriteAdd(favoriteName, address);
+
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    setGuestFavorites([...favorites]);
+
+    offFavoriteModal();
+    successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
+  };
+
   const favoriteAdd = async (favoriteName: string, address: string) => {
-    if (isGuest) {
-      const result = localFavoriteAdd(favoriteName, address);
-
-      if (result) {
-        const { favoriteList, favorite } = result;
-
-        if (favoriteList) {
-          setLocalStorageItem("favoriteList", [...favoriteList, favorite]);
-          setGuestFavorites([...favoriteList, favorite]);
-        } else {
-          setLocalStorageItem("favoriteList", [favorite]);
-          setGuestFavorites([favorite]);
-        }
-
-        offFavoriteModal();
-        successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
-      }
-
-      return;
-    }
     try {
       setIsLoding(true);
       const { message } = await postFavoriteAdd(
@@ -80,6 +71,16 @@ export default function FavoriteModal() {
     }
   };
 
+  const guestFavoriteEdit = async (favoriteName: string) => {
+    await localFavoriteEdit(favoriteName, selectedFavoriteId);
+
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    setGuestFavorites([...favorites]);
+
+    offFavoriteModal();
+    successAlert("즐겨찾기가 수정되었습니다.", "즐겨찾기 수정");
+  };
+
   const favoriteEdit = async (favoriteName: string) => {
     try {
       setIsLoding(true);
@@ -101,8 +102,18 @@ export default function FavoriteModal() {
   };
 
   const modalData: { [key: string]: JSX.Element } = {
-    add: <AddForm favoriteAdd={favoriteAdd} isLoading={isLoading} />,
-    edit: <EditForm favoriteEdit={favoriteEdit} isLoading={isLoading} />,
+    add: (
+      <AddForm
+        favoriteAdd={isGuest ? guestFavoriteAdd : favoriteAdd}
+        isLoading={isLoading}
+      />
+    ),
+    edit: (
+      <EditForm
+        favoriteEdit={isGuest ? guestFavoriteEdit : favoriteEdit}
+        isLoading={isLoading}
+      />
+    ),
   };
 
   return (

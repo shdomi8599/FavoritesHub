@@ -3,15 +3,15 @@ import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
 import SearchSelect from "@/components/search/SearchSelect";
 import { SearchSelects } from "@/const";
-import {
-  useAuth,
-  useFavoriteEvent,
-  useFavoriteFilter,
-  useHandler,
-} from "@/hooks";
-import { useResetQuery } from "@/hooks/react-query";
+import { useFavoriteFilter, useHandler } from "@/hooks";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
+import {
+  localFavoriteDelete,
+  localFavoriteHandleStar,
+  localFavoriteVisited,
+  localUpFavoriteVisited,
+} from "@/localEvent/favorite";
 import { localHandleDefaultPreset } from "@/localEvent/preset";
 import {
   guestFavoritesState,
@@ -48,13 +48,11 @@ export default function Guest() {
   const { isBoolean: isStar, handleBoolean: handleStar } = useHandler(false);
 
   // 훅
-  const { userId, accessToken } = useAuth();
   const { isMaxWidth600 } = useBreakPoints();
   const isDashboard = useRecoilValue(isDashboardState);
   const isHideContent = isDashboard && isMaxWidth600;
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setViewPreset = useSetRecoilState(viewPresetState);
-  const { resetFavoriteList } = useResetQuery(userId);
   const { viewPreset, addFavoriteModal, editFavoriteModal } =
     useFavoriteModal();
 
@@ -71,18 +69,30 @@ export default function Guest() {
     inputValue,
   });
 
-  // 이벤트
-  const {
-    deleteFavoriteEvent,
-    favoriteVisited,
-    favoriteHandleStar,
-    upFavoriteVisitedCount,
-  } = useFavoriteEvent({
-    id: viewPreset?.id,
-    accessToken,
-    setIsLoading,
-    resetFavoriteList,
-  });
+  // 로컬 즐겨찾기 이벤트
+  const localDeleteFavoriteEvent = async (id: number) => {
+    await localFavoriteDelete(id);
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    setGuestFavorites([...favorites]);
+  };
+
+  const localUpFavoriteVisitedCountEvent = async (id: number) => {
+    await localUpFavoriteVisited(id);
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    setGuestFavorites([...favorites]);
+  };
+
+  const localFavoriteVisitedEvent = async (id: number) => {
+    await localFavoriteVisited(id);
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    setGuestFavorites([...favorites]);
+  };
+
+  const localFavoriteHandleStarEvent = async (id: number) => {
+    await localFavoriteHandleStar(id);
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    setGuestFavorites([...favorites]);
+  };
 
   const HandleDefaultPreset = async () => {
     if (!viewPreset) {
@@ -127,6 +137,7 @@ export default function Guest() {
     if (favorites) {
       setGuestFavorites([...favorites]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -221,11 +232,11 @@ export default function Guest() {
           <FavoriteCard
             key={index}
             favorite={favorite}
-            favoriteVisited={favoriteVisited}
             editFavoriteModal={editFavoriteModal}
-            favoriteHandleStar={favoriteHandleStar}
-            deleteFavoriteEvent={deleteFavoriteEvent}
-            upFavoriteVisitedCount={upFavoriteVisitedCount}
+            favoriteVisited={localFavoriteVisitedEvent}
+            deleteFavoriteEvent={localDeleteFavoriteEvent}
+            favoriteHandleStar={localFavoriteHandleStarEvent}
+            upFavoriteVisitedCount={localUpFavoriteVisitedCountEvent}
           />
         ))}
       </Grid>

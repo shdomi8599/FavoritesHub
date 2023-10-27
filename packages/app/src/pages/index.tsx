@@ -118,6 +118,8 @@ export default function Main() {
     setInputValue("");
   }, [tags]);
 
+  if(!!!accessToken) return <></>
+
   return (
     <>
       <Head>
