@@ -118,7 +118,7 @@ export default function Main() {
     setInputValue("");
   }, [tags]);
 
-  if(!!!accessToken) return <></>
+  if (!!!accessToken) return <></>;
 
   return (
     <>

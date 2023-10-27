@@ -7,7 +7,7 @@ import {
 } from "@/util";
 import moment from "moment";
 
-export const localFavoriteAdd = async (
+export const guestFavoriteAdd = async (
   favoriteName: string,
   address: string,
 ) => {
@@ -39,18 +39,13 @@ export const localFavoriteAdd = async (
   };
 
   if (isNotFavoriteList) {
-    setLocalStorageItem("favoriteList", [favorite]);
-  } else {
-    setLocalStorageItem("favoriteList", [...favoriteList, favorite]);
+    return setLocalStorageItem("favoriteList", [favorite]);
   }
 
-  return {
-    favoriteList,
-    favorite,
-  };
+  setLocalStorageItem("favoriteList", [...favoriteList, favorite]);
 };
 
-export const localFavoriteEdit = async (favoriteName: string, id: number) => {
+export const guestFavoriteEdit = async (favoriteName: string, id: number) => {
   const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
 
   const newFavoriteList = favoriteList.map((fav) => {
@@ -63,7 +58,7 @@ export const localFavoriteEdit = async (favoriteName: string, id: number) => {
   setLocalStorageItem("favoriteList", newFavoriteList);
 };
 
-export const localFavoriteDelete = async (id: number) => {
+export const guestFavoriteDelete = async (id: number) => {
   await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
 
   const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
@@ -73,7 +68,7 @@ export const localFavoriteDelete = async (id: number) => {
   setLocalStorageItem("favoriteList", newFavoriteList);
 };
 
-export const localFavoriteVisited = async (id: number) => {
+export const guestFavoriteVisited = async (id: number) => {
   const currentDate = moment().format("YYYY-MM-DD hh:mm:ss");
   const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
 
@@ -87,7 +82,7 @@ export const localFavoriteVisited = async (id: number) => {
   setLocalStorageItem("favoriteList", newFavoriteList);
 };
 
-export const localUpFavoriteVisited = async (id: number) => {
+export const guestUpFavoriteVisited = async (id: number) => {
   const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
 
   const newFavoriteList = favoriteList.map((fav) => {
@@ -100,7 +95,7 @@ export const localUpFavoriteVisited = async (id: number) => {
   setLocalStorageItem("favoriteList", newFavoriteList);
 };
 
-export const localFavoriteHandleStar = async (id: number) => {
+export const guestFavoriteHandleStar = async (id: number) => {
   const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
 
   const newFavoriteList = favoriteList.map((fav) => {

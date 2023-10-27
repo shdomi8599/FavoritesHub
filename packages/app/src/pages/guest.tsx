@@ -3,16 +3,17 @@ import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
 import SearchSelect from "@/components/search/SearchSelect";
 import { SearchSelects } from "@/const";
+import {
+  guestFavoriteDelete,
+  guestFavoriteHandleStar,
+  guestFavoriteVisited,
+  guestUpFavoriteVisited,
+} from "@/guest/favorite";
+import { guestHandleDefaultPreset } from "@/guest/preset";
 import { useFavoriteFilter, useHandler } from "@/hooks";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import {
-  localFavoriteDelete,
-  localFavoriteHandleStar,
-  localFavoriteVisited,
-  localUpFavoriteVisited,
-} from "@/localEvent/favorite";
-import { localHandleDefaultPreset } from "@/localEvent/preset";
+
 import {
   guestFavoritesState,
   guestPresetsState,
@@ -71,25 +72,25 @@ export default function Guest() {
 
   // 로컬 즐겨찾기 이벤트
   const localDeleteFavoriteEvent = async (id: number) => {
-    await localFavoriteDelete(id);
+    await guestFavoriteDelete(id);
     const favorites: Favorite[] = getLocalStorageItem("favoriteList");
     setGuestFavorites([...favorites]);
   };
 
   const localUpFavoriteVisitedCountEvent = async (id: number) => {
-    await localUpFavoriteVisited(id);
+    await guestUpFavoriteVisited(id);
     const favorites: Favorite[] = getLocalStorageItem("favoriteList");
     setGuestFavorites([...favorites]);
   };
 
   const localFavoriteVisitedEvent = async (id: number) => {
-    await localFavoriteVisited(id);
+    await guestFavoriteVisited(id);
     const favorites: Favorite[] = getLocalStorageItem("favoriteList");
     setGuestFavorites([...favorites]);
   };
 
-  const localFavoriteHandleStarEvent = async (id: number) => {
-    await localFavoriteHandleStar(id);
+  const guestFavoriteHandleStarEvent = async (id: number) => {
+    await guestFavoriteHandleStar(id);
     const favorites: Favorite[] = getLocalStorageItem("favoriteList");
     setGuestFavorites([...favorites]);
   };
@@ -103,7 +104,7 @@ export default function Guest() {
     const callbackEvent = async () => {
       try {
         setIsLoading(true);
-        const result = localHandleDefaultPreset(presetId);
+        const result = guestHandleDefaultPreset(presetId);
         if (result) {
           const { newPresetList, findPreset } = result;
           setGuestPresets(newPresetList);
@@ -235,7 +236,7 @@ export default function Guest() {
             editFavoriteModal={editFavoriteModal}
             favoriteVisited={localFavoriteVisitedEvent}
             deleteFavoriteEvent={localDeleteFavoriteEvent}
-            favoriteHandleStar={localFavoriteHandleStarEvent}
+            favoriteHandleStar={guestFavoriteHandleStarEvent}
             upFavoriteVisitedCount={localUpFavoriteVisitedCountEvent}
           />
         ))}

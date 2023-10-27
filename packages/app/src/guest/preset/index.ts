@@ -1,7 +1,7 @@
 import { Preset } from "@/types";
 import { errorAlert, getLocalStorageItem, setLocalStorageItem } from "@/util";
 
-export const localHandleDefaultPreset = (presetId: number) => {
+export const guestHandleDefaultPreset = (presetId: number) => {
   const presetList: Preset[] = getLocalStorageItem("presetList");
   const currentDefaultPreset = presetList?.find(
     (preset) => preset.defaultPreset,
@@ -26,7 +26,7 @@ export const localHandleDefaultPreset = (presetId: number) => {
   };
 };
 
-export const localPresetAdd = (presetName: string) => {
+export const guestPresetAdd = (presetName: string) => {
   const presetList: Preset[] = getLocalStorageItem("presetList");
   if (presetList?.length === 1) {
     return errorAlert("게스트 프리셋은 1개가 최대입니다.", "프리셋 추가");
@@ -55,7 +55,7 @@ export const localPresetAdd = (presetName: string) => {
   };
 };
 
-export const localPresetEdit = (
+export const guestPresetEdit = (
   selectedPresetId: number,
   newPresetName: string,
 ) => {
@@ -95,7 +95,7 @@ export const localPresetEdit = (
   };
 };
 
-export const localPresetDelete = (guestPresets: Preset[], id: number) => {
+export const guestPresetDelete = (guestPresets: Preset[], id: number) => {
   const findPreset = guestPresets.find((preset) => preset.id === id);
   const newPreset = guestPresets.filter(
     (preset) => preset.id !== findPreset?.id,

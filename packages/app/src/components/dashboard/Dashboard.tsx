@@ -1,10 +1,10 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
 import { postPresetDelete } from "@/api/preset";
+import { guestPresetDelete } from "@/guest/preset";
 import { useAuth, useAuthModal, useBarHeight, usePresetModal } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useRouters } from "@/hooks/useRouters";
-import { localPresetDelete } from "@/localEvent/preset";
 import {
   guestPresetsState,
   isDashboardState,
@@ -87,7 +87,7 @@ export default function Dashboard({
       try {
         setIsLoading(true);
         await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-        const result = localPresetDelete(guestPresets, id);
+        const result = guestPresetDelete(guestPresets, id);
         if (result) {
           const { newPreset, findDefaultPreset } = result;
           setLocalStorageItem("presetList", [...newPreset]);

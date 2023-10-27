@@ -1,5 +1,5 @@
 import { postPresetAdd, putPresetEdit } from "@/api/preset";
-import { localPresetAdd, localPresetEdit } from "@/localEvent/preset";
+import { guestPresetAdd, guestPresetEdit } from "@/guest/preset";
 import { isPresetEventState, viewPresetState } from "@/states";
 import { errorAlert, setLocalStorageItem, successAlert } from "@/util";
 import { useState } from "react";
@@ -25,7 +25,7 @@ export const usePresetEvent = ({
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
   const presetAdd = async (presetName: string) => {
     if (isGuest) {
-      const result = localPresetAdd(presetName)!;
+      const result = guestPresetAdd(presetName)!;
       if (result) {
         const { presetList, preset } = result;
         if (presetList) {
@@ -69,7 +69,7 @@ export const usePresetEvent = ({
 
   const presetEdit = async (newPresetName: string) => {
     if (isGuest) {
-      const result = localPresetEdit(selectedPresetId, newPresetName)!;
+      const result = guestPresetEdit(selectedPresetId, newPresetName)!;
       if (result) {
         const { newPresetList, findNewPreset } = result;
         setLocalStorageItem("presetList", [...newPresetList]);

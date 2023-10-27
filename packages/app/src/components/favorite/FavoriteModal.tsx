@@ -1,8 +1,8 @@
 import { postFavoriteAdd, putFavoriteEdit } from "@/api/favorite";
+import { guestFavoriteAdd, guestFavoriteEdit } from "@/guest/favorite";
 import { useAuth } from "@/hooks";
 import { useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { localFavoriteAdd, localFavoriteEdit } from "@/localEvent/favorite";
 import { guestFavoritesState, selectedFavoriteIdState } from "@/states";
 import { Favorite } from "@/types";
 import { errorAlert, getLocalStorageItem, successAlert } from "@/util";
@@ -22,8 +22,11 @@ export default function FavoriteModal() {
 
   const { resetFavoriteList } = useResetQuery(userId);
 
-  const guestFavoriteAdd = async (favoriteName: string, address: string) => {
-    await localFavoriteAdd(favoriteName, address);
+  const guestFavoriteAddEvent = async (
+    favoriteName: string,
+    address: string,
+  ) => {
+    await guestFavoriteAdd(favoriteName, address);
 
     const favorites: Favorite[] = getLocalStorageItem("favoriteList");
     setGuestFavorites([...favorites]);
@@ -71,8 +74,8 @@ export default function FavoriteModal() {
     }
   };
 
-  const guestFavoriteEdit = async (favoriteName: string) => {
-    await localFavoriteEdit(favoriteName, selectedFavoriteId);
+  const guestFavoriteEditEvent = async (favoriteName: string) => {
+    await guestFavoriteEdit(favoriteName, selectedFavoriteId);
 
     const favorites: Favorite[] = getLocalStorageItem("favoriteList");
     setGuestFavorites([...favorites]);
@@ -104,13 +107,13 @@ export default function FavoriteModal() {
   const modalData: { [key: string]: JSX.Element } = {
     add: (
       <AddForm
-        favoriteAdd={isGuest ? guestFavoriteAdd : favoriteAdd}
+        favoriteAdd={isGuest ? guestFavoriteAddEvent : favoriteAdd}
         isLoading={isLoading}
       />
     ),
     edit: (
       <EditForm
-        favoriteEdit={isGuest ? guestFavoriteEdit : favoriteEdit}
+        favoriteEdit={isGuest ? guestFavoriteEditEvent : favoriteEdit}
         isLoading={isLoading}
       />
     ),
