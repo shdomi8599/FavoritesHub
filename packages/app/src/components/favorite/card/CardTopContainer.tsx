@@ -42,13 +42,14 @@ export default function CardTopContainer({
   handleStar,
   deleteEvent,
 }: Props) {
+  const colorId = id % 10;
   return (
     <TopContainer>
       <TopImgBox>
         {!imgSrc ? (
           <TopCustomImg
             sx={{
-              backgroundColor: randomColorTable[id],
+              backgroundColor: randomColorTable[colorId],
             }}
           >
             {title ? title[0] : <QuestionMarkIcon />}
