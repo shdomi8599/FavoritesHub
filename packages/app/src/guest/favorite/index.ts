@@ -32,7 +32,7 @@ export const guestFavoriteAdd = async (
     createdAt: currentDate,
     lastVisitedAt: currentDate,
     description: "",
-    imgHref: "",
+    imgHref: `https://www.google.com/s2/favicons?sz=256&domain=${address}`,
     star: false,
     title: "",
     visitedCount: 0,
