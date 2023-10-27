@@ -7,10 +7,22 @@ import {
   Star as StarIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, Tooltip, styled } from "@mui/material";
-import { useState } from "react";
-var randomColor = require("randomcolor"); // import the script
+
+const randomColorTable: Record<number, string> = {
+  1: "#FF5733",
+  2: "#33FF57",
+  3: "#3366FF",
+  4: "#FF33B3",
+  5: "#33CCFF",
+  6: "#FFCC33",
+  7: "#33FFCC",
+  8: "#9933FF",
+  9: "#FF33CC",
+  10: "#66FF33",
+};
 
 type Props = {
+  id: number;
   title: string;
   star: boolean;
   imgSrc: string;
@@ -21,6 +33,7 @@ type Props = {
 };
 
 export default function CardTopContainer({
+  id,
   star,
   title,
   imgSrc,
@@ -29,14 +42,13 @@ export default function CardTopContainer({
   handleStar,
   deleteEvent,
 }: Props) {
-  const [color] = useState(randomColor());
   return (
     <TopContainer>
       <TopImgBox>
         {!imgSrc ? (
           <TopCustomImg
             sx={{
-              backgroundColor: color,
+              backgroundColor: randomColorTable[id],
             }}
           >
             {title ? title[0] : <QuestionMarkIcon />}

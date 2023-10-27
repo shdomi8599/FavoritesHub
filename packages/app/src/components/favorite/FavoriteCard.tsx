@@ -117,6 +117,7 @@ function FavoriteCard({
           }}
         >
           <CardTopContainer
+            id={id}
             star={star}
             title={title}
             imgSrc={!imgHref ? imgHref : imgSrc}
