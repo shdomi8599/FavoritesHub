@@ -6,6 +6,7 @@ import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useRouters } from "@/hooks/useRouters";
 import {
+  guestFavoritesState,
   guestPresetsState,
   isDashboardState,
   isLoadingState,
@@ -19,6 +20,7 @@ import {
   errorAlert,
   getCookie,
   getLocalStorageItem,
+  removeLocalStorageItem,
   setLocalStorageItem,
 } from "@/util";
 import { Box } from "@mui/material";
@@ -56,6 +58,7 @@ export default function Dashboard({
   const setPresetLength = useSetRecoilState(presetLengthState);
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
   const { addPresetModal, editPresetModal } = usePresetModal();
+  const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);
 
@@ -93,9 +96,11 @@ export default function Dashboard({
           setLocalStorageItem("presetList", [...newPreset]);
           setGuestPresets([...newPreset]);
           setViewPreset(findDefaultPreset!);
+          removeLocalStorageItem("favoriteList");
         }
       } finally {
         setIsLoading(false);
+        setGuestFavorites([]);
         return;
       }
     }
