@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { baseURL } from "@/api";
 import { postAuthLogin, postUserExist } from "@/api/auth";
 import {
   ModalButton,
@@ -20,12 +19,12 @@ import {
   FormControlLabel,
   Grid,
   Tooltip,
-  styled,
 } from "@mui/material";
 import Head from "next/head";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from "recoil";
+import { GoogleLogin } from ".";
 
 interface Props {
   openAuthModal: () => void;
@@ -163,9 +162,7 @@ export default function LoginForm({
               />
             </Tooltip>
             <ModalButton>로그인</ModalButton>
-            <GoogleBox>
-              <GoogleBtn href={`${baseURL}/auth/google`} />
-            </GoogleBox>
+            <GoogleLogin />
             <Grid container justifyContent={"space-between"}>
               <Grid item>
                 <ModalLink clickEvent={passwordEvent}>
@@ -182,23 +179,3 @@ export default function LoginForm({
     </>
   );
 }
-
-const GoogleBox = styled(Box)(() => ({
-  width: "100%",
-  display: "flex",
-  justifyContent: "center",
-  marginBottom: "8px",
-}));
-
-const GoogleBtn = styled("a")(() => ({
-  width: "180px",
-  display: "block",
-  height: "43px",
-  backgroundImage: `url(/google/btn.png)`,
-  backgroundRepeat: "no-repeat",
-  backgroundSize: "100% 100%",
-  cursor: "pointer",
-  "&:hover": {
-    backgroundImage: `url(/google/btn-hover.png)`,
-  },
-}));

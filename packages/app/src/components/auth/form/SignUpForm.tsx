@@ -9,10 +9,11 @@ import {
 import { authFormOptions, authInputLabel } from "@/const";
 import { useRouters } from "@/hooks/useRouters";
 import { AuthProps, SignUpFormInput } from "@/types";
-import { errorAlert } from "@/util";
-import { callbackSuccessAlert } from "@/util/alert";
+import { errorAlert, getLocalStorageItem } from "@/util";
+import { callbackSuccessAlert, confirmAlert } from "@/util/alert";
 import { Box, Container, Grid } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { GoogleLogin } from ".";
 
 export default function SignUpForm({
   handleAuthModal,
@@ -42,11 +43,21 @@ export default function SignUpForm({
     }
 
     if (message === "success") {
-      callbackSuccessAlert(
-        "회원가입을 축하합니다.",
-        "로그인 하러가기",
-        moveLogin,
-      );
+      try {
+        const guestFavoriteList = getLocalStorageItem("favoriteList");
+        if (guestFavoriteList) {
+          await confirmAlert(
+            "게스트 데이터를 이전하시겠습니까?",
+            "게스트 이전이",
+          );
+        }
+      } finally {
+        callbackSuccessAlert(
+          "회원가입을 축하합니다.",
+          "로그인 하러가기",
+          moveLogin,
+        );
+      }
     }
   };
 
@@ -90,6 +101,7 @@ export default function SignUpForm({
             type="password"
           />
           <ModalButton>회원가입</ModalButton>
+          <GoogleLogin />
           <Grid container justifyContent={"space-between"}>
             <Grid item>
               <ModalLink
