@@ -48,8 +48,6 @@ export default function SignUpForm({
 
     if (message === "success") {
       try {
-        setIsLoading(true);
-
         const guestFavoriteList: Favorite[] =
           getLocalStorageItem("favoriteList");
 
@@ -57,10 +55,12 @@ export default function SignUpForm({
           await confirmAlert(
             "게스트 데이터를 이전하시겠습니까?",
             "게스트 이전이",
-          );
-          const presetList: Preset[] = getLocalStorageItem("presetList");
-          const presetName = presetList[0].presetName;
-          await guestFavoritesAdd(guestFavoriteList, mail, presetName);
+          ).then(async () => {
+            setIsLoading(true);
+            const presetList: Preset[] = getLocalStorageItem("presetList");
+            const presetName = presetList[0].presetName;
+            await guestFavoritesAdd(guestFavoriteList, mail, presetName);
+          });
         }
       } finally {
         callbackSuccessAlert(
@@ -68,6 +68,7 @@ export default function SignUpForm({
           "로그인 하러가기",
           moveLogin,
         );
+        handleClose();
         setIsLoading(false);
       }
     }
