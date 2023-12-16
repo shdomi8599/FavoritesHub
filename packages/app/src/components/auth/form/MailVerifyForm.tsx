@@ -7,6 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions } from "@/const";
+import { useRouters } from "@/hooks/useRouters";
 import { AuthProps } from "@/types";
 import { errorAlert, successAlert } from "@/util";
 import { Box, Container, Grid, TextField } from "@mui/material";
@@ -43,6 +44,7 @@ export default function MailVerifyForm({
     handleSubmit,
     formState: { errors, isSubmitted },
   } = useForm<{ verifyCode: string }>();
+  const { moveHome } = useRouters();
 
   const onVerifyMail = async () => {
     restart(expiryTimestamp);
@@ -75,6 +77,7 @@ export default function MailVerifyForm({
     setUserId(userId);
     setAccessToken(accessToken!);
     handleClose();
+    moveHome();
   };
 
   useEffect(() => {

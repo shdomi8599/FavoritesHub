@@ -1,4 +1,5 @@
 import { postSignUp } from "@/api/auth";
+import { guestFavoritesAdd } from "@/api/favorite";
 import {
   ModalButton,
   ModalForm,
@@ -7,16 +8,22 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
-import { AuthProps, SignUpFormInput } from "@/types";
-import { errorAlert } from "@/util";
-import { callbackSuccessAlert } from "@/util/alert";
+import { useRouters } from "@/hooks/useRouters";
+import { isLoadingState } from "@/states";
+import { AuthProps, Favorite, Preset, SignUpFormInput } from "@/types";
+import { errorAlert, getLocalStorageItem } from "@/util";
+import { callbackSuccessAlert, confirmAlert } from "@/util/alert";
 import { Box, Container, Grid } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useSetRecoilState } from "recoil";
+import { GoogleLogin } from ".";
 
 export default function SignUpForm({
   handleAuthModal,
   handleClose,
 }: AuthProps) {
+  const setIsLoading = useSetRecoilState(isLoadingState);
+  const { moveLogin } = useRouters();
   const {
     register,
     handleSubmit,
@@ -40,11 +47,30 @@ export default function SignUpForm({
     }
 
     if (message === "success") {
-      callbackSuccessAlert(
-        "회원가입을 축하합니다.",
-        "로그인 하러가기",
-        handleClose,
-      );
+      try {
+        const guestFavoriteList: Favorite[] =
+          getLocalStorageItem("favoriteList");
+
+        if (guestFavoriteList) {
+          await confirmAlert(
+            "게스트 데이터를 이전하시겠습니까?",
+            "게스트 이전이",
+          ).then(async () => {
+            setIsLoading(true);
+            const presetList: Preset[] = getLocalStorageItem("presetList");
+            const presetName = presetList[0].presetName;
+            await guestFavoritesAdd(guestFavoriteList, mail, presetName);
+          });
+        }
+      } finally {
+        callbackSuccessAlert(
+          "회원가입을 축하합니다.",
+          "로그인 하러가기",
+          moveLogin,
+        );
+        handleClose();
+        setIsLoading(false);
+      }
     }
   };
 
@@ -88,9 +114,17 @@ export default function SignUpForm({
             type="password"
           />
           <ModalButton>회원가입</ModalButton>
-          <Grid container>
-            <Grid item xs>
-              <ModalLink clickEvent={handleClose}>로그인</ModalLink>
+          <GoogleLogin />
+          <Grid container justifyContent={"space-between"}>
+            <Grid item>
+              <ModalLink
+                clickEvent={() => {
+                  handleClose();
+                  moveLogin();
+                }}
+              >
+                로그인
+              </ModalLink>
             </Grid>
             <Grid item>
               <ModalLink clickEvent={() => handleAuthModal("password")}>

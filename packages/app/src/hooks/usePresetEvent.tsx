@@ -1,11 +1,12 @@
 import { postPresetAdd, putPresetEdit } from "@/api/preset";
+import { guestPresetAdd, guestPresetEdit } from "@/guest/preset";
 import { isPresetEventState, viewPresetState } from "@/states";
-import { errorAlert, successAlert } from "@/util";
+import { errorAlert, setLocalStorageItem, successAlert } from "@/util";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 type Props = {
-  userId: number;
+  isGuest: boolean;
   accessToken: string;
   selectedPresetId: number;
   offPresetModal: () => void;
@@ -13,7 +14,7 @@ type Props = {
 };
 
 export const usePresetEvent = ({
-  userId,
+  isGuest,
   accessToken,
   selectedPresetId,
   offPresetModal,
@@ -23,6 +24,23 @@ export const usePresetEvent = ({
   const setViewPreset = useSetRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
   const presetAdd = async (presetName: string) => {
+    if (isGuest) {
+      const result = guestPresetAdd(presetName)!;
+      if (result) {
+        const { presetList, preset } = result;
+        if (presetList) {
+          setLocalStorageItem("presetList", [...presetList, preset]);
+        } else {
+          setLocalStorageItem("presetList", [preset]);
+        }
+        successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
+        offPresetModal();
+        setIsPresetEvent(true);
+        setViewPreset(preset!);
+      }
+      return;
+    }
+
     try {
       setIsLoding(true);
       const { message, preset } = await postPresetAdd(accessToken, presetName);
@@ -50,6 +68,19 @@ export const usePresetEvent = ({
   };
 
   const presetEdit = async (newPresetName: string) => {
+    if (isGuest) {
+      const result = guestPresetEdit(selectedPresetId, newPresetName)!;
+      if (result) {
+        const { newPresetList, findNewPreset } = result;
+        setLocalStorageItem("presetList", [...newPresetList]);
+        successAlert("프리셋이 수정되었습니다.", "프리셋 수정");
+        offPresetModal();
+        setViewPreset(findNewPreset!);
+        setIsPresetEvent(true);
+      }
+      return;
+    }
+
     try {
       setIsLoding(true);
       const { message, preset } = await putPresetEdit(

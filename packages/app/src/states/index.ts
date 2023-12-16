@@ -1,5 +1,6 @@
 import {
   AuthModalState,
+  Favorite,
   FavoriteModalState,
   Preset,
   PresetModalState,
@@ -105,4 +106,15 @@ export const isLoadingState = atom({
 export const isDashboardState = atom({
   key: "isDashboardState",
   default: false,
+});
+
+// 게스트용
+export const guestPresetsState = atom<Preset[]>({
+  key: "guestPresetsState",
+  default: [],
+});
+
+export const guestFavoritesState = atom<Favorite[]>({
+  key: "guestFavoritesState",
+  default: [],
 });

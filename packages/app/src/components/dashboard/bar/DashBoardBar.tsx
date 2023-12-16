@@ -26,11 +26,15 @@ interface Props extends DashBoardChildProps {
 
 export default function DashboardBar({
   barRef,
+  isGuest,
   isLogin,
   userMail,
+  pathname,
   barHeight,
   isDashboard,
   isMinWidth600,
+  moveLogin,
+  moveGuest,
   logoutEvent,
   handleModalOpen,
   handleIsDashboard,
@@ -69,7 +73,7 @@ export default function DashboardBar({
           noWrap
           sx={{ flexGrow: 1, ml: 0.5 }}
         >
-          Favorites Hub
+          <span>Favorites Hub</span>
         </Typography>
         <UserIconBox ref={ref}>
           <IconButton onClick={handleOpen}>
@@ -77,8 +81,12 @@ export default function DashboardBar({
           </IconButton>
           {isOpen && (
             <BarUserModal
+              isGuest={isGuest}
+              pathname={pathname}
               userMail={userMail}
               isLogin={isLogin}
+              moveLogin={moveLogin}
+              moveGuest={moveGuest}
               handleOpen={handleOpen}
               contentBoxTop={contentBoxTop}
               handleModalOpen={handleModalOpen}

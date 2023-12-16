@@ -79,6 +79,10 @@ export interface DashBoardChildProps {
   isDashboard: boolean;
   handleModalOpen: () => void;
   logoutEvent: () => void;
+  pathname: string;
+  isGuest: boolean;
+  moveGuest: () => void;
+  moveLogin: () => void;
 }
 
 export interface Preset {

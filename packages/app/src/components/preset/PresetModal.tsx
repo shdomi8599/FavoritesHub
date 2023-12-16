@@ -7,14 +7,14 @@ import { ModalContentBox } from "../modal";
 import { AddForm, EditForm } from "./form";
 
 export default function PresetModal() {
-  const { userId, accessToken } = useAuth();
+  const { userId, accessToken, isGuest } = useAuth();
   const selectedPresetId = useRecoilValue(selectedPresetIdState);
   const { isPresetModal, offPresetModal, presetModal } = usePresetModal();
 
   const { resetPresetList } = useResetQuery(userId);
 
   const { isLoding, presetAdd, presetEdit } = usePresetEvent({
-    userId,
+    isGuest,
     accessToken,
     selectedPresetId,
     resetPresetList,

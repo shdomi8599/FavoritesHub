@@ -1,20 +1,32 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
 import { postPresetDelete } from "@/api/preset";
+import { guestPresetDelete } from "@/guest/preset";
 import { useAuth, useAuthModal, useBarHeight, usePresetModal } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
+import { useRouters } from "@/hooks/useRouters";
 import {
+  guestFavoritesState,
+  guestPresetsState,
   isDashboardState,
   isLoadingState,
   isPresetEventState,
   presetLengthState,
   viewPresetState,
 } from "@/states";
-import { confirmAlert, deleteCookie, errorAlert, getCookie } from "@/util";
+import {
+  confirmAlert,
+  deleteCookie,
+  errorAlert,
+  getCookie,
+  getLocalStorageItem,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from "@/util";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useEffect } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
@@ -30,25 +42,31 @@ export default function Dashboard({
     userId,
     userMail,
     isLogin,
+    isGuest,
     accessToken,
     setIsLogin,
     setUserId,
     setUserMail,
     setAccessToken,
   } = useAuth();
+  const { pathname, moveGuest, moveLogin } = useRouters();
   const [isDashboard, setIsDashboard] = useRecoilState(isDashboardState);
   const { handleSignUpModal } = useAuthModal();
   const { resetPresetList } = useResetQuery(userId);
   const { ref: barRef, barHeight } = useBarHeight();
-  const isPresetEvent = useRecoilValue(isPresetEventState);
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setPresetLength = useSetRecoilState(presetLengthState);
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
   const { addPresetModal, editPresetModal } = usePresetModal();
+  const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
+  const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
+
+  // 게스트용 데이터
+  const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
 
   // 핸들러
   const handleIsDashboard = () => {
@@ -63,10 +81,30 @@ export default function Dashboard({
       setUserMail("");
       setAccessToken("");
       resetPresetList();
+      moveLogin();
     }
   };
 
   const deletePresetEvent = async (id: number) => {
+    if (isGuest) {
+      try {
+        setIsLoading(true);
+        await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
+        const result = guestPresetDelete(guestPresets, id);
+        if (result) {
+          const { newPreset, findDefaultPreset } = result;
+          setLocalStorageItem("presetList", [...newPreset]);
+          setGuestPresets([...newPreset]);
+          setViewPreset(findDefaultPreset!);
+          removeLocalStorageItem("favoriteList");
+        }
+      } finally {
+        setIsLoading(false);
+        setGuestFavorites([]);
+        return;
+      }
+    }
+
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
@@ -132,34 +170,61 @@ export default function Dashboard({
       .then((res) => {
         if (res) {
           const { accessToken, userId, mail } = res;
+
+          if (!accessToken && !userId && pathname !== "/login") {
+            moveGuest();
+          }
+
           setUserId(userId);
           setAccessToken(accessToken!);
           setUserMail(mail);
         }
       })
-      .catch(() => {})
       .finally(handleMount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 게스트 용
+  useEffect(() => {
+    if (isGuest) {
+      const presets = getLocalStorageItem("presetList");
+      if (presets) {
+        setIsPresetEvent(false);
+        setGuestPresets([...presets]);
+      }
+    }
+  }, [isGuest, isPresetEvent, setGuestPresets, setIsPresetEvent]);
+
+  useEffect(() => {
+    setPresetLength(guestPresets?.length || 0);
+  }, [guestPresets, setPresetLength]);
 
   return (
     <Box sx={{ display: "flex" }}>
       <DashboardBar
         barRef={barRef}
         isLogin={isLogin}
+        isGuest={isGuest}
+        pathname={pathname}
         userMail={userMail}
         barHeight={barHeight}
         isDashboard={isDashboard}
         isMinWidth600={isMinWidth600}
+        moveGuest={moveGuest}
+        moveLogin={moveLogin}
         logoutEvent={logoutEvent}
         handleModalOpen={handleSignUpModal}
         handleIsDashboard={handleIsDashboard}
       />
       <DashboardDrawer
         isLogin={isLogin}
-        presets={presets!}
+        isGuest={isGuest}
+        pathname={pathname}
+        presets={isGuest ? guestPresets : presets!}
         viewPreset={viewPreset}
         isDashboard={isDashboard}
+        moveGuest={moveGuest}
+        moveLogin={moveLogin}
         logoutEvent={logoutEvent}
         setViewPreset={setViewPreset}
         addPresetModal={addPresetModal}

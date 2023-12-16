@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { baseURL } from "@/api";
 import { postAuthLogin, postUserExist } from "@/api/auth";
 import {
   ModalButton,
@@ -9,6 +8,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
+import { useRouters } from "@/hooks/useRouters";
 import { isPasswordForgotState, isRefreshTokenState } from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
@@ -19,12 +19,12 @@ import {
   FormControlLabel,
   Grid,
   Tooltip,
-  styled,
 } from "@mui/material";
 import Head from "next/head";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from "recoil";
+import { GoogleLogin } from ".";
 
 interface Props {
   openAuthModal: () => void;
@@ -41,6 +41,7 @@ export default function LoginForm({
   setUserId,
   setUserMail,
 }: Props) {
+  const { moveHome } = useRouters();
   const [isRefreshToken, setIsRefreshToken] =
     useRecoilState(isRefreshTokenState);
 
@@ -106,6 +107,7 @@ export default function LoginForm({
 
     setUserId(userId);
     setAccessToken(accessToken!);
+    moveHome();
   };
 
   useEffect(() => {
@@ -160,11 +162,9 @@ export default function LoginForm({
               />
             </Tooltip>
             <ModalButton>로그인</ModalButton>
-            <GoogleBox>
-              <GoogleBtn href={`${baseURL}/auth/google`} />
-            </GoogleBox>
-            <Grid container>
-              <Grid item xs>
+            <GoogleLogin />
+            <Grid container justifyContent={"space-between"}>
+              <Grid item>
                 <ModalLink clickEvent={passwordEvent}>
                   비밀번호 재설정
                 </ModalLink>
@@ -179,23 +179,3 @@ export default function LoginForm({
     </>
   );
 }
-
-const GoogleBox = styled(Box)(() => ({
-  width: "100%",
-  display: "flex",
-  justifyContent: "center",
-  marginBottom: "8px",
-}));
-
-const GoogleBtn = styled("a")(() => ({
-  width: "180px",
-  display: "block",
-  height: "43px",
-  backgroundImage: `url(/google/btn.png)`,
-  backgroundRepeat: "no-repeat",
-  backgroundSize: "100% 100%",
-  cursor: "pointer",
-  "&:hover": {
-    backgroundImage: `url(/google/btn-hover.png)`,
-  },
-}));

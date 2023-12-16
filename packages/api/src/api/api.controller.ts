@@ -326,6 +326,31 @@ export class ApiController {
     await this.usersService.remove(userId);
   }
 
+  @Post("guestDataTransfer")
+  @ApiResponse({
+    status: 200,
+    description: "회원가입 직후 게스트 데이터 이전에 사용하는 api입니다.",
+    type: ResSuccessMessageDto,
+  })
+  async guestDataTransfer(
+    @Body() dto: { favorites: Favorite[]; mail: string; presetName: string },
+  ) {
+    const { favorites, mail, presetName } = dto;
+    try {
+      const user = await this.usersService.findOneToMail(mail);
+      const preset = await this.presetsService.add(user, presetName);
+
+      for (const favorite of favorites) {
+        const { favoriteName, address } = favorite;
+        await this.favoritesService.add(preset, favoriteName, address);
+      }
+
+      return { message: "success" };
+    } catch {
+      return { message: "failed" };
+    }
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get("preset/list")
   @ApiResponse({

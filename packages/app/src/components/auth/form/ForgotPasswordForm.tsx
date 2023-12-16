@@ -7,6 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
+import { useRouters } from "@/hooks/useRouters";
 import { AuthProps, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import { Box, Container, Grid } from "@mui/material";
@@ -24,6 +25,7 @@ export default function ForgotPasswordForm({
   setUserMail,
   handleClose,
 }: Props) {
+  const { moveLogin } = useRouters();
   const {
     register,
     handleSubmit,
@@ -75,9 +77,16 @@ export default function ForgotPasswordForm({
             type="email"
           />
           <ModalButton>이메일 인증</ModalButton>
-          <Grid container>
-            <Grid item xs>
-              <ModalLink clickEvent={handleClose}>로그인</ModalLink>
+          <Grid container justifyContent={"space-between"}>
+            <Grid item>
+              <ModalLink
+                clickEvent={() => {
+                  handleClose();
+                  moveLogin();
+                }}
+              >
+                로그인
+              </ModalLink>
             </Grid>
             <Grid item>
               <ModalLink clickEvent={() => handleAuthModal("signUp")}>
