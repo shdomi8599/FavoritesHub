@@ -1,4 +1,4 @@
-import { ApiResultMessage, ResPostFavoritePut } from "@/types";
+import { ApiResultMessage, Favorite, ResPostFavoritePut } from "@/types";
 import { api } from ".";
 
 export const getFavoriteList = async (
@@ -91,4 +91,19 @@ export const upVisitedCountFavorite = async (
       Authorization: `Bearer ${accessToken}`,
     },
   });
+};
+
+export const guestFavoritesAdd = async (
+  favorites: Favorite[],
+  mail: string,
+  presetName: string,
+) => {
+  const body = { favorites, mail, presetName };
+  const { message } = await api
+    .post<ApiResultMessage>(`/guestDataTransfer/`, body)
+    .then((res) => res.data);
+
+  return {
+    message,
+  };
 };

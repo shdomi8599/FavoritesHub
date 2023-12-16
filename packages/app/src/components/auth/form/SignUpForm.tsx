@@ -1,4 +1,5 @@
 import { postSignUp } from "@/api/auth";
+import { guestFavoritesAdd } from "@/api/favorite";
 import {
   ModalButton,
   ModalForm,
@@ -8,17 +9,20 @@ import {
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
 import { useRouters } from "@/hooks/useRouters";
-import { AuthProps, SignUpFormInput } from "@/types";
+import { isLoadingState } from "@/states";
+import { AuthProps, Favorite, Preset, SignUpFormInput } from "@/types";
 import { errorAlert, getLocalStorageItem } from "@/util";
 import { callbackSuccessAlert, confirmAlert } from "@/util/alert";
 import { Box, Container, Grid } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useSetRecoilState } from "recoil";
 import { GoogleLogin } from ".";
 
 export default function SignUpForm({
   handleAuthModal,
   handleClose,
 }: AuthProps) {
+  const setIsLoading = useSetRecoilState(isLoadingState);
   const { moveLogin } = useRouters();
   const {
     register,
@@ -44,12 +48,19 @@ export default function SignUpForm({
 
     if (message === "success") {
       try {
-        const guestFavoriteList = getLocalStorageItem("favoriteList");
+        setIsLoading(true);
+
+        const guestFavoriteList: Favorite[] =
+          getLocalStorageItem("favoriteList");
+
         if (guestFavoriteList) {
           await confirmAlert(
             "게스트 데이터를 이전하시겠습니까?",
             "게스트 이전이",
           );
+          const presetList: Preset[] = getLocalStorageItem("presetList");
+          const presetName = presetList[0].presetName;
+          await guestFavoritesAdd(guestFavoriteList, mail, presetName);
         }
       } finally {
         callbackSuccessAlert(
@@ -57,6 +68,7 @@ export default function SignUpForm({
           "로그인 하러가기",
           moveLogin,
         );
+        setIsLoading(false);
       }
     }
   };
