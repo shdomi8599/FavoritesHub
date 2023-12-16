@@ -18,11 +18,9 @@ export const useFavoriteFilter = ({
 }: Props) => {
   const getFilterData = () => {
     let data: Favorite[] = [];
-    console.log(favorites);
 
     if (selectValue === "createdAt") {
       data = favorites?.sort((a, b) => {
-        console.log(new Date(b.createdAt).getTime());
         return (
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
