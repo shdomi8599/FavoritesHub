@@ -41,9 +41,8 @@ export const presetFormOptions: Record<string, RegisterOptions> = {
   presetName: {
     required: true,
     pattern: {
-      value: /^[\p{L}0-9가-힣ㄱ-ㅎㅏ-ㅣ\x20]{1,20}$/iu,
-      message:
-        "프리셋 이름은 1~20글자 사이의 특수문자가 제외된 문자여야 합니다.",
+      value: /^.{1,30}$/,
+      message: "프리셋 이름은 최대 30글자입니다.",
     },
   },
 };
@@ -51,9 +50,8 @@ export const presetFormOptions: Record<string, RegisterOptions> = {
 export const favoriteFormOptions: Record<string, RegisterOptions> = {
   favoriteName: {
     pattern: {
-      value: /^[\p{L}0-9가-힣ㄱ-ㅎㅏ-ㅣ\x20]{1,20}$/iu,
-      message:
-        "즐겨찾기 이름은 1~20글자 사이의 특수문자가 제외된 문자여야 합니다.",
+      value: /^.{1,30}$/,
+      message: "즐겨찾기 이름은 최대 30글자입니다.",
     },
   },
   address: {
@@ -69,9 +67,8 @@ export const favoriteEditOptions: Record<string, RegisterOptions> = {
   favoriteName: {
     required: true,
     pattern: {
-      value: /^[\p{L}0-9가-힣ㄱ-ㅎㅏ-ㅣ\x20]{1,20}$/iu,
-      message:
-        "즐겨찾기 이름은 1~20글자 사이의 특수문자가 제외된 문자여야 합니다.",
+      value: /^.{1,30}$/,
+      message: "즐겨찾기 이름은 최대 30글자입니다.",
     },
   },
 };
