@@ -121,19 +121,17 @@ export class ApiController {
       if (!verify) {
         return { message: "not verify", userId: user.id };
       }
-      const tokens = await this.authService.login(user);
+      const tokens = await this.authService.login(user, isRefreshToken);
       const { accessToken, refreshToken } = tokens;
 
       await this.usersService.updateloginTime(user);
 
-      if (isRefreshToken) {
-        await this.usersService.updateRefreshToken(user, refreshToken);
+      await this.usersService.updateRefreshToken(user, refreshToken);
 
-        res.cookie("refreshToken", refreshToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production" ? true : false,
-        });
-      }
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+      });
 
       return { accessToken, userId: user.id, mail: user.mail };
     } catch (e) {
