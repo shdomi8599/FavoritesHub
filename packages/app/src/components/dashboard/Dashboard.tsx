@@ -180,6 +180,7 @@ export default function Dashboard({
           setUserMail(mail);
         }
       })
+      .catch(moveGuest)
       .finally(handleMount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
