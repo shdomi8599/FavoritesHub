@@ -1,3 +1,4 @@
+import MainContainer from "./MainContainer";
 import MainTitle from "./MainTitle";
 
-export { MainTitle };
+export { MainContainer, MainTitle };
