@@ -140,7 +140,8 @@ export default function Dashboard({
     const currentViewPreset = viewPreset;
     const defaultPreset = presets?.find(({ defaultPreset }) => defaultPreset)!;
     if (!defaultPreset && presets) {
-      return setViewPreset(presets[0]);
+      setViewPreset(presets[0]);
+      return;
     }
     setViewPreset(defaultPreset);
     /**
@@ -180,6 +181,7 @@ export default function Dashboard({
           setUserMail(mail);
         }
       })
+      .catch(moveGuest)
       .finally(handleMount);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

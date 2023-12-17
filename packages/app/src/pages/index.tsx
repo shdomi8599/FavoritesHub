@@ -1,47 +1,16 @@
 import { getPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
-import FavoriteCard from "@/components/favorite/FavoriteCard";
-import { MainTitle } from "@/components/main";
-import { SearchAutoBar, SearchTag } from "@/components/search";
-import SearchSelect from "@/components/search/SearchSelect";
-import { SearchSelects } from "@/const";
-import {
-  useAuth,
-  useAuthModal,
-  useFavoriteEvent,
-  useFavoriteFilter,
-  useHandler,
-} from "@/hooks";
+import { MainContainer } from "@/components/main";
+import { useAuth, useAuthModal, useFavoriteEvent } from "@/hooks";
 import { useFavoriteList, useResetQuery } from "@/hooks/react-query";
-import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { isDashboardState, isLoadingState, viewPresetState } from "@/states";
+import { isLoadingState, viewPresetState } from "@/states";
 import { callbackSuccessAlert } from "@/util";
-import {
-  Search as SearchIcon,
-  StarBorder as StarBorderIcon,
-  Star as StarIcon,
-} from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  IconButton,
-  styled,
-} from "@mui/material";
+import { Box, styled } from "@mui/material";
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 export default function Main() {
-  // 상태
-  const [tags, setTags] = useState<string[]>([]);
-  const [selectValue, setSelectValue] = useState("createdAt");
-  const [inputValue, setInputValue] = useState("");
-  const searchLabel = tags.includes("전체") ? "전체" : tags.join(", ");
-  const { isBoolean: isStar, handleBoolean: handleStar } = useHandler(false);
-
   // 훅
   const {
     userId,
@@ -51,15 +20,11 @@ export default function Main() {
     setUserMail,
     setAccessToken,
   } = useAuth();
-  const { isMaxWidth600 } = useBreakPoints();
-  const isDashboard = useRecoilValue(isDashboardState);
-  const isHideContent = isDashboard && isMaxWidth600;
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setViewPreset = useSetRecoilState(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
   const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
-  const { viewPreset, addFavoriteModal, editFavoriteModal } =
-    useFavoriteModal();
+  const { viewPreset } = useFavoriteModal();
 
   // 데이터
   const { data: favorites } = useFavoriteList(
@@ -67,14 +32,6 @@ export default function Main() {
     viewPreset?.id,
     accessToken,
   );
-
-  const { viewData, autoBarData } = useFavoriteFilter({
-    selectValue,
-    favorites,
-    isStar,
-    tags,
-    inputValue,
-  });
 
   // 이벤트
   const {
@@ -114,10 +71,6 @@ export default function Main() {
     );
   };
 
-  useEffect(() => {
-    setInputValue("");
-  }, [tags]);
-
   if (!!!accessToken) return <></>;
 
   return (
@@ -127,101 +80,14 @@ export default function Main() {
       </Head>
       {isLogin ? (
         <>
-          <Container
-            maxWidth={"md"}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              display: "flex",
-              mt: 2,
-            }}
-          >
-            {!isHideContent && (
-              <>
-                <SearchIcon fontSize="large" />
-                <SearchTag tags={tags} setTags={setTags} />
-                <SearchAutoBar
-                  tags={tags}
-                  label={searchLabel}
-                  inputValue={inputValue}
-                  data={autoBarData}
-                  setInputValue={setInputValue}
-                />
-              </>
-            )}
-          </Container>
-          <CenterContainer
-            sx={{
-              px: 2,
-              mt: 1,
-              "@media screen and (max-width: 600px)": {
-                flexDirection: "column",
-                gap: 1.5,
-              },
-            }}
-          >
-            <MainTitle
-              presetName={viewPreset?.presetName}
-              defaultPreset={viewPreset?.defaultPreset}
-              HandleDefaultPreset={HandleDefaultPreset}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "1rem",
-                "@media screen and (max-width: 600px)": {
-                  width: "100%",
-                  justifyContent: "flex-end",
-                },
-              }}
-            >
-              {!isHideContent && (
-                <>
-                  <IconButton onClick={handleStar}>
-                    {isStar ? (
-                      <StarIcon fontSize="large" sx={{ color: "#e96363d2" }} />
-                    ) : (
-                      <StarBorderIcon fontSize="large" />
-                    )}
-                  </IconButton>
-                  <SearchSelect
-                    label={"날짜"}
-                    selectValue={selectValue}
-                    menuItems={SearchSelects}
-                    setSelectValue={setSelectValue}
-                  />
-                  <Button
-                    onClick={addFavoriteModal}
-                    variant="contained"
-                    sx={{ minWidth: 105 }}
-                  >
-                    즐겨찾기 추가
-                  </Button>
-                </>
-              )}
-            </Box>
-          </CenterContainer>
-          <Grid
-            container
-            spacing={4}
-            sx={{
-              p: 2,
-            }}
-          >
-            {viewData?.map((favorite, index) => (
-              <FavoriteCard
-                key={index}
-                favorite={favorite}
-                favoriteVisited={favoriteVisited}
-                editFavoriteModal={editFavoriteModal}
-                favoriteHandleStar={favoriteHandleStar}
-                deleteFavoriteEvent={deleteFavoriteEvent}
-                upFavoriteVisitedCount={upFavoriteVisitedCount}
-              />
-            ))}
-          </Grid>
+          <MainContainer
+            favorites={favorites!}
+            HandleDefaultPreset={HandleDefaultPreset}
+            favoriteVisited={favoriteVisited}
+            favoriteHandleStar={favoriteHandleStar}
+            deleteFavoriteEvent={deleteFavoriteEvent}
+            upFavoriteVisitedCount={upFavoriteVisitedCount}
+          />
         </>
       ) : (
         <LoginContainer>
@@ -243,10 +109,4 @@ const LoginContainer = styled(Box)(() => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-}));
-
-const CenterContainer = styled(Box)(() => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
 }));

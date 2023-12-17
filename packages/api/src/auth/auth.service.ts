@@ -45,18 +45,18 @@ export class AuthService {
     return decodedRefreshToken;
   }
 
-  async getRefreshToken(user: User) {
+  async getRefreshToken(user: User, isRefreshToken: boolean) {
     const payload = { username: user.mail, sub: user.id };
     const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: "7d",
+      expiresIn: isRefreshToken ? "7d" : "15m",
       secret: `${JWT_REFRESH_SECRET}=`,
     });
     return refreshToken;
   }
 
-  async login(user: User) {
+  async login(user: User, isRefreshToken = false) {
     const accessToken = await this.getAccessToken(user);
-    const refreshToken = await this.getRefreshToken(user);
+    const refreshToken = await this.getRefreshToken(user, isRefreshToken);
 
     return {
       accessToken,

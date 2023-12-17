@@ -51,62 +51,54 @@ export default function BarUserModal({
           <AccordionTypography>계정 관리</AccordionTypography>
         </AccordionSummary>
         <AccordionDetails>
-          <AccordionTypography sx={{ gap: "4px", display: "flex" }}>
+          <CenterBox
+            sx={{
+              gap: "4px",
+            }}
+          >
             {isLogin ? (
-              <>
+              <CenterBox onClick={logoutEvent} sx={{ cursor: "pointer" }}>
                 <DirectionsRunIcon />
-                <span onClick={logoutEvent}>로그아웃</span>
-              </>
+                <span>로그아웃</span>
+              </CenterBox>
             ) : pathname === "/guest" ? (
-              <Box
+              <CenterBox
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
                   flexDirection: "column",
                   gap: "8px",
                 }}
               >
-                <Box
+                <CenterBox
                   sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
                     cursor: "pointer",
                   }}
                   onClick={moveLogin}
                 >
                   <AccountCircleIcon fontSize="large" />
                   <span>로그인</span>
-                </Box>
-                <Box
+                </CenterBox>
+                <CenterBox
                   sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
                     cursor: "pointer",
                   }}
                   onClick={handleModalOpen}
                 >
                   <AccountCircleIcon fontSize="large" />
                   <span>회원가입</span>
-                </Box>
-              </Box>
+                </CenterBox>
+              </CenterBox>
             ) : (
-              <Box
+              <CenterBox
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
                   cursor: "pointer",
                 }}
                 onClick={moveGuest}
               >
                 <AccountCircleIcon fontSize="large" />
                 <span>게스트</span>
-              </Box>
+              </CenterBox>
             )}
-          </AccordionTypography>
+          </CenterBox>
         </AccordionDetails>
       </AccordionBox>
     </UserContentBox>
@@ -162,4 +154,11 @@ const AccordionTypography = styled(Typography)(() => ({
   "& > span": {
     cursor: "pointer",
   },
+}));
+
+const CenterBox = styled(Box)(() => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
 }));

@@ -1,4 +1,5 @@
 import { useHandler } from "@/hooks";
+import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { Favorite } from "@/types";
 import { successToast } from "@/util/alert";
 import { Card, CardContent, Grid } from "@mui/material";
@@ -18,9 +19,11 @@ type Props = {
   deleteFavoriteEvent: (favoriteId: number) => void;
   upFavoriteVisitedCount: (favoriteId: number) => Promise<void>;
   favorite: Favorite;
+  isGrid: boolean;
 };
 
 function FavoriteCard({
+  isGrid,
   favorite,
   favoriteVisited,
   favoriteHandleStar,
@@ -28,6 +31,7 @@ function FavoriteCard({
   upFavoriteVisitedCount,
   editFavoriteModal,
 }: Props) {
+  const { isMaxWidth900 } = useBreakPoints();
   const {
     isBoolean: isHover,
     onBoolean: onHover,
@@ -98,7 +102,15 @@ function FavoriteCard({
   };
 
   return (
-    <Grid item xs={12} md={4} lg={3}>
+    <Grid
+      sx={{
+        paddingTop: isGrid || isMaxWidth900 ? "16px !important" : "",
+      }}
+      item
+      xs={12}
+      md={isGrid ? 12 : 4}
+      lg={isGrid ? 12 : 3}
+    >
       <Card
         onClick={openSite}
         onMouseEnter={onHover}

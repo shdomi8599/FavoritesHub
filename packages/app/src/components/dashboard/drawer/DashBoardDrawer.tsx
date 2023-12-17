@@ -31,7 +31,6 @@ interface Props extends DashBoardChildProps {
 export default function DashboardDrawer({
   presets,
   isLogin,
-  isGuest,
   pathname,
   viewPreset,
   isDashboard,
