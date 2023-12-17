@@ -38,7 +38,7 @@ export default function PresetItem({
   useEffect(() => {
     setIsPresetEvent(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [preset]);
   return (
     <ListItemButton onClick={() => setViewPreset(preset)}>
       <ListItemIcon>
