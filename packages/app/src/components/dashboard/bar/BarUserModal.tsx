@@ -57,10 +57,10 @@ export default function BarUserModal({
             }}
           >
             {isLogin ? (
-              <>
+              <CenterBox onClick={logoutEvent} sx={{ cursor: "pointer" }}>
                 <DirectionsRunIcon />
-                <span onClick={logoutEvent}>로그아웃</span>
-              </>
+                <span>로그아웃</span>
+              </CenterBox>
             ) : pathname === "/guest" ? (
               <CenterBox
                 sx={{
@@ -160,4 +160,5 @@ const CenterBox = styled(Box)(() => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  width: "100%",
 }));
