@@ -169,6 +169,7 @@ export default function MainContainer({
         spacing={4}
         sx={{
           p: 2,
+          mt: 2,
         }}
       >
         {viewData?.map((favorite, index) => (
