@@ -69,7 +69,9 @@ export default function MainContainer({
   });
 
   useEffect(() => {
-    setInputValue("");
+    if (tags.length === 0) {
+      setInputValue("");
+    }
   }, [tags]);
 
   return (

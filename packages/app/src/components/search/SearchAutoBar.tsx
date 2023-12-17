@@ -18,6 +18,10 @@ export default function SearchAutoBar<T extends AutoBarItem>({
   setInputValue,
 }: Props<T>) {
   const handleChange = (event: ChangeEvent<{}>, newValue: string) => {
+    if (tags.length === 0) {
+      setInputValue("");
+      return;
+    }
     setInputValue(newValue);
   };
 
@@ -30,6 +34,7 @@ export default function SearchAutoBar<T extends AutoBarItem>({
 
   return (
     <Autocomplete
+      key={tags.length}
       disablePortal
       disabled={tags.length === 0}
       options={data}
