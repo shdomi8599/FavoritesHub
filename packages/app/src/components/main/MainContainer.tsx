@@ -6,13 +6,14 @@ import { SearchSelects } from "@/const";
 import { useFavoriteFilter, useHandler } from "@/hooks";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-
 import { isDashboardState } from "@/states";
 import { Favorite } from "@/types";
 import {
   Search as SearchIcon,
   StarBorder as StarBorderIcon,
   Star as StarIcon,
+  ViewList as ViewListIcon,
+  ViewModule as ViewModuleIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -44,6 +45,7 @@ export default function MainContainer({
   favorites,
 }: Props) {
   // 상태
+  const [isGrid, setIsGrid] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState("createdAt");
   const [inputValue, setInputValue] = useState("");
@@ -51,7 +53,7 @@ export default function MainContainer({
   const { isBoolean: isStar, handleBoolean: handleStar } = useHandler(false);
 
   // 훅
-  const { isMaxWidth600 } = useBreakPoints();
+  const { isMaxWidth600, isMaxWidth900 } = useBreakPoints();
   const isDashboard = useRecoilValue(isDashboardState);
   const isHideContent = isDashboard && isMaxWidth600;
   const { viewPreset, addFavoriteModal, editFavoriteModal } =
@@ -127,6 +129,15 @@ export default function MainContainer({
         >
           {!isHideContent && (
             <>
+              {!isMaxWidth900 && (
+                <IconButton onClick={() => setIsGrid(!isGrid)}>
+                  {isGrid ? (
+                    <ViewModuleIcon fontSize="large" />
+                  ) : (
+                    <ViewListIcon fontSize="large" />
+                  )}
+                </IconButton>
+              )}
               <IconButton onClick={handleStar}>
                 {isStar ? (
                   <StarIcon fontSize="large" sx={{ color: "#e96363d2" }} />
@@ -161,6 +172,7 @@ export default function MainContainer({
         {viewData?.map((favorite, index) => (
           <FavoriteCard
             key={index}
+            isGrid={isGrid}
             favorite={favorite}
             editFavoriteModal={editFavoriteModal}
             favoriteVisited={favoriteVisited}

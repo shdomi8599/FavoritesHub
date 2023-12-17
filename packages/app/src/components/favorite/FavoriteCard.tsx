@@ -18,9 +18,11 @@ type Props = {
   deleteFavoriteEvent: (favoriteId: number) => void;
   upFavoriteVisitedCount: (favoriteId: number) => Promise<void>;
   favorite: Favorite;
+  isGrid: boolean;
 };
 
 function FavoriteCard({
+  isGrid,
   favorite,
   favoriteVisited,
   favoriteHandleStar,
@@ -98,7 +100,7 @@ function FavoriteCard({
   };
 
   return (
-    <Grid item xs={12} md={4} lg={3}>
+    <Grid item xs={12} md={isGrid ? 12 : 4} lg={isGrid ? 12 : 3}>
       <Card
         onClick={openSite}
         onMouseEnter={onHover}
