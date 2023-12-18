@@ -23,7 +23,6 @@ import {
   IconButton,
   styled,
 } from "@mui/material";
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
@@ -76,9 +75,6 @@ export default function MainContainer({
 
   return (
     <>
-      <Head>
-        <title>Favorites Hub - 게스트</title>
-      </Head>
       <Container
         maxWidth={"md"}
         sx={{

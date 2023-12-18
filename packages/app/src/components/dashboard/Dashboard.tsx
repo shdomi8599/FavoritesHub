@@ -9,6 +9,7 @@ import {
   guestFavoritesState,
   guestPresetsState,
   isDashboardState,
+  isGuideModalState,
   isLoadingState,
   isPresetEventState,
   presetLengthState,
@@ -50,6 +51,7 @@ export default function Dashboard({
     setAccessToken,
   } = useAuth();
   const { pathname, moveGuest, moveLogin } = useRouters();
+  const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
   const [isDashboard, setIsDashboard] = useRecoilState(isDashboardState);
   const { handleSignUpModal } = useAuthModal();
   const { resetPresetList } = useResetQuery(userId);
@@ -201,44 +203,54 @@ export default function Dashboard({
     setPresetLength(guestPresets?.length || 0);
   }, [guestPresets, setPresetLength]);
 
+  useEffect(() => {
+    const presets = getLocalStorageItem("presetList");
+    if (!presets) {
+      setIsGuideModal(true);
+    }
+  }, []);
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <DashboardBar
-        barRef={barRef}
-        isLogin={isLogin}
-        isGuest={isGuest}
-        pathname={pathname}
-        userMail={userMail}
-        barHeight={barHeight}
-        isDashboard={isDashboard}
-        isMinWidth600={isMinWidth600}
-        moveGuest={moveGuest}
-        moveLogin={moveLogin}
-        logoutEvent={logoutEvent}
-        handleModalOpen={handleSignUpModal}
-        handleIsDashboard={handleIsDashboard}
-      />
-      <DashboardDrawer
-        isLogin={isLogin}
-        isGuest={isGuest}
-        pathname={pathname}
-        presets={isGuest ? guestPresets : presets!}
-        viewPreset={viewPreset}
-        isDashboard={isDashboard}
-        moveGuest={moveGuest}
-        moveLogin={moveLogin}
-        logoutEvent={logoutEvent}
-        setViewPreset={setViewPreset}
-        addPresetModal={addPresetModal}
-        editPresetModal={editPresetModal}
-        handleModalOpen={handleSignUpModal}
-        deletePresetEvent={deletePresetEvent}
-        handleIsDashboard={handleIsDashboard}
-      />
-      <Main component="main" barheight={barHeight}>
-        {children}
-      </Main>
-    </Box>
+    <>
+      <Blind />
+      <Box sx={{ display: "flex" }}>
+        <DashboardBar
+          barRef={barRef}
+          isLogin={isLogin}
+          isGuest={isGuest}
+          pathname={pathname}
+          userMail={userMail}
+          barHeight={barHeight}
+          isDashboard={isDashboard}
+          isMinWidth600={isMinWidth600}
+          moveGuest={moveGuest}
+          moveLogin={moveLogin}
+          logoutEvent={logoutEvent}
+          handleModalOpen={handleSignUpModal}
+          handleIsDashboard={handleIsDashboard}
+        />
+        <DashboardDrawer
+          isLogin={isLogin}
+          isGuest={isGuest}
+          pathname={pathname}
+          presets={isGuest ? guestPresets : presets!}
+          viewPreset={viewPreset}
+          isDashboard={isDashboard}
+          moveGuest={moveGuest}
+          moveLogin={moveLogin}
+          logoutEvent={logoutEvent}
+          setViewPreset={setViewPreset}
+          addPresetModal={addPresetModal}
+          editPresetModal={editPresetModal}
+          handleModalOpen={handleSignUpModal}
+          deletePresetEvent={deletePresetEvent}
+          handleIsDashboard={handleIsDashboard}
+        />
+        <Main component="main" barheight={barHeight}>
+          {children}
+        </Main>
+      </Box>
+    </>
   );
 }
 
@@ -248,4 +260,15 @@ const Main = styled(Box)(({ barheight }: { barheight: number }) => ({
   overflow: "auto",
   paddingTop: `${barheight}px`,
   backgroundColor: "#f3f3f3",
+}));
+
+const Blind = styled(Box)(() => ({
+  height: "100vh",
+  width: "100vw",
+  position: "absolute",
+  background: "black",
+  opacity: "0.3",
+  top: "0",
+  left: "0",
+  zIndex: 1200,
 }));
