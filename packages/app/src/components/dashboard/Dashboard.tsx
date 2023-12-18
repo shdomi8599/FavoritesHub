@@ -212,7 +212,7 @@ export default function Dashboard({
 
   return (
     <>
-      <Blind />
+      {/* <Blind /> */}
       <Box sx={{ display: "flex" }}>
         <DashboardBar
           barRef={barRef}
