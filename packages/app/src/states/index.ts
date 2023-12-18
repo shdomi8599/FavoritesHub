@@ -105,10 +105,9 @@ export const isLoadingState = atom({
 
 export const isDashboardState = atom({
   key: "isDashboardState",
-  default: false,
+  default: true,
 });
 
-// 게스트용
 export const guestPresetsState = atom<Preset[]>({
   key: "guestPresetsState",
   default: [],
@@ -117,4 +116,14 @@ export const guestPresetsState = atom<Preset[]>({
 export const guestFavoritesState = atom<Favorite[]>({
   key: "guestFavoritesState",
   default: [],
+});
+
+export const isGuideModalState = atom({
+  key: "isGuideModalState",
+  default: false,
+});
+
+export const guideStepState = atom({
+  key: "guideStepState",
+  default: 1,
 });
