@@ -32,7 +32,7 @@ FavoritesHub는 사내 업무 효율을 높이기 위해 직접 개발한 툴입
 게스트 모드를 통해 로그인 하지 않아도 FavoritesHub의 기능들을 체험할 수 있습니다.
 <br/>
 <br/>
-React-Query의 localStoragePersister를 적극 활용하여, 네트워크 요청을 최소화하고 사용자의 기기에 즐겨찾기 데이터를 캐싱하여 사용자 경험을 향상시켰습니다.
+React-Query의 localStoragePersister를 적극 활용하여, 네트워크 요청을 최소화하고 사용자의 기기에 즐겨찾기 데이터를 캐싱하여 사용자 경험을 향상시켰습니다. (lz-string 라이브러리의 문자열 압축을 활용하여 LocalStorage 용량에 대한 대비를 해두었습니다.)
 <br/>
 <br/>
 구글 로그인과 Refresh토큰을 활용하여 자동로그인이 가능하도록 구현하였습니다.
