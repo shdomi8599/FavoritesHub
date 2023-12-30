@@ -12,7 +12,7 @@ export default function ModalForm({ submitEvent, children }: Props) {
       component="form"
       onSubmit={submitEvent}
       noValidate
-      sx={{ mt: 1, width: "90%" }}
+      sx={{ mt: 1, width: "90%", display: "flex", flexDirection: "column" }}
     >
       {children}
     </Box>
