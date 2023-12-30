@@ -207,13 +207,9 @@ export default function Dashboard({
   }, [guestPresets, setPresetLength]);
 
   useEffect(() => {
-    console.log(1);
     const presets = getLocalStorageItem("presetList");
-    console.log(presets);
     const isViewGuide = getLocalStorageItem("isViewGuide");
-    console.log(isViewGuide);
     if (!isViewGuide && !presets) {
-      console.log(2);
       setLocalStorageItem("isViewGuide", "true");
       setIsGuideModal(true);
     }
