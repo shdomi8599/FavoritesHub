@@ -1,6 +1,9 @@
+import { isGuideModalState } from "@/states";
 import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
 
 export const useRouters = () => {
+  const setIsGuideModal = useSetRecoilState(isGuideModalState);
   const router = useRouter();
 
   const { pathname } = router;
@@ -14,6 +17,7 @@ export const useRouters = () => {
   };
 
   const moveLogin = () => {
+    setIsGuideModal(false);
     router.push("/login");
   };
 

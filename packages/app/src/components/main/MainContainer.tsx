@@ -6,7 +6,7 @@ import { SearchSelects } from "@/const";
 import { useFavoriteFilter, useHandler } from "@/hooks";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { isDashboardState } from "@/states";
+import { guideStepState, isDashboardState, isGuideModalState } from "@/states";
 import { Favorite } from "@/types";
 import {
   Search as SearchIcon,
@@ -44,6 +44,8 @@ export default function MainContainer({
   favorites,
 }: Props) {
   // 상태
+  const isGuideModal = useRecoilValue(isGuideModalState);
+  const guideStep = useRecoilValue(guideStepState);
   const [isGrid, setIsGrid] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState("createdAt");
@@ -152,7 +154,13 @@ export default function MainContainer({
               <Button
                 onClick={addFavoriteModal}
                 variant="contained"
-                sx={{ minWidth: 105 }}
+                sx={{
+                  minWidth: 105,
+                  ...(isGuideModal &&
+                    guideStep === 2 && {
+                      zIndex: 1201,
+                    }),
+                }}
               >
                 즐겨찾기 추가
               </Button>

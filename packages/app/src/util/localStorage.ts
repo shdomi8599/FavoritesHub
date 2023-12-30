@@ -1,7 +1,10 @@
 import { Favorite, Preset } from "@/types";
 import { compress, decompress } from "lz-string";
 
-const setLocalStorageItem = (key: string, value: Preset[] | Favorite[]) => {
+const setLocalStorageItem = (
+  key: string,
+  value: Preset[] | Favorite[] | string,
+) => {
   localStorage.setItem(key, compress(JSON.stringify(value)));
 };
 

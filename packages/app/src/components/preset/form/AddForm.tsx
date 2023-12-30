@@ -5,9 +5,11 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { presetFormOptions } from "@/const";
+import { guideStepState, isGuideModalState } from "@/states";
 import { PresetAddFormInput } from "@/types";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface Props {
   presetAdd: (presetName: string) => void;
@@ -15,6 +17,8 @@ interface Props {
 }
 
 export default function AddForm({ presetAdd, isLoding }: Props) {
+  const isGuideModal = useRecoilValue(isGuideModalState);
+  const setGuideStep = useSetRecoilState(guideStepState);
   const {
     register,
     handleSubmit,
@@ -22,6 +26,9 @@ export default function AddForm({ presetAdd, isLoding }: Props) {
   } = useForm<PresetAddFormInput>();
 
   const onSubmit: SubmitHandler<PresetAddFormInput> = (data) => {
+    if (isGuideModal) {
+      setGuideStep(2);
+    }
     const { presetName } = data;
     presetAdd(presetName);
   };
