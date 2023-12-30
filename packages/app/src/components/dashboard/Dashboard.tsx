@@ -8,6 +8,7 @@ import { useRouters } from "@/hooks/useRouters";
 import {
   guestFavoritesState,
   guestPresetsState,
+  guideStepState,
   isDashboardState,
   isGuideModalState,
   isLoadingState,
@@ -27,7 +28,8 @@ import {
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import Blind from "../blind/Blind";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
 
@@ -56,6 +58,7 @@ export default function Dashboard({
   const { handleSignUpModal } = useAuthModal();
   const { resetPresetList } = useResetQuery(userId);
   const { ref: barRef, barHeight } = useBarHeight();
+  const guideStep = useRecoilValue(guideStepState);
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setPresetLength = useSetRecoilState(presetLengthState);
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
@@ -204,21 +207,29 @@ export default function Dashboard({
   }, [guestPresets, setPresetLength]);
 
   useEffect(() => {
+    console.log(1);
     const presets = getLocalStorageItem("presetList");
-    if (!presets) {
+    console.log(presets);
+    const isViewGuide = getLocalStorageItem("isViewGuide");
+    console.log(isViewGuide);
+    if (!isViewGuide && !presets) {
+      console.log(2);
+      setLocalStorageItem("isViewGuide", "true");
       setIsGuideModal(true);
     }
   }, []);
 
   return (
     <>
-      {/* <Blind /> */}
+      {isGuideModal && <Blind />}
       <Box sx={{ display: "flex" }}>
         <DashboardBar
           barRef={barRef}
           isLogin={isLogin}
           isGuest={isGuest}
           pathname={pathname}
+          guideStep={guideStep}
+          isGuideModal={isGuideModal}
           userMail={userMail}
           barHeight={barHeight}
           isDashboard={isDashboard}
@@ -232,7 +243,9 @@ export default function Dashboard({
         <DashboardDrawer
           isLogin={isLogin}
           isGuest={isGuest}
+          isGuideModal={isGuideModal}
           pathname={pathname}
+          guideStep={guideStep}
           presets={isGuest ? guestPresets : presets!}
           viewPreset={viewPreset}
           isDashboard={isDashboard}
@@ -260,15 +273,4 @@ const Main = styled(Box)(({ barheight }: { barheight: number }) => ({
   overflow: "auto",
   paddingTop: `${barheight}px`,
   backgroundColor: "#f3f3f3",
-}));
-
-const Blind = styled(Box)(() => ({
-  height: "100vh",
-  width: "100vw",
-  position: "absolute",
-  background: "black",
-  opacity: "0.3",
-  top: "0",
-  left: "0",
-  zIndex: 1200,
 }));

@@ -83,6 +83,8 @@ export interface DashBoardChildProps {
   isGuest: boolean;
   moveGuest: () => void;
   moveLogin: () => void;
+  isGuideModal: boolean;
+  guideStep: number;
 }
 
 export interface Preset {

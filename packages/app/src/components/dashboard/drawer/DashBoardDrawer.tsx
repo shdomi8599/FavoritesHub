@@ -1,3 +1,4 @@
+import Blind from "@/components/blind/Blind";
 import PresetItem from "@/components/preset/PresetItem";
 import { DashBoardChildProps, Preset } from "@/types";
 import {
@@ -34,6 +35,8 @@ export default function DashboardDrawer({
   pathname,
   viewPreset,
   isDashboard,
+  isGuideModal,
+  guideStep,
   moveLogin,
   moveGuest,
   logoutEvent,
@@ -46,6 +49,7 @@ export default function DashboardDrawer({
 }: Props) {
   return (
     <Drawer variant="permanent" open={isDashboard}>
+      {isGuideModal && <Blind />}
       <Toolbar
         sx={{
           display: "flex",
@@ -72,6 +76,11 @@ export default function DashboardDrawer({
                 justifyContent: "center",
                 width: "100%",
                 height: "5vh",
+                ...(isGuideModal &&
+                  guideStep === 1 && {
+                    zIndex: 1201,
+                    background: "white",
+                  }),
               }}
               onClick={addPresetModal}
             >

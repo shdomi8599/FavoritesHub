@@ -5,9 +5,11 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { favoriteFormOptions } from "@/const";
+import { isGuideModalState } from "@/states";
 import { FavoriteAddFormInput } from "@/types";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
 
 interface Props {
   favoriteAdd: (favoriteName: string, address: string) => void;
@@ -15,6 +17,8 @@ interface Props {
 }
 
 export default function AddForm({ favoriteAdd, isLoading }: Props) {
+  const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
+
   const {
     register,
     handleSubmit,
@@ -22,6 +26,9 @@ export default function AddForm({ favoriteAdd, isLoading }: Props) {
   } = useForm<FavoriteAddFormInput>();
 
   const onSubmit: SubmitHandler<FavoriteAddFormInput> = (data) => {
+    if (isGuideModal) {
+      setIsGuideModal(false);
+    }
     const { favoriteName, address } = data;
     favoriteAdd(favoriteName, address);
   };
