@@ -5,9 +5,11 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { favoriteEditOptions } from "@/const";
+import { selectedFavoriteNameState } from "@/states";
 import { FavoriteEditFormInput } from "@/types";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useRecoilValue } from "recoil";
 
 interface Props {
   favoriteEdit: (favoriteName: string) => Promise<void>;
@@ -15,6 +17,7 @@ interface Props {
 }
 
 export default function EditForm({ favoriteEdit, isLoading }: Props) {
+  const selectedFavoriteName = useRecoilValue(selectedFavoriteNameState);
   const {
     register,
     handleSubmit,
@@ -45,6 +48,7 @@ export default function EditForm({ favoriteEdit, isLoading }: Props) {
             option={favoriteEditOptions["favoriteName"]}
             label={"별칭 수정"}
             autoFocus={true}
+            defaultValue={selectedFavoriteName}
           />
           <ModalButton disabled={isLoading}>수정하기</ModalButton>
         </ModalForm>

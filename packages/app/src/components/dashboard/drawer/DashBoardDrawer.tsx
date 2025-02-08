@@ -76,6 +76,8 @@ export default function DashboardDrawer({
                 justifyContent: "center",
                 width: "100%",
                 height: "5vh",
+                minHeight: "40px",
+                minWidth: "unset",
                 ...(isGuideModal &&
                   guideStep === 1 && {
                     zIndex: 1201,
@@ -93,6 +95,7 @@ export default function DashboardDrawer({
               <PresetItem
                 key={preset?.id}
                 preset={preset}
+                isDashboard={isDashboard}
                 viewPreset={viewPreset}
                 setViewPreset={setViewPreset}
                 editPresetModal={editPresetModal}

@@ -3,6 +3,7 @@ import {
   isFavoriteModalState,
   presetLengthState,
   selectedFavoriteIdState,
+  selectedFavoriteNameState,
   viewPresetState,
 } from "@/states";
 import { errorAlert } from "@/util";
@@ -12,6 +13,9 @@ export const useFavoriteModal = () => {
   const viewPreset = useRecoilValue(viewPresetState);
   const presetLength = useRecoilValue(presetLengthState);
   const setSelectedFavoriteId = useSetRecoilState(selectedFavoriteIdState);
+  const setSelectedFavoriteNameState = useSetRecoilState(
+    selectedFavoriteNameState,
+  );
   const [favoriteModal, setFavoriteModal] = useRecoilState(favoriteModalState);
   const [isFavoriteModal, setIsFavoriteModal] =
     useRecoilState(isFavoriteModalState);
@@ -30,7 +34,8 @@ export const useFavoriteModal = () => {
     openFavoriteModal();
   };
 
-  const editFavoriteModal = (id: number) => {
+  const editFavoriteModal = (id: number, name?: string) => {
+    setSelectedFavoriteNameState(name || "");
     setSelectedFavoriteId(id);
     setFavoriteModal("edit");
     openFavoriteModal();

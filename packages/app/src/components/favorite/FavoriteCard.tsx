@@ -14,7 +14,7 @@ import {
 
 type Props = {
   favoriteVisited: (favoriteId: number) => Promise<void>;
-  editFavoriteModal: (favoriteId: number) => void;
+  editFavoriteModal: (favoriteId: number, name?: string) => void;
   favoriteHandleStar: (favoriteId: number) => void;
   deleteFavoriteEvent: (favoriteId: number) => void;
   upFavoriteVisitedCount: (favoriteId: number) => Promise<void>;
@@ -93,7 +93,7 @@ function FavoriteCard({
   };
 
   const editEvent = () => {
-    editFavoriteModal(id);
+    editFavoriteModal(id, favoriteName);
   };
 
   const copyURL = () => {

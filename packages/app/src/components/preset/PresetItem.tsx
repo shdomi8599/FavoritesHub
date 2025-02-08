@@ -24,11 +24,13 @@ interface Props {
   setViewPreset: SetterOrUpdater<Preset>;
   editPresetModal: (id: number) => void;
   deletePresetEvent: (id: number) => void;
+  isDashboard: boolean;
 }
 
 export default function PresetItem({
   preset,
   viewPreset,
+  isDashboard,
   setViewPreset,
   editPresetModal,
   deletePresetEvent,
@@ -40,8 +42,24 @@ export default function PresetItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preset]);
   return (
-    <ListItemButton onClick={() => setViewPreset(preset)}>
-      <ListItemIcon>
+    <ListItemButton
+      onClick={() => setViewPreset(preset)}
+      sx={{
+        padding: "8px 0px",
+        ...(isDashboard && {
+          padding: "8px",
+        }),
+      }}
+    >
+      <ListItemIcon
+        sx={{
+          padding: "8px 16px",
+          ...(!isDashboard && {
+            justifyContent: "center",
+            width: "100%",
+          }),
+        }}
+      >
         <DashboardIcon
           sx={{
             color:

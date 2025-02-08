@@ -10,6 +10,7 @@ import {
   AccordionSummary,
   Box,
   IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -45,7 +46,11 @@ export default function BarUserModal({
           <CloseIcon />
         </IconButton>
       </CloseBox>
-      <MailBox>{userMail}</MailBox>
+      <MailBox>
+        <Tooltip title={userMail} enterDelay={300}>
+          <span>{userMail}</span>
+        </Tooltip>
+      </MailBox>
       <AccordionBox disableGutters={true}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <AccordionTypography>계정 관리</AccordionTypography>

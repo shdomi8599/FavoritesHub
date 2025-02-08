@@ -73,6 +73,11 @@ export const selectedFavoriteIdState = atom({
   default: 0,
 });
 
+export const selectedFavoriteNameState = atom({
+  key: "selectedFavoriteNameState",
+  default: "",
+});
+
 export const viewPresetState = atom<Preset>({
   key: "viewPresetState",
   default: null!,

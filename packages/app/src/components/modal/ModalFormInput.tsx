@@ -18,6 +18,7 @@ interface Props<T extends FieldValues> {
   type?: string;
   autoFocus?: boolean;
   required?: boolean;
+  defaultValue?: string;
 }
 
 export default function ModalFormInput<T extends FieldValues>({
@@ -29,6 +30,7 @@ export default function ModalFormInput<T extends FieldValues>({
   label,
   type,
   autoFocus,
+  defaultValue,
   required = true,
 }: Props<T>) {
   return (
@@ -40,6 +42,7 @@ export default function ModalFormInput<T extends FieldValues>({
         {...register(name as Path<T>, option)}
         label={label}
         type={type}
+        defaultValue={defaultValue}
         autoFocus={autoFocus}
       />
       {isSubmitted && <ModalAlertMessage error={error} />}
