@@ -265,7 +265,7 @@ export default function Dashboard({
 
 const Main = styled(Box)(({ barheight }: { barheight: number }) => ({
   flexGrow: 1,
-  minHeight: "100vh",
+  height: "100vh",
   overflow: "auto",
   paddingTop: `${barheight}px`,
   backgroundColor: "#f3f3f3",
