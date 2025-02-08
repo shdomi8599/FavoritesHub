@@ -22,6 +22,9 @@ import {
   Grid,
   IconButton,
   styled,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -44,6 +47,7 @@ export default function MainContainer({
   favorites,
 }: Props) {
   // 상태
+  const [open, setOpen] = useState(false);
   const isGuideModal = useRecoilValue(isGuideModalState);
   const guideStep = useRecoilValue(guideStepState);
   const [isGrid, setIsGrid] = useState(false);
@@ -74,6 +78,12 @@ export default function MainContainer({
       setInputValue("");
     }
   }, [tags]);
+
+  useEffect(() => {
+    if (isGuideModal && guideStep === 2) {
+      setOpen(true);
+    }
+  }, [isGuideModal, guideStep]);
 
   return (
     <>
@@ -151,19 +161,41 @@ export default function MainContainer({
                 menuItems={SearchSelects}
                 setSelectValue={setSelectValue}
               />
-              <Button
-                onClick={addFavoriteModal}
-                variant="contained"
-                sx={{
-                  minWidth: 105,
-                  ...(isGuideModal &&
-                    guideStep === 2 && {
-                      zIndex: 1201,
-                    }),
-                }}
-              >
-                즐겨찾기 추가
-              </Button>
+              {isGuideModal ? (
+                <HtmlTooltip
+                  title={<>즐겨찾기를 추가해보세요.</>}
+                  placement="left"
+                  arrow
+                  open={open}
+                >
+                  <Button
+                    onClick={() => {
+                      setOpen(false);
+                      addFavoriteModal();
+                    }}
+                    variant="contained"
+                    sx={{
+                      minWidth: 105,
+                      ...(isGuideModal &&
+                        guideStep === 2 && {
+                          zIndex: 1201,
+                        }),
+                    }}
+                  >
+                    즐겨찾기 추가
+                  </Button>
+                </HtmlTooltip>
+              ) : (
+                <Button
+                  onClick={addFavoriteModal}
+                  variant="contained"
+                  sx={{
+                    minWidth: 105,
+                  }}
+                >
+                  즐겨찾기 추가
+                </Button>
+              )}
             </>
           )}
         </Box>
@@ -197,4 +229,15 @@ const CenterContainer = styled(Box)(() => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+}));
+
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  textAlign: "center",
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(20),
+    padding: "8px 16px",
+  },
 }));

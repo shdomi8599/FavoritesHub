@@ -15,9 +15,13 @@ import {
   List,
   Drawer as MuiDrawer,
   Toolbar,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 import { SetterOrUpdater } from "recoil";
 
 interface Props extends DashBoardChildProps {
@@ -47,6 +51,12 @@ export default function DashboardDrawer({
   deletePresetEvent,
   handleIsDashboard,
 }: Props) {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (isGuideModal) {
+      setOpen(true);
+    }
+  }, [isGuideModal]);
   return (
     <Drawer variant="permanent" open={isDashboard}>
       {isGuideModal && <Blind />}
@@ -70,27 +80,60 @@ export default function DashboardDrawer({
           )
         ) : (
           <>
-            <Button
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                height: "5vh",
-                minHeight: "40px",
-                minWidth: "unset",
-                ...(isGuideModal &&
-                  guideStep === 1 && {
-                    zIndex: 1201,
-                    background: "white",
-                  }),
-              }}
-              onClick={addPresetModal}
-            >
-              <AddCircleOutlineIcon />
-              {isDashboard && (
-                <Typography sx={{ marginLeft: "1px" }}>프리셋 추가</Typography>
-              )}
-            </Button>
+            {isGuideModal ? (
+              <HtmlTooltip
+                title={<>즐겨찾기들을 저장할 프리셋을 추가해보세요.</>}
+                placement="right"
+                arrow
+                open={open}
+              >
+                <Button
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: "5vh",
+                    minHeight: "40px",
+                    minWidth: "unset",
+                    ...(isGuideModal &&
+                      guideStep === 1 && {
+                        zIndex: 1201,
+                        background: "white",
+                      }),
+                  }}
+                  onClick={() => {
+                    setOpen(false);
+                    addPresetModal();
+                  }}
+                >
+                  <AddCircleOutlineIcon />
+                  {isDashboard && (
+                    <Typography sx={{ marginLeft: "1px" }}>
+                      프리셋 추가
+                    </Typography>
+                  )}
+                </Button>
+              </HtmlTooltip>
+            ) : (
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  height: "5vh",
+                  minHeight: "40px",
+                  minWidth: "unset",
+                }}
+                onClick={addPresetModal}
+              >
+                <AddCircleOutlineIcon />
+                {isDashboard && (
+                  <Typography sx={{ marginLeft: "1px" }}>
+                    프리셋 추가
+                  </Typography>
+                )}
+              </Button>
+            )}
             {presets?.map((preset) => (
               <PresetItem
                 key={preset?.id}
@@ -195,5 +238,16 @@ const ToolBarLoginBox = styled(Box)(() => ({
   gap: "0.2rem",
   "& > span": {
     cursor: "pointer",
+  },
+}));
+
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  textAlign: "center",
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(20),
+    padding: "8px 16px",
   },
 }));
