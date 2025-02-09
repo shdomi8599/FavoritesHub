@@ -75,10 +75,20 @@ export default function PresetItem({
         <ListItemText sx={itemTextStyle} primary={presetName} />
       </Tooltip>
       <IconContainer>
-        <IconButton onClick={() => editPresetModal(id)}>
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            editPresetModal(id);
+          }}
+        >
           <EditIcon />
         </IconButton>
-        <IconButton onClick={() => deletePresetEvent(id)}>
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            deletePresetEvent(id);
+          }}
+        >
           <DeleteIcon />
         </IconButton>
       </IconContainer>
