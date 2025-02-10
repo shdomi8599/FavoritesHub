@@ -79,18 +79,18 @@ export default function CardTopContainer({
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            deleteEvent();
-          }}
-        >
-          <ClearIcon />
-        </IconButton>
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
             handleStar();
           }}
         >
           {star ? <StarIcon sx={{ color: "#e96363d2" }} /> : <StarBorderIcon />}
+        </IconButton>
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteEvent();
+          }}
+        >
+          <ClearIcon />
         </IconButton>
       </TopIconContainer>
     </TopContainer>
