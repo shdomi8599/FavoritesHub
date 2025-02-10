@@ -42,8 +42,6 @@ export default function Dashboard({
   // 훅
   const {
     userId,
-    userMail,
-    isLogin,
     isGuest,
     accessToken,
     setIsLogin,
@@ -51,16 +49,17 @@ export default function Dashboard({
     setUserMail,
     setAccessToken,
   } = useAuth();
-  const { pathname, moveGuest, moveLogin } = useRouters();
-  const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
   const { setIsDashboard } = useDashboard();
   const { resetPresetList } = useResetQuery(userId);
   const { ref: barRef, barHeight } = useBarHeight();
+  const { pathname, moveGuest, moveLogin } = useRouters();
+  const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
+
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setPresetLength = useSetRecoilState(presetLengthState);
-  const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
   const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
+  const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
   const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);
 
   // 데이터 훅
@@ -88,10 +87,10 @@ export default function Dashboard({
         await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
         const result = guestPresetDelete(guestPresets, id);
         if (result) {
-          const { newPreset, findDefaultPreset } = result;
+          const { newPreset } = result;
           setLocalStorageItem("presetList", [...newPreset]);
           setGuestPresets([...newPreset]);
-          setViewPreset(findDefaultPreset!);
+          setViewPreset(newPreset[0]);
           removeLocalStorageItem("favoriteList");
         }
       } finally {
@@ -134,12 +133,10 @@ export default function Dashboard({
   useEffect(() => {
     setPresetLength(presets?.length || 0);
     const currentViewPreset = viewPreset;
-    const defaultPreset = presets?.find(({ defaultPreset }) => defaultPreset)!;
-    if (!defaultPreset && presets) {
-      setViewPreset(presets[0]);
+    if (!presets?.length) {
       return;
     }
-    setViewPreset(defaultPreset);
+    setViewPreset(presets[0]);
     /**
      * 복잡한 로직이라 코멘트를 남겨놔야 할 듯
      * preset add 이벤트가 일어났을 때, 순간적으로 viewPreset을

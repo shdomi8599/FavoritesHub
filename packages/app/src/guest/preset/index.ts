@@ -3,18 +3,12 @@ import { errorAlert, getLocalStorageItem, setLocalStorageItem } from "@/util";
 
 export const guestHandleDefaultPreset = (presetId: number) => {
   const presetList: Preset[] = getLocalStorageItem("presetList");
-  const currentDefaultPreset = presetList?.find(
-    (preset) => preset.defaultPreset,
-  )!;
-  currentDefaultPreset.defaultPreset = false;
-
   const findPreset = presetList?.find((preset) => preset.id === presetId);
   const newPresetList = presetList?.filter(
     (preset) => preset.id !== findPreset?.id,
   );
 
   if (findPreset) {
-    findPreset.defaultPreset = true;
     newPresetList.unshift(findPreset);
   }
 
@@ -42,11 +36,11 @@ export const guestPresetAdd = (presetName: string) => {
 
   const isNotPresetList = presetList?.length === 0 || !presetList;
   const id = isNotPresetList ? 1 : presetList[presetList?.length - 1]?.id + 1;
-  const defaultPreset = isNotPresetList ? true : false;
+  const order = 0;
   const preset: Preset = {
     id,
     presetName,
-    defaultPreset,
+    order,
   };
 
   return {
@@ -100,10 +94,7 @@ export const guestPresetDelete = (guestPresets: Preset[], id: number) => {
   const newPreset = guestPresets.filter(
     (preset) => preset.id !== findPreset?.id,
   );
-  const findDefaultPreset = newPreset.find((preset) => preset.defaultPreset);
-
   return {
     newPreset,
-    findDefaultPreset,
   };
 };

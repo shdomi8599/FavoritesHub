@@ -80,3 +80,22 @@ export const getPresetDefault = async (
 
   return preset;
 };
+
+export const postPresetRelocation = async (
+  accessToken: string,
+  presets: Preset[],
+) => {
+  const body = { presets };
+  const { message, preset } = await api
+    .post(`/preset/relocation`, body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.data);
+
+  return {
+    message,
+    preset,
+  };
+};

@@ -1,4 +1,4 @@
-import { mainBlueColor, mainRedColor } from "@/const";
+import { mainBlueColor } from "@/const";
 import { useDashboard } from "@/hooks/useDashboard";
 import { isPresetEventState } from "@/states";
 import { Preset } from "@/types";
@@ -35,7 +35,7 @@ export default function PresetItem({
   deletePresetEvent,
 }: Props) {
   const { isDashboard } = useDashboard();
-  const { presetName, id, defaultPreset } = preset;
+  const { presetName, id, order } = preset;
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
 
   useEffect(() => {
@@ -63,12 +63,7 @@ export default function PresetItem({
       >
         <DashboardIcon
           sx={{
-            color:
-              viewPreset?.id === id
-                ? mainBlueColor
-                : defaultPreset
-                ? mainRedColor
-                : "",
+            color: viewPreset?.id === id ? mainBlueColor : "",
           }}
         />
       </ListItemIcon>

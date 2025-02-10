@@ -456,15 +456,17 @@ export class ApiController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get("preset/default/:presetId")
+  @Post("preset/relocation")
   @ApiResponse({
     status: 200,
-    description: "프리셋 디폴트 변경에 사용되는 API입니다.",
+    description: "프리셋 재배치에 사용되는 API입니다.",
   })
-  async postDefaultPreset(@Request() req, @Param("presetId") presetId: number) {
+  async postRelocationPreset(
+    @Request() req,
+    @Param("presets") presets: Preset[],
+  ) {
     const { userId } = req.user;
-    const preset = await this.presetsService.updateDefault(userId, presetId);
-    return preset;
+    await this.presetsService.relocation(userId, presets);
   }
 
   @UseGuards(JwtAuthGuard)

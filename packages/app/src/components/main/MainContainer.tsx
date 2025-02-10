@@ -34,12 +34,10 @@ type Props = {
   deleteFavoriteEvent: (id: number) => Promise<void>;
   favoriteHandleStar: (id: number) => Promise<void>;
   upFavoriteVisitedCount: (id: number) => Promise<void>;
-  HandleDefaultPreset: () => Promise<void>;
   favorites: Favorite[];
 };
 
 export default function MainContainer({
-  HandleDefaultPreset,
   favoriteVisited,
   deleteFavoriteEvent,
   favoriteHandleStar,
@@ -120,11 +118,7 @@ export default function MainContainer({
           },
         }}
       >
-        <MainTitle
-          presetName={viewPreset?.presetName}
-          defaultPreset={viewPreset?.defaultPreset}
-          HandleDefaultPreset={HandleDefaultPreset}
-        />
+        <MainTitle presetName={viewPreset?.presetName} />
         <Box
           sx={{
             display: "flex",

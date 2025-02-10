@@ -1,21 +1,12 @@
 import { mainBlueColor } from "@/const";
-import {
-  Star as StarIcon,
-  StarOutline as StarOutlineIcon,
-} from "@mui/icons-material";
+import { Star as StarIcon } from "@mui/icons-material";
 import { Box, Tooltip, Typography } from "@mui/material";
 
 type Props = {
   presetName: string;
-  defaultPreset: boolean;
-  HandleDefaultPreset: () => void;
 };
 
-export default function MainTitle({
-  presetName,
-  defaultPreset,
-  HandleDefaultPreset,
-}: Props) {
+export default function MainTitle({ presetName }: Props) {
   return (
     <Box
       sx={{
@@ -30,33 +21,17 @@ export default function MainTitle({
         },
       }}
     >
-      {defaultPreset ? (
-        <Typography
-          sx={{
-            p: 0.5,
-            backgroundColor: mainBlueColor,
-            color: "white",
-            borderRadius: "50%",
-            display: "flex",
-          }}
-        >
-          <StarIcon />
-        </Typography>
-      ) : (
-        <Typography
-          onClick={HandleDefaultPreset}
-          sx={{
-            p: 0.5,
-            backgroundColor: "rgb(195, 197, 197)",
-            color: "white",
-            borderRadius: "50%",
-            display: "flex",
-            cursor: "pointer",
-          }}
-        >
-          <StarOutlineIcon />
-        </Typography>
-      )}
+      <Typography
+        sx={{
+          p: 0.5,
+          backgroundColor: mainBlueColor,
+          color: "white",
+          borderRadius: "50%",
+          display: "flex",
+        }}
+      >
+        <StarIcon />
+      </Typography>
       <Tooltip title={presetName} enterDelay={300}>
         <Typography
           sx={{

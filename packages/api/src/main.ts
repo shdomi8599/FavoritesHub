@@ -17,7 +17,7 @@ async function bootstrap() {
   app.enableCors(corsOptions);
 
   const config = new DocumentBuilder()
-    .setTitle("FavoritesHub Example")
+    .setTitle("FavoritesHub API")
     .setDescription("The FavoritesHub API description")
     .setVersion("1.0")
     .build();

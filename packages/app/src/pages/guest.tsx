@@ -86,8 +86,9 @@ export default function Guest() {
 
   useEffect(() => {
     const presets: Preset[] = getLocalStorageItem("presetList");
-    const defaultPreset = presets?.find(({ defaultPreset }) => defaultPreset)!;
-    setViewPreset(defaultPreset);
+    if (presets?.length) {
+      setViewPreset(presets[0]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -105,7 +106,6 @@ export default function Guest() {
         <title>Favorites Hub - 게스트</title>
       </Head>
       <MainContainer
-        HandleDefaultPreset={HandleDefaultPreset}
         favoriteVisited={localFavoriteVisitedEvent}
         deleteFavoriteEvent={localDeleteFavoriteEvent}
         favoriteHandleStar={guestFavoriteHandleStarEvent}

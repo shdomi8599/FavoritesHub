@@ -21,23 +21,13 @@ export class PresetsService {
       return [];
     }
 
-    const defaultPresetIndex = presets.findIndex(
-      (preset) => preset.defaultPreset,
-    );
-
-    if (defaultPresetIndex !== -1) {
-      const defaultPreset = presets[defaultPresetIndex];
-      presets.splice(defaultPresetIndex, 1);
-      presets.unshift(defaultPreset);
-    }
-
     const presetsData = presets.map((data) => {
       delete data.user;
       delete data.favorites;
       return data;
     });
 
-    return presetsData;
+    return presetsData.sort((a, b) => a.order - b.order);
   }
 
   async findOne(presetId: number): Promise<Preset> {
@@ -49,13 +39,7 @@ export class PresetsService {
     return preset;
   }
 
-  async exist(
-    presets: {
-      presetName: string;
-      defaultPreset: boolean;
-    }[],
-    presetName: string,
-  ) {
+  async exist(presets: Preset[], presetName: string) {
     const isSamePreset = presets
       ?.map(({ presetName }) => presetName)
       ?.includes(presetName);
@@ -68,20 +52,17 @@ export class PresetsService {
   async add(user: User, presetName: string) {
     const presets = await this.findAll(user.id);
 
-    const isMaxPreset = presets.length === 15;
+    const presetLength = presets.length;
+    const isMaxPreset = presetLength === 15;
 
     if (isMaxPreset) {
       throw new Error("max");
     }
 
-    await this.exist(presets, presetName);
-
-    const defaultPreset = presets.find((preset) => preset.defaultPreset);
-
     const newPreset = this.presetTable.create({
-      presetName,
-      defaultPreset: defaultPreset ? false : true,
       user,
+      presetName,
+      order: presetLength ? presetLength + 1 : 0,
     });
 
     const preset = await this.presetTable.save(newPreset);
@@ -111,18 +92,10 @@ export class PresetsService {
     return newPreset;
   }
 
-  async updateDefault(userId: number, presetId: number) {
-    const presets = await this.findAll(userId);
-
-    const currentDefaultPreset = presets.find((preset) => preset.defaultPreset);
-    if (currentDefaultPreset) {
-      currentDefaultPreset.defaultPreset = false;
-      await this.presetTable.save(currentDefaultPreset);
-    }
-
-    const preset = await this.findOne(presetId);
-    preset.defaultPreset = true;
-    await this.presetTable.save(preset);
-    return preset;
+  async relocation(userId: number, presets: Preset[]) {
+    const updatePromises = presets.map(({ id, order }) =>
+      this.presetTable.update({ id, user: { id: userId } }, { order }),
+    );
+    await Promise.all(updatePromises);
   }
 }

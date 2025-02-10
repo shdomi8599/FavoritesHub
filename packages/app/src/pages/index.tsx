@@ -1,11 +1,9 @@
-import { getPresetDefault } from "@/api/preset";
 import { LoginForm } from "@/components/auth/form";
 import { MainContainer } from "@/components/main";
 import { useAuth, useAuthModal, useFavoriteEvent } from "@/hooks";
 import { useFavoriteList, useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { isLoadingState, viewPresetState } from "@/states";
-import { callbackSuccessAlert } from "@/util";
+import { isLoadingState } from "@/states";
 import { Box, styled } from "@mui/material";
 import Head from "next/head";
 import { useSetRecoilState } from "recoil";
@@ -21,9 +19,8 @@ export default function Main() {
     setAccessToken,
   } = useAuth();
   const setIsLoading = useSetRecoilState(isLoadingState);
-  const setViewPreset = useSetRecoilState(viewPresetState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
-  const { resetFavoriteList, resetPresetList } = useResetQuery(userId);
+  const { resetFavoriteList } = useResetQuery(userId);
   const { viewPreset } = useFavoriteModal();
 
   // 데이터
@@ -46,31 +43,6 @@ export default function Main() {
     resetFavoriteList,
   });
 
-  const HandleDefaultPreset = async () => {
-    const { id: presetId } = viewPreset;
-
-    const callbackEvent = async () => {
-      try {
-        setIsLoading(true);
-        const preset = await getPresetDefault(presetId, accessToken);
-        await resetPresetList();
-        setViewPreset(preset);
-      } catch (e: any) {
-        if (e?.code === 401) {
-          location.reload();
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    callbackSuccessAlert(
-      "기본 프리셋 변경",
-      "정말 기본 프리셋을 변경하시겠습니까?",
-      callbackEvent,
-    );
-  };
-
   if (!!!accessToken) return <></>;
 
   return (
@@ -82,7 +54,6 @@ export default function Main() {
         <>
           <MainContainer
             favorites={favorites!}
-            HandleDefaultPreset={HandleDefaultPreset}
             favoriteVisited={favoriteVisited}
             favoriteHandleStar={favoriteHandleStar}
             deleteFavoriteEvent={deleteFavoriteEvent}

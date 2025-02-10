@@ -78,8 +78,8 @@ export interface DashBoardChildProps {
 }
 
 export interface Preset {
-  defaultPreset: boolean;
   id: number;
+  order: number;
   presetName: string;
 }
 

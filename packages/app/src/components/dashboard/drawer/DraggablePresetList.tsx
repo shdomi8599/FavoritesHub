@@ -38,51 +38,43 @@ export default function DraggablePresetList({
   };
 
   useEffect(() => {
-    setPresetData(presets.slice(1));
+    if (!presets?.length) return;
+    setPresetData(presets);
   }, [presets]);
 
-  if (presets.length)
+  if (presets?.length)
     return (
-      <>
-        <PresetItem
-          preset={presets[0]}
-          viewPreset={viewPreset}
-          setViewPreset={setViewPreset}
-          editPresetModal={editPresetModal}
-          deletePresetEvent={deletePresetEvent}
-        />
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="presetsList">
-            {(provided: DroppableProvided) => (
-              <Box {...provided.droppableProps} ref={provided.innerRef}>
-                {presetData.map((preset, index) => (
-                  <Draggable
-                    index={index}
-                    key={preset.id}
-                    draggableId={preset.id.toString()}
-                  >
-                    {(provided: DraggableProvided) => (
-                      <Box
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <PresetItem
-                          preset={preset}
-                          viewPreset={viewPreset}
-                          setViewPreset={setViewPreset}
-                          editPresetModal={editPresetModal}
-                          deletePresetEvent={deletePresetEvent}
-                        />
-                      </Box>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </Box>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="presetsList">
+          {(provided: DroppableProvided) => (
+            <Box {...provided.droppableProps} ref={provided.innerRef}>
+              {presetData.map((preset, index) => (
+                <Draggable
+                  index={index}
+                  key={preset.id}
+                  draggableId={preset.id.toString()}
+                >
+                  {(provided: DraggableProvided) => (
+                    <Box
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <PresetItem
+                        preset={preset}
+                        viewPreset={viewPreset}
+                        setViewPreset={setViewPreset}
+                        editPresetModal={editPresetModal}
+                        deletePresetEvent={deletePresetEvent}
+                      />
+                    </Box>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </Box>
+          )}
+        </Droppable>
+      </DragDropContext>
     );
 }

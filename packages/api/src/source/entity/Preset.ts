@@ -29,13 +29,8 @@ export class Preset {
   })
   presetName: string;
 
-  @Column({ default: false })
-  @ApiProperty({
-    example: true,
-    description: "기본 프리셋 설정입니다.",
-    required: true,
-  })
-  defaultPreset: boolean;
+  @Column({ default: 0 })
+  order: number;
 
   @ManyToOne(() => User, (user) => user.presets)
   user: User;
