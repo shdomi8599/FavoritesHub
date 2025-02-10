@@ -1,4 +1,5 @@
 import { mainBlueColor, mainRedColor } from "@/const";
+import { useDashboard } from "@/hooks/useDashboard";
 import { isPresetEventState } from "@/states";
 import { Preset } from "@/types";
 import {
@@ -24,23 +25,23 @@ interface Props {
   setViewPreset: SetterOrUpdater<Preset>;
   editPresetModal: (id: number) => void;
   deletePresetEvent: (id: number) => void;
-  isDashboard: boolean;
 }
 
 export default function PresetItem({
   preset,
   viewPreset,
-  isDashboard,
   setViewPreset,
   editPresetModal,
   deletePresetEvent,
 }: Props) {
+  const { isDashboard } = useDashboard();
   const { presetName, id, defaultPreset } = preset;
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
+
   useEffect(() => {
     setIsPresetEvent(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preset]);
+
   return (
     <ListItemButton
       onClick={() => setViewPreset(preset)}

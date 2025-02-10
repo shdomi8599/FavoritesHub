@@ -153,7 +153,6 @@ export default function Dashboard({
     if (isPresetEvent) {
       setViewPreset(currentViewPreset);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presets, setViewPreset]);
 
   useEffect(() => {
@@ -179,7 +178,6 @@ export default function Dashboard({
       })
       .catch(moveGuest)
       .finally(handleMount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 게스트 용

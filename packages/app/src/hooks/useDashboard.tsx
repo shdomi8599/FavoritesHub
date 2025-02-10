@@ -9,6 +9,7 @@ export const useDashboard = () => {
   };
   return {
     handleIsDashboard,
+    setIsDashboard,
     isDashboard,
   };
 };

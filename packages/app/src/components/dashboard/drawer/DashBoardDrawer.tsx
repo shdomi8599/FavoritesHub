@@ -1,5 +1,4 @@
 import Blind from "@/components/blind/Blind";
-import PresetItem from "@/components/preset/PresetItem";
 import { useAuth, useAuthModal, usePresetModal } from "@/hooks";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useRouters } from "@/hooks/useRouters";
@@ -27,6 +26,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { SetterOrUpdater, useRecoilValue } from "recoil";
+import DraggablePresetList from "./DraggablePresetList";
 
 interface Props extends DashBoardChildProps {
   setViewPreset: SetterOrUpdater<Preset>;
@@ -136,17 +136,13 @@ export default function DashboardDrawer({
                 )}
               </Button>
             )}
-            {presets?.map((preset) => (
-              <PresetItem
-                key={preset?.id}
-                preset={preset}
-                isDashboard={isDashboard}
-                viewPreset={viewPreset}
-                setViewPreset={setViewPreset}
-                editPresetModal={editPresetModal}
-                deletePresetEvent={deletePresetEvent}
-              />
-            ))}
+            <DraggablePresetList
+              presets={presets}
+              viewPreset={viewPreset}
+              setViewPreset={setViewPreset}
+              editPresetModal={editPresetModal}
+              deletePresetEvent={deletePresetEvent}
+            />
           </>
         )}
       </List>
