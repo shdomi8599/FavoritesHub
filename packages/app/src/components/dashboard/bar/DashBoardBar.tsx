@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { useHandler, useOutSideRef } from "@/hooks";
+import { useAuth, useAuthModal, useHandler, useOutSideRef } from "@/hooks";
+import { useDashboard } from "@/hooks/useDashboard";
+import { useRouters } from "@/hooks/useRouters";
 import { DashBoardChildProps } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
@@ -21,31 +23,27 @@ interface Props extends DashBoardChildProps {
   barHeight: number;
   barRef: MutableRefObject<HTMLDivElement>;
   isMinWidth600: boolean;
-  userMail: string;
 }
 
 export default function DashboardBar({
   barRef,
-  isGuest,
-  isLogin,
-  userMail,
-  pathname,
   barHeight,
-  isDashboard,
   isMinWidth600,
-  moveLogin,
-  moveGuest,
   logoutEvent,
-  handleModalOpen,
-  handleIsDashboard,
 }: Props) {
+  const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
+
+  const { handleSignUpModal } = useAuthModal();
+  const { isGuest, isLogin, userMail } = useAuth();
+  const { pathname, moveGuest, moveLogin } = useRouters();
+  const { isDashboard, handleIsDashboard } = useDashboard();
   const {
     isBoolean: isOpen,
     handleBoolean: handleOpen,
     offBoolean: offContent,
   } = useHandler(false);
   const { ref } = useOutSideRef(offContent);
-  const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
+
   return (
     <Container ref={barRef} open={isDashboard}>
       <Toolbar
@@ -89,7 +87,7 @@ export default function DashboardBar({
               moveGuest={moveGuest}
               handleOpen={handleOpen}
               contentBoxTop={contentBoxTop}
-              handleModalOpen={handleModalOpen}
+              handleModalOpen={handleSignUpModal}
               logoutEvent={logoutEvent}
             />
           )}

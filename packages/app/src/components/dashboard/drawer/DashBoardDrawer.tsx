@@ -1,5 +1,9 @@
 import Blind from "@/components/blind/Blind";
 import PresetItem from "@/components/preset/PresetItem";
+import { useAuth, useAuthModal, usePresetModal } from "@/hooks";
+import { useDashboard } from "@/hooks/useDashboard";
+import { useRouters } from "@/hooks/useRouters";
+import { guideStepState, isGuideModalState } from "@/states";
 import { DashBoardChildProps, Preset } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
@@ -22,12 +26,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { SetterOrUpdater } from "recoil";
+import { SetterOrUpdater, useRecoilValue } from "recoil";
 
 interface Props extends DashBoardChildProps {
   setViewPreset: SetterOrUpdater<Preset>;
-  addPresetModal: () => void;
-  editPresetModal: (id: number) => void;
   deletePresetEvent: (id: number) => void;
   viewPreset: Preset;
   presets: Preset[];
@@ -35,28 +37,28 @@ interface Props extends DashBoardChildProps {
 
 export default function DashboardDrawer({
   presets,
-  isLogin,
-  pathname,
   viewPreset,
-  isDashboard,
-  isGuideModal,
-  guideStep,
-  moveLogin,
-  moveGuest,
   logoutEvent,
   setViewPreset,
-  addPresetModal,
-  editPresetModal,
-  handleModalOpen,
   deletePresetEvent,
-  handleIsDashboard,
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const guideStep = useRecoilValue(guideStepState);
+  const isGuideModal = useRecoilValue(isGuideModalState);
+
+  const { isLogin } = useAuth();
+  const { handleSignUpModal } = useAuthModal();
+  const { pathname, moveGuest, moveLogin } = useRouters();
+  const { isDashboard, handleIsDashboard } = useDashboard();
+  const { addPresetModal, editPresetModal } = usePresetModal();
+
+  const [guideTipOpen, setGuideTipOpen] = useState(false);
+
   useEffect(() => {
     if (isGuideModal) {
-      setOpen(true);
+      setGuideTipOpen(true);
     }
   }, [isGuideModal]);
+
   return (
     <Drawer variant="permanent" open={isDashboard}>
       {isGuideModal && <Blind />}
@@ -85,7 +87,7 @@ export default function DashboardDrawer({
                 title={<>즐겨찾기들을 저장할 프리셋을 추가해보세요.</>}
                 placement="right"
                 arrow
-                open={open}
+                open={guideTipOpen}
               >
                 <Button
                   sx={{
@@ -102,7 +104,7 @@ export default function DashboardDrawer({
                       }),
                   }}
                   onClick={() => {
-                    setOpen(false);
+                    setGuideTipOpen(false);
                     addPresetModal();
                   }}
                 >
@@ -181,7 +183,7 @@ export default function DashboardDrawer({
                     ml: 2,
                     cursor: "pointer",
                   }}
-                  onClick={handleModalOpen}
+                  onClick={handleSignUpModal}
                 >
                   <AccountCircleIcon fontSize="large" />
                   <span>회원가입</span>

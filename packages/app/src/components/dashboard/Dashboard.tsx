@@ -1,15 +1,14 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
 import { postPresetDelete } from "@/api/preset";
 import { guestPresetDelete } from "@/guest/preset";
-import { useAuth, useAuthModal, useBarHeight, usePresetModal } from "@/hooks";
+import { useAuth, useBarHeight } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
+import { useDashboard } from "@/hooks/useDashboard";
 import { useRouters } from "@/hooks/useRouters";
 import {
   guestFavoritesState,
   guestPresetsState,
-  guideStepState,
-  isDashboardState,
   isGuideModalState,
   isLoadingState,
   isPresetEventState,
@@ -28,7 +27,7 @@ import {
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ReactNode, useEffect } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import Blind from "../blind/Blind";
 import { DashboardBar } from "./bar";
 import { DashboardDrawer } from "./drawer";
@@ -54,15 +53,12 @@ export default function Dashboard({
   } = useAuth();
   const { pathname, moveGuest, moveLogin } = useRouters();
   const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
-  const [isDashboard, setIsDashboard] = useRecoilState(isDashboardState);
-  const { handleSignUpModal } = useAuthModal();
+  const { setIsDashboard } = useDashboard();
   const { resetPresetList } = useResetQuery(userId);
   const { ref: barRef, barHeight } = useBarHeight();
-  const guideStep = useRecoilValue(guideStepState);
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setPresetLength = useSetRecoilState(presetLengthState);
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
-  const { addPresetModal, editPresetModal } = usePresetModal();
   const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);
@@ -72,11 +68,6 @@ export default function Dashboard({
 
   // 게스트용 데이터
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
-
-  // 핸들러
-  const handleIsDashboard = () => {
-    setIsDashboard(!isDashboard);
-  };
 
   // 이벤트
   const logoutEvent = async () => {
@@ -221,39 +212,16 @@ export default function Dashboard({
       <Box sx={{ display: "flex" }}>
         <DashboardBar
           barRef={barRef}
-          isLogin={isLogin}
-          isGuest={isGuest}
-          pathname={pathname}
-          guideStep={guideStep}
-          isGuideModal={isGuideModal}
-          userMail={userMail}
           barHeight={barHeight}
-          isDashboard={isDashboard}
           isMinWidth600={isMinWidth600}
-          moveGuest={moveGuest}
-          moveLogin={moveLogin}
           logoutEvent={logoutEvent}
-          handleModalOpen={handleSignUpModal}
-          handleIsDashboard={handleIsDashboard}
         />
         <DashboardDrawer
-          isLogin={isLogin}
-          isGuest={isGuest}
-          isGuideModal={isGuideModal}
-          pathname={pathname}
-          guideStep={guideStep}
           presets={isGuest ? guestPresets : presets!}
           viewPreset={viewPreset}
-          isDashboard={isDashboard}
-          moveGuest={moveGuest}
-          moveLogin={moveLogin}
           logoutEvent={logoutEvent}
           setViewPreset={setViewPreset}
-          addPresetModal={addPresetModal}
-          editPresetModal={editPresetModal}
-          handleModalOpen={handleSignUpModal}
           deletePresetEvent={deletePresetEvent}
-          handleIsDashboard={handleIsDashboard}
         />
         <Main component="main" barheight={barHeight}>
           {children}

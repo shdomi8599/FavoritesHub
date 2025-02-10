@@ -74,17 +74,7 @@ export interface ApiResultAccessToken {
 }
 
 export interface DashBoardChildProps {
-  handleIsDashboard: () => void;
-  isLogin: boolean;
-  isDashboard: boolean;
-  handleModalOpen: () => void;
   logoutEvent: () => void;
-  pathname: string;
-  isGuest: boolean;
-  moveGuest: () => void;
-  moveLogin: () => void;
-  isGuideModal: boolean;
-  guideStep: number;
 }
 
 export interface Preset {
