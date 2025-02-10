@@ -127,6 +127,7 @@ export default function Dashboard({
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
       await relocationPresetEvent();
       await postPresetDelete(id, accessToken);
+      setIsPresetEvent(true);
       resetPresetList();
     } catch (e: any) {
       if (e?.code === 401) {
@@ -179,7 +180,15 @@ export default function Dashboard({
      * 이펙트를 통해 초기화 되도록 로직을 구성함
      */
     if (isPresetEvent) {
-      setViewPreset(currentViewPreset);
+      const findViewPreset = presets.find(
+        (preset) => preset.id === viewPreset.id,
+      );
+
+      if (findViewPreset) {
+        setViewPreset(currentViewPreset);
+        return;
+      }
+      setViewPreset(presets[0]);
     }
   }, [presets, setViewPreset]);
 

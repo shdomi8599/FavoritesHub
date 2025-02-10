@@ -35,7 +35,7 @@ export default function PresetItem({
   deletePresetEvent,
 }: Props) {
   const { isDashboard } = useDashboard();
-  const { presetName, id, order } = preset;
+  const { presetName, id } = preset;
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
 
   useEffect(() => {
