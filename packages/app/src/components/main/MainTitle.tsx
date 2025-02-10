@@ -24,7 +24,7 @@ export default function MainTitle({ presetName }: Props) {
       <Typography
         sx={{
           p: 0.5,
-          backgroundColor: mainBlueColor,
+          backgroundColor: presetName ? mainBlueColor : "gray",
           color: "white",
           borderRadius: "50%",
           display: "flex",
