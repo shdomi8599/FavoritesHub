@@ -1,7 +1,6 @@
 import PresetItem from "@/components/preset/PresetItem";
 import { Preset } from "@/types";
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -13,42 +12,37 @@ import {
 import { SetterOrUpdater } from "recoil";
 
 interface Props {
-  presets: Preset[];
+  dragPresetData: Preset[];
   viewPreset: Preset;
   setViewPreset: SetterOrUpdater<Preset>;
+  setdragPresetData: SetterOrUpdater<Preset[] | undefined>;
   editPresetModal: (id: number) => void;
   deletePresetEvent: (id: number) => void;
 }
 
 export default function DraggablePresetList({
-  presets,
+  dragPresetData,
   viewPreset,
   setViewPreset,
   editPresetModal,
   deletePresetEvent,
+  setdragPresetData,
 }: Props) {
-  const [presetData, setPresetData] = useState(presets);
-
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
-    const items = Array.from(presetData);
+    const items = Array.from(dragPresetData);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    setPresetData(items);
+    setdragPresetData(items);
   };
 
-  useEffect(() => {
-    if (!presets?.length) return;
-    setPresetData(presets);
-  }, [presets]);
-
-  if (presets?.length)
+  if (dragPresetData?.length)
     return (
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="presetsList">
+        <Droppable droppableId="dragPresetDataList">
           {(provided: DroppableProvided) => (
             <Box {...provided.droppableProps} ref={provided.innerRef}>
-              {presetData.map((preset, index) => (
+              {dragPresetData.map((preset, index) => (
                 <Draggable
                   index={index}
                   key={preset.id}

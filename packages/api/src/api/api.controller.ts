@@ -22,6 +22,7 @@ import { UsersService } from "src/users/users.service";
 import { generateRandomNumber } from "src/util";
 import { ReqPostFavoriteAddDto, ReqPutPavoriteDto } from "./dto/req/favorite";
 import { ReqPostPresetAddDto, ReqPutPresetDto } from "./dto/req/preset";
+import { ReqPostPresetRelocationDto } from "./dto/req/preset/reqPostPresetRelocation.dto";
 import { ReqPostUserSignUpDto } from "./dto/req/user";
 import {
   ResGetAuthAccessTokenDto,
@@ -463,8 +464,9 @@ export class ApiController {
   })
   async postRelocationPreset(
     @Request() req,
-    @Param("presets") presets: Preset[],
+    @Body() dto: ReqPostPresetRelocationDto,
   ) {
+    const { presets } = dto;
     const { userId } = req.user;
     await this.presetsService.relocation(userId, presets);
   }

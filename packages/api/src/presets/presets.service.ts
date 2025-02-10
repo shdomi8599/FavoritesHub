@@ -62,7 +62,7 @@ export class PresetsService {
     const newPreset = this.presetTable.create({
       user,
       presetName,
-      order: presetLength ? presetLength + 1 : 0,
+      order: presetLength ? presetLength : 0,
     });
 
     const preset = await this.presetTable.save(newPreset);

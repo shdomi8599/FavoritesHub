@@ -1,5 +1,5 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
-import { postPresetDelete } from "@/api/preset";
+import { postPresetDelete, postPresetRelocation } from "@/api/preset";
 import { guestPresetDelete } from "@/guest/preset";
 import { useAuth, useBarHeight } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
@@ -26,7 +26,7 @@ import {
 } from "@/util";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import Blind from "../blind/Blind";
 import { DashboardBar } from "./bar";
@@ -64,6 +64,13 @@ export default function Dashboard({
 
   // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
+
+  // 드래그 프리셋 데이터
+  const [dragPresetData, setdragPresetData] = useState(presets);
+  useEffect(() => {
+    if (!presets?.length) return;
+    setdragPresetData(presets);
+  }, [presets]);
 
   // 게스트용 데이터
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
@@ -103,6 +110,16 @@ export default function Dashboard({
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
+      await postPresetRelocation(
+        accessToken,
+        dragPresetData?.map((preset, index) => {
+          const order = index;
+          return {
+            ...preset,
+            order,
+          };
+        })!,
+      );
       await postPresetDelete(id, accessToken);
       resetPresetList();
     } catch (e: any) {
@@ -212,10 +229,11 @@ export default function Dashboard({
           logoutEvent={logoutEvent}
         />
         <DashboardDrawer
-          presets={isGuest ? guestPresets : presets!}
+          presets={isGuest ? guestPresets : dragPresetData!}
           viewPreset={viewPreset}
           logoutEvent={logoutEvent}
           setViewPreset={setViewPreset}
+          setdragPresetData={setdragPresetData}
           deletePresetEvent={deletePresetEvent}
         />
         <Main component="main" barheight={barHeight}>

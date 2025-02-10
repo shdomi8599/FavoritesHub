@@ -30,6 +30,7 @@ import DraggablePresetList from "./DraggablePresetList";
 
 interface Props extends DashBoardChildProps {
   setViewPreset: SetterOrUpdater<Preset>;
+  setdragPresetData: SetterOrUpdater<Preset[] | undefined>;
   deletePresetEvent: (id: number) => void;
   viewPreset: Preset;
   presets: Preset[];
@@ -40,6 +41,7 @@ export default function DashboardDrawer({
   viewPreset,
   logoutEvent,
   setViewPreset,
+  setdragPresetData,
   deletePresetEvent,
 }: Props) {
   const guideStep = useRecoilValue(guideStepState);
@@ -137,10 +139,11 @@ export default function DashboardDrawer({
               </Button>
             )}
             <DraggablePresetList
-              presets={presets}
               viewPreset={viewPreset}
+              dragPresetData={presets}
               setViewPreset={setViewPreset}
               editPresetModal={editPresetModal}
+              setdragPresetData={setdragPresetData}
               deletePresetEvent={deletePresetEvent}
             />
           </>
