@@ -76,7 +76,22 @@ export default function Dashboard({
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
 
   // 이벤트
+  const relocationPresetEvent = async () => {
+    if (!accessToken || !dragPresetData?.length) return;
+    await postPresetRelocation(
+      accessToken,
+      dragPresetData?.map((preset, index) => {
+        const order = index;
+        return {
+          ...preset,
+          order,
+        };
+      })!,
+    );
+  };
+
   const logoutEvent = async () => {
+    await relocationPresetEvent();
     const { message } = await postAuthLogout(accessToken);
 
     if (message === "success") {
@@ -110,16 +125,7 @@ export default function Dashboard({
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-      await postPresetRelocation(
-        accessToken,
-        dragPresetData?.map((preset, index) => {
-          const order = index;
-          return {
-            ...preset,
-            order,
-          };
-        })!,
-      );
+      await relocationPresetEvent();
       await postPresetDelete(id, accessToken);
       resetPresetList();
     } catch (e: any) {
@@ -132,6 +138,14 @@ export default function Dashboard({
   };
 
   // 이펙트
+  useEffect(() => {
+    window.addEventListener("beforeunload", relocationPresetEvent);
+    return () => {
+      resetPresetList();
+      window.removeEventListener("beforeunload", relocationPresetEvent);
+    };
+  }, [relocationPresetEvent, resetPresetList]);
+
   useEffect(() => {
     if (isMaxWidth900) {
       setIsDashboard(false);
