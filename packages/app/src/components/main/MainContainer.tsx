@@ -52,7 +52,7 @@ export default function MainContainer({
   const guideStep = useRecoilValue(guideStepState);
   const [isGrid, setIsGrid] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
-  const [selectValue, setSelectValue] = useState("createdAt");
+  const [selectValue, setSelectValue] = useState("default");
   const [inputValue, setInputValue] = useState("");
   const searchLabel = tags.includes("전체") ? "전체" : tags.join(", ");
   const { isBoolean: isStar, handleBoolean: handleStar } = useHandler(false);
@@ -156,7 +156,7 @@ export default function MainContainer({
                 )}
               </IconButton>
               <SearchSelect
-                label={"날짜"}
+                label={"정렬"}
                 selectValue={selectValue}
                 menuItems={SearchSelects}
                 setSelectValue={setSelectValue}

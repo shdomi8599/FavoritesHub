@@ -76,6 +76,7 @@ export const favoriteEditOptions: Record<string, RegisterOptions> = {
 export const SearchTags = ["전체", "별칭", "주소", "타이틀", "설명"];
 
 export const SearchSelects = [
+  { label: "기본순", value: "default" },
   { label: "등록순", value: "createdAt" },
   { label: "최근 방문순", value: "lastVisitedAt" },
   { label: "방문 횟수순", value: "visitedCount" },

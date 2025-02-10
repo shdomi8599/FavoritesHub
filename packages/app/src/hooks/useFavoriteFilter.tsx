@@ -16,34 +16,31 @@ export const useFavoriteFilter = ({
   isStar,
   tags,
 }: Props) => {
+  const defaultData = [...(favorites ?? [])];
   const getFilterData = () => {
-    let data: Favorite[] = [];
+    let data: Favorite[] = [...defaultData];
 
     if (selectValue === "createdAt") {
-      data = favorites?.sort((a, b) => {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      })!;
+      data = [...favorites!].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
     }
 
     if (selectValue === "lastVisitedAt") {
-      data = favorites?.sort((a, b) => {
-        return (
+      data = [...favorites!].sort(
+        (a, b) =>
           new Date(b.lastVisitedAt).getTime() -
-          new Date(a.lastVisitedAt).getTime()
-        );
-      })!;
+          new Date(a.lastVisitedAt).getTime(),
+      );
     }
 
     if (selectValue === "visitedCount") {
-      data = favorites?.sort((a, b) => {
-        return b.visitedCount - a.visitedCount;
-      })!;
+      data = [...favorites!].sort((a, b) => b.visitedCount - a.visitedCount);
     }
 
     if (isStar) {
-      data = favorites?.filter((favorite) => favorite.star)!;
+      data = data.filter((favorite) => favorite.star);
     }
 
     return data;
