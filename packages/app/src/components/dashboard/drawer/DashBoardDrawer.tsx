@@ -30,7 +30,7 @@ import DraggablePresetList from "./DraggablePresetList";
 
 interface Props extends DashBoardChildProps {
   setViewPreset: SetterOrUpdater<Preset>;
-  setdragPresetData: SetterOrUpdater<Preset[] | undefined>;
+  setdragPresetData: SetterOrUpdater<Preset[]>;
   deletePresetEvent: (id: number) => void;
   viewPreset: Preset;
   presets: Preset[];

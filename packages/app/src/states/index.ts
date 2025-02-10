@@ -53,6 +53,11 @@ export const presetLengthState = atom({
   default: 0,
 });
 
+export const dragPresetDataState = atom<Preset[]>({
+  key: "dragPresetDataState",
+  default: [],
+});
+
 export const selectedPresetIdState = atom({
   key: "selectedPresetState",
   default: 0,

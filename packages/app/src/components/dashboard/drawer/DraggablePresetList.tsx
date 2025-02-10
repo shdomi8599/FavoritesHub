@@ -15,7 +15,7 @@ interface Props {
   dragPresetData: Preset[];
   viewPreset: Preset;
   setViewPreset: SetterOrUpdater<Preset>;
-  setdragPresetData: SetterOrUpdater<Preset[] | undefined>;
+  setdragPresetData: SetterOrUpdater<Preset[]>;
   editPresetModal: (id: number) => void;
   deletePresetEvent: (id: number) => void;
 }

@@ -7,6 +7,7 @@ import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useRouters } from "@/hooks/useRouters";
 import {
+  dragPresetDataState,
   guestFavoritesState,
   guestPresetsState,
   isGuideModalState,
@@ -26,7 +27,7 @@ import {
 } from "@/util";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import Blind from "../blind/Blind";
 import { DashboardBar } from "./bar";
@@ -66,7 +67,8 @@ export default function Dashboard({
   const { data: presets } = usePresetList(userId, accessToken);
 
   // 드래그 프리셋 데이터
-  const [dragPresetData, setdragPresetData] = useState(presets);
+  const [dragPresetData, setdragPresetData] =
+    useRecoilState(dragPresetDataState);
   useEffect(() => {
     if (!presets?.length) return;
     setdragPresetData(presets);
@@ -145,7 +147,7 @@ export default function Dashboard({
       resetPresetList();
       window.removeEventListener("beforeunload", relocationPresetEvent);
     };
-  }, [relocationPresetEvent, resetPresetList]);
+  }, [relocationPresetEvent]);
 
   useEffect(() => {
     if (isMaxWidth900) {

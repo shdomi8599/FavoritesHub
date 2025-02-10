@@ -1,9 +1,17 @@
-import { postPresetAdd, putPresetEdit } from "@/api/preset";
+import {
+  postPresetAdd,
+  postPresetRelocation,
+  putPresetEdit,
+} from "@/api/preset";
 import { guestPresetAdd, guestPresetEdit } from "@/guest/preset";
-import { isPresetEventState, viewPresetState } from "@/states";
+import {
+  dragPresetDataState,
+  isPresetEventState,
+  viewPresetState,
+} from "@/states";
 import { errorAlert, setLocalStorageItem, successAlert } from "@/util";
 import { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 type Props = {
   isGuest: boolean;
@@ -22,7 +30,23 @@ export const usePresetEvent = ({
 }: Props) => {
   const [isLoding, setIsLoding] = useState(false);
   const setViewPreset = useSetRecoilState(viewPresetState);
+  const dragPresetData = useRecoilValue(dragPresetDataState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
+
+  const relocationPresetEvent = async () => {
+    if (!accessToken || !dragPresetData?.length) return;
+    await postPresetRelocation(
+      accessToken,
+      dragPresetData?.map((preset, index) => {
+        const order = index;
+        return {
+          ...preset,
+          order,
+        };
+      })!,
+    );
+  };
+
   const presetAdd = async (presetName: string) => {
     if (isGuest) {
       const result = guestPresetAdd(presetName)!;
@@ -43,6 +67,7 @@ export const usePresetEvent = ({
 
     try {
       setIsLoding(true);
+      await relocationPresetEvent();
       const { message, preset } = await postPresetAdd(accessToken, presetName);
 
       if (message === "max") {
@@ -83,6 +108,7 @@ export const usePresetEvent = ({
 
     try {
       setIsLoding(true);
+      await relocationPresetEvent();
       const { message, preset } = await putPresetEdit(
         selectedPresetId,
         accessToken,
