@@ -53,6 +53,8 @@ export class FavoritesService {
       address = "https://" + address;
     }
 
+    const favoriteLength = favorites.length;
+
     const favoriteData = {
       favoriteName,
       address,
@@ -60,6 +62,7 @@ export class FavoritesService {
       description: "",
       imgHref: "",
       star: false,
+      order: favoriteLength ? favoriteLength : 0,
     };
 
     const newFavorite = this.favoriteTable.create({

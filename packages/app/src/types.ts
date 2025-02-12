@@ -94,6 +94,7 @@ export interface Favorite {
   star: boolean;
   title: string;
   visitedCount: number;
+  order: number;
 }
 
 export interface AutoBarItem {

@@ -57,6 +57,9 @@ export class Favorite {
   @Column({ type: "timestamp", default: () => "now()" })
   createdAt: Date;
 
+  @Column({ default: 0 })
+  order: number;
+
   @ManyToOne(() => Preset, (preset) => preset.favorites)
   preset: Preset;
 }
