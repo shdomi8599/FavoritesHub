@@ -3,10 +3,11 @@ import { MainContainer } from "@/components/main";
 import { useAuth, useAuthModal, useFavoriteEvent } from "@/hooks";
 import { useFavoriteList, useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { isLoadingState } from "@/states";
+import { dragFavoriteDataState, isLoadingState } from "@/states";
 import { Box, styled } from "@mui/material";
 import Head from "next/head";
-import { useSetRecoilState } from "recoil";
+import { useEffect } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 export default function Main() {
   // 훅
@@ -29,6 +30,15 @@ export default function Main() {
     viewPreset?.id,
     accessToken,
   );
+
+  // 드래그 즐겨찾기 데이터
+  const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
+    dragFavoriteDataState,
+  );
+  useEffect(() => {
+    if (!favorites?.length) return;
+    setDragFavoriteData(favorites);
+  }, [favorites]);
 
   // 이벤트
   const {
@@ -53,9 +63,10 @@ export default function Main() {
       {isLogin ? (
         <>
           <MainContainer
-            favorites={favorites!}
+            favorites={dragFavoriteData}
             favoriteVisited={favoriteVisited}
             favoriteHandleStar={favoriteHandleStar}
+            setDragFavoriteData={setDragFavoriteData}
             deleteFavoriteEvent={deleteFavoriteEvent}
             upFavoriteVisitedCount={upFavoriteVisitedCount}
           />

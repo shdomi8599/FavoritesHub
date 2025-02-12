@@ -83,6 +83,11 @@ export const selectedFavoriteNameState = atom({
   default: "",
 });
 
+export const dragFavoriteDataState = atom<Favorite[]>({
+  key: "dragFavoriteDataState",
+  default: [],
+});
+
 export const viewPresetState = atom<Preset>({
   key: "viewPresetState",
   default: null!,

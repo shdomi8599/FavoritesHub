@@ -27,13 +27,15 @@ import {
   TooltipProps,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { SetterOrUpdater, useRecoilValue } from "recoil";
+import DraggableFavoriteList from "./DraggableFavoriteList";
 
 type Props = {
   favoriteVisited: (id: number) => Promise<void>;
   deleteFavoriteEvent: (id: number) => Promise<void>;
   favoriteHandleStar: (id: number) => Promise<void>;
   upFavoriteVisitedCount: (id: number) => Promise<void>;
+  setDragFavoriteData: SetterOrUpdater<Favorite[]>;
   favorites: Favorite[];
 };
 
@@ -41,6 +43,7 @@ export default function MainContainer({
   favoriteVisited,
   deleteFavoriteEvent,
   favoriteHandleStar,
+  setDragFavoriteData,
   upFavoriteVisitedCount,
   favorites,
 }: Props) {
@@ -194,27 +197,40 @@ export default function MainContainer({
           )}
         </Box>
       </CenterContainer>
-      <Grid
-        container
-        spacing={4}
-        sx={{
-          p: 2,
-          mt: 0,
-        }}
-      >
-        {viewData?.map((favorite, index) => (
-          <FavoriteCard
-            key={index}
-            isGrid={isGrid}
-            favorite={favorite}
-            editFavoriteModal={editFavoriteModal}
-            favoriteVisited={favoriteVisited}
-            deleteFavoriteEvent={deleteFavoriteEvent}
-            favoriteHandleStar={favoriteHandleStar}
-            upFavoriteVisitedCount={upFavoriteVisitedCount}
-          />
-        ))}
-      </Grid>
+      {selectValue === "default" ? (
+        <DraggableFavoriteList
+          isGrid={isGrid}
+          dragFavoriteData={favorites}
+          editFavoriteModal={editFavoriteModal}
+          favoriteVisited={favoriteVisited}
+          setDragFavoriteData={setDragFavoriteData}
+          deleteFavoriteEvent={deleteFavoriteEvent}
+          favoriteHandleStar={favoriteHandleStar}
+          upFavoriteVisitedCount={upFavoriteVisitedCount}
+        />
+      ) : (
+        <Grid
+          container
+          spacing={4}
+          sx={{
+            p: 2,
+            mt: 0,
+          }}
+        >
+          {viewData?.map((favorite, index) => (
+            <FavoriteCard
+              key={index}
+              isGrid={isGrid}
+              favorite={favorite}
+              editFavoriteModal={editFavoriteModal}
+              favoriteVisited={favoriteVisited}
+              deleteFavoriteEvent={deleteFavoriteEvent}
+              favoriteHandleStar={favoriteHandleStar}
+              upFavoriteVisitedCount={upFavoriteVisitedCount}
+            />
+          ))}
+        </Grid>
+      )}
     </>
   );
 }
