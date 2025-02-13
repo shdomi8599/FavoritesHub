@@ -1,13 +1,8 @@
 import { Favorite } from "@/types";
-import { Box, Grid } from "@mui/material";
-import {
-  DragDropContext,
-  Draggable,
-  DraggableProvided,
-  Droppable,
-  DroppableProvided,
-  DropResult,
-} from "react-beautiful-dnd";
+import { Box } from "@mui/material";
+import { GridStack, GridStackNode } from "gridstack";
+import "gridstack/dist/gridstack.css";
+import { useEffect, useRef, useState } from "react";
 import { SetterOrUpdater } from "recoil";
 import FavoriteCard from "../favorite/FavoriteCard";
 
@@ -32,56 +27,97 @@ export default function DraggableFavoriteList({
   upFavoriteVisitedCount,
   editFavoriteModal,
 }: Props) {
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-    const items = Array.from(dragFavoriteData);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setDragFavoriteData(items);
+  const [orderList, setOrderList] = useState<any[]>(null!);
+  const [gridData, setGridData] = useState<any[]>(null!);
+  const gridRef = useRef<GridStack | null>(null);
+
+  useEffect(() => {
+    // console.log(orderList);
+  }, [orderList]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      import("gridstack").then((module) => {
+        const gridInstance = module.GridStack.init({
+          cellHeight: 100,
+          float: false,
+        });
+        gridRef.current = gridInstance;
+
+        updateGridLayout(gridInstance, isGrid);
+
+        gridInstance.on("change", () => {
+          const allItems: any = gridInstance.save();
+          setGridData(allItems);
+        });
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (gridData?.length) {
+      const updatedFavorites = dragFavoriteData.map((favorite) => {
+        const gridItem = gridData.find((item) =>
+          item.content.includes(`favorite-${favorite.order}`),
+        );
+
+        if (gridItem) {
+          console.log(
+            `${favorite.favoriteName}` +
+              ":" +
+              `${(gridItem.y / 2) * 4 + gridItem.x / 3}`,
+          );
+          return {
+            ...favorite,
+            order: (gridItem.y / 2) * 4 + gridItem.x / 3,
+          };
+        }
+        return favorite;
+      });
+
+      setOrderList(updatedFavorites.sort((a, b) => a.order - b.order));
+    }
+  }, [gridData]);
+
+  useEffect(() => {
+    if (gridRef.current) {
+      updateGridLayout(gridRef.current, isGrid);
+    }
+  }, [isGrid]);
+
+  const updateGridLayout = (grid: GridStack, isGrid: boolean) => {
+    grid.batchUpdate();
+
+    grid.getGridItems().map((item) => {
+      const id = Number(item.id.slice(9));
+      const newNode: Partial<GridStackNode> = {
+        w: !isGrid ? 3 : 12,
+        h: 2,
+        x: !isGrid ? (id % 4) * 3 : 0,
+        y: !isGrid ? Math.floor(id / 4) * 2 : id * 2,
+      };
+
+      grid.update(item, newNode);
+    });
+
+    grid.commit();
   };
 
-  if (dragFavoriteData?.length)
-    return (
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable
-          droppableId="dragFavoriteDataList"
-          // direction="horizontal"
-          // type="droppableListItem"
-        >
-          {(provided: DroppableProvided) => (
-            <Box {...provided.droppableProps} ref={provided.innerRef}>
-              {dragFavoriteData.map((favorite, index) => (
-                <Draggable
-                  index={index}
-                  key={favorite.id}
-                  draggableId={favorite.id.toString()}
-                >
-                  {(provided: DraggableProvided) => (
-                    <Grid
-                      container
-                      spacing={4}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <FavoriteCard
-                        key={index}
-                        isGrid={isGrid}
-                        favorite={favorite}
-                        editFavoriteModal={editFavoriteModal}
-                        favoriteVisited={favoriteVisited}
-                        deleteFavoriteEvent={deleteFavoriteEvent}
-                        favoriteHandleStar={favoriteHandleStar}
-                        upFavoriteVisitedCount={upFavoriteVisitedCount}
-                      />
-                    </Grid>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </Box>
-          )}
-        </Droppable>
-      </DragDropContext>
-    );
+  return (
+    <Box className="grid-stack">
+      {dragFavoriteData.map((favorite, index) => (
+        <FavoriteCard
+          key={index}
+          isDrag={true}
+          isGrid={isGrid}
+          favorite={favorite}
+          editFavoriteModal={editFavoriteModal}
+          favoriteVisited={favoriteVisited}
+          deleteFavoriteEvent={deleteFavoriteEvent}
+          favoriteHandleStar={favoriteHandleStar}
+          upFavoriteVisitedCount={upFavoriteVisitedCount}
+        />
+      ))}
+    </Box>
+  );
 }

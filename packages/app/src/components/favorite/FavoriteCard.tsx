@@ -5,7 +5,6 @@ import { successToast } from "@/util/alert";
 import { Card, CardContent, Grid } from "@mui/material";
 import moment from "moment";
 import "moment/locale/ko";
-import { memo } from "react";
 import {
   CardBottomContainer,
   CardMiddleContainer,
@@ -20,9 +19,11 @@ type Props = {
   upFavoriteVisitedCount: (favoriteId: number) => Promise<void>;
   favorite: Favorite;
   isGrid: boolean;
+  isDrag?: boolean;
 };
 
 function FavoriteCard({
+  isDrag,
   isGrid,
   favorite,
   favoriteVisited,
@@ -49,6 +50,7 @@ function FavoriteCard({
     visitedCount,
     favoriteName,
     lastVisitedAt,
+    order,
   } = favorite;
 
   const formatDate = (date: string) => {
@@ -101,10 +103,63 @@ function FavoriteCard({
     successToast("주소가 복사되었습니다.");
   };
 
+  if (isDrag) {
+    return (
+      <div
+        id={`favorite-${order}`}
+        className="grid-stack-item"
+        gs-no-resize="true"
+      >
+        <Card
+          className="grid-stack-item-content"
+          onClick={openSite}
+          onMouseEnter={onHover}
+          onMouseLeave={offHover}
+          raised={isHover}
+          sx={cardStyle}
+        >
+          <CardContent
+            id={`favorite-${order}`}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: 120,
+              backfaceVisibility: "hidden",
+              transform: "translateZ(0)",
+              WebkitFontSmoothing: "subpixel-antialiased",
+            }}
+          >
+            <CardTopContainer
+              id={id}
+              star={star}
+              title={title}
+              imgSrc={!imgHref ? imgHref : imgSrc}
+              favoriteName={favoriteName}
+              handleStar={handleStar}
+              editEvent={editEvent}
+              deleteEvent={deleteEvent}
+            />
+            <CardMiddleContainer
+              title={title}
+              copyURL={copyURL}
+              address={address}
+              description={description}
+              formatCreatedAt={formatCreatedAt}
+            />
+          </CardContent>
+          <CardBottomContainer
+            visitedCount={visitedCount}
+            formatLastVisitedAt={formatLastVisitedAt}
+          />
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <Grid
       sx={{
-        paddingTop: isGrid || isMaxWidth900 ? "16px !important" : "",
+        paddingTop: isMaxWidth900 ? "16px !important" : "",
       }}
       item
       xs={12}
@@ -155,7 +210,7 @@ function FavoriteCard({
   );
 }
 
-export default memo(FavoriteCard);
+export default FavoriteCard;
 
 const cardStyle = {
   minWidth: 275,
