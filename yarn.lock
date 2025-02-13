@@ -5053,6 +5053,11 @@ graphemer@^1.4.0:
   resolved "https://registry.npmjs.org/graphemer/-/graphemer-1.4.0.tgz"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
+gridstack@^11.3.0:
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-11.3.0.tgz#b110c66bafc64c920fc54933e2c9df4f7b2cfffe"
+  integrity sha512-Z0eRovKcZTRTs3zetJwjO6CNwrgIy845WfOeZGk8ybpeMCE8fMA8tScyKU72Y2M6uGHkjgwnjflglvPiv+RcBQ==
+
 hamt_plus@1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/hamt_plus/-/hamt_plus-1.0.2.tgz"
