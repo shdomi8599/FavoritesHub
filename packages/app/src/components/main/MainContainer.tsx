@@ -197,7 +197,7 @@ export default function MainContainer({
           )}
         </Box>
       </CenterContainer>
-      {selectValue === "default" ? (
+      {selectValue === "default" && !isStar ? (
         <DraggableFavoriteList
           isGrid={isGrid}
           dragFavoriteData={favorites}
@@ -211,10 +211,11 @@ export default function MainContainer({
       ) : (
         <Grid
           container
-          spacing={4}
+          spacing={2.5}
           sx={{
-            p: 2,
-            mt: 0,
+            marginTop: "-10px",
+            padding: "0px 10px",
+            paddingTop: "0px",
           }}
         >
           {viewData?.map((favorite, index) => (
