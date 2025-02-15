@@ -8,6 +8,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
+import { useAuth } from "@/hooks";
 import { useRouters } from "@/hooks/useRouters";
 import { isPasswordForgotState, isRefreshTokenState } from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
@@ -23,24 +24,16 @@ import {
 import Head from "next/head";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SetterOrUpdater, useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { GoogleLogin } from ".";
 
 interface Props {
   openAuthModal: () => void;
   handleAuthModal: (path: AuthModalState) => void;
-  setAccessToken: SetterOrUpdater<string>;
-  setUserId: SetterOrUpdater<number>;
-  setUserMail: SetterOrUpdater<string>;
 }
 
-export default function LoginForm({
-  openAuthModal,
-  handleAuthModal,
-  setAccessToken,
-  setUserId,
-  setUserMail,
-}: Props) {
+export default function LoginForm({ openAuthModal, handleAuthModal }: Props) {
+  const { setAccessToken, setUserId, setUserMail } = useAuth();
   const { moveHome } = useRouters();
   const [isRefreshToken, setIsRefreshToken] =
     useRecoilState(isRefreshTokenState);

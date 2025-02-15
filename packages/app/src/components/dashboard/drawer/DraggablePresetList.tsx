@@ -1,4 +1,5 @@
 import PresetItem from "@/components/preset/PresetItem";
+import { dragPresetDataState } from "@/states";
 import { Preset } from "@/types";
 import { Box } from "@mui/material";
 import {
@@ -9,31 +10,21 @@ import {
   DroppableProvided,
   DropResult,
 } from "react-beautiful-dnd";
-import { SetterOrUpdater } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 interface Props {
   dragPresetData: Preset[];
-  viewPreset: Preset;
-  setViewPreset: SetterOrUpdater<Preset>;
-  setdragPresetData: SetterOrUpdater<Preset[]>;
-  editPresetModal: (id: number) => void;
-  deletePresetEvent: (id: number) => void;
 }
 
-export default function DraggablePresetList({
-  dragPresetData,
-  viewPreset,
-  setViewPreset,
-  editPresetModal,
-  deletePresetEvent,
-  setdragPresetData,
-}: Props) {
+export default function DraggablePresetList({ dragPresetData }: Props) {
+  const setDragPresetData = useSetRecoilState(dragPresetDataState);
+
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
     const items = Array.from(dragPresetData);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    setdragPresetData(items);
+    setDragPresetData(items);
   };
 
   if (dragPresetData?.length)
@@ -54,13 +45,7 @@ export default function DraggablePresetList({
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <PresetItem
-                        preset={preset}
-                        viewPreset={viewPreset}
-                        setViewPreset={setViewPreset}
-                        editPresetModal={editPresetModal}
-                        deletePresetEvent={deletePresetEvent}
-                      />
+                      <PresetItem preset={preset} />
                     </Box>
                   )}
                 </Draggable>

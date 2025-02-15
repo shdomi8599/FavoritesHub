@@ -27,18 +27,14 @@ import {
   TooltipProps,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { SetterOrUpdater, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import DraggableFavoriteList from "./DraggableFavoriteList";
 
 type Props = {
   favorites: Favorite[];
-  setDragFavoriteData: SetterOrUpdater<Favorite[]>;
 };
 
-export default function MainContainer({
-  favorites,
-  setDragFavoriteData,
-}: Props) {
+export default function MainContainer({ favorites }: Props) {
   // 상태
   const [open, setOpen] = useState(false);
   const isGuideModal = useRecoilValue(isGuideModalState);
@@ -189,12 +185,7 @@ export default function MainContainer({
         </Box>
       </CenterContainer>
       {selectValue === "default" && !isStar ? (
-        <DraggableFavoriteList
-          isGrid={isGrid}
-          selectValue={selectValue}
-          dragFavoriteData={favorites}
-          setDragFavoriteData={setDragFavoriteData}
-        />
+        <DraggableFavoriteList isGrid={isGrid} selectValue={selectValue} />
       ) : (
         <Grid
           container

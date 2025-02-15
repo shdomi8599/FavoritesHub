@@ -1,6 +1,7 @@
 import { mainBlueColor } from "@/const";
+import { usePresetEvent, usePresetModal } from "@/hooks";
 import { useDashboard } from "@/hooks/useDashboard";
-import { isPresetEventState } from "@/states";
+import { isPresetEventState, viewPresetState } from "@/states";
 import { Preset } from "@/types";
 import {
   Dashboard as DashboardIcon,
@@ -17,25 +18,19 @@ import {
   styled,
 } from "@mui/material";
 import { useEffect } from "react";
-import { SetterOrUpdater, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 interface Props {
   preset: Preset;
-  viewPreset: Preset;
-  setViewPreset: SetterOrUpdater<Preset>;
-  editPresetModal: (id: number) => void;
-  deletePresetEvent: (id: number) => void;
 }
 
-export default function PresetItem({
-  preset,
-  viewPreset,
-  setViewPreset,
-  editPresetModal,
-  deletePresetEvent,
-}: Props) {
-  const { isDashboard } = useDashboard();
+export default function PresetItem({ preset }: Props) {
   const { presetName, id } = preset;
+  const { isDashboard } = useDashboard();
+  const { presetDelete } = usePresetEvent();
+  const { editPresetModal } = usePresetModal();
+
+  const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
 
   useEffect(() => {
@@ -82,7 +77,7 @@ export default function PresetItem({
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            deletePresetEvent(id);
+            presetDelete(id);
           }}
         >
           <DeleteIcon />

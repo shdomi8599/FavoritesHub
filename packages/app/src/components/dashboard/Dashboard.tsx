@@ -1,6 +1,5 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
-import { postPresetDelete, postPresetRelocation } from "@/api/preset";
-import { guestPresetDelete } from "@/guest/preset";
+import { postPresetRelocation } from "@/api/preset";
 import { useAuth, useBarHeight } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
@@ -17,12 +16,10 @@ import {
   viewPresetState,
 } from "@/states";
 import {
-  confirmAlert,
   deleteCookie,
   errorAlert,
   getCookie,
   getLocalStorageItem,
-  removeLocalStorageItem,
   setLocalStorageItem,
 } from "@/util";
 import { Box } from "@mui/material";
@@ -67,11 +64,11 @@ export default function Dashboard({
   const { data: presets } = usePresetList(userId, accessToken);
 
   // 드래그 프리셋 데이터
-  const [dragPresetData, setdragPresetData] =
+  const [dragPresetData, setDragPresetData] =
     useRecoilState(dragPresetDataState);
   useEffect(() => {
     if (!presets?.length) return;
-    setdragPresetData(presets);
+    setDragPresetData(presets);
   }, [presets]);
 
   // 게스트용 데이터
@@ -101,42 +98,6 @@ export default function Dashboard({
       setAccessToken("");
       resetPresetList();
       moveLogin();
-    }
-  };
-
-  const deletePresetEvent = async (id: number) => {
-    if (isGuest) {
-      try {
-        setIsLoading(true);
-        await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-        const result = guestPresetDelete(guestPresets, id);
-        if (result) {
-          const { newPreset } = result;
-          setLocalStorageItem("presetList", [...newPreset]);
-          setGuestPresets([...newPreset]);
-          setViewPreset(newPreset[0]);
-          removeLocalStorageItem("favoriteList");
-        }
-      } finally {
-        setIsLoading(false);
-        setGuestFavorites([]);
-        return;
-      }
-    }
-
-    try {
-      setIsLoading(true);
-      await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-      await relocationPresetEvent();
-      await postPresetDelete(id, accessToken);
-      setIsPresetEvent(true);
-      resetPresetList();
-    } catch (e: any) {
-      if (e?.code === 401) {
-        location.reload();
-      }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -251,11 +212,7 @@ export default function Dashboard({
         />
         <DashboardDrawer
           presets={isGuest ? guestPresets : dragPresetData!}
-          viewPreset={viewPreset}
           logoutEvent={logoutEvent}
-          setViewPreset={setViewPreset}
-          setdragPresetData={setdragPresetData}
-          deletePresetEvent={deletePresetEvent}
         />
         <Main component="main" barheight={barHeight}>
           {children}

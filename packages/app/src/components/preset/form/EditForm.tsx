@@ -11,10 +11,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 interface Props {
   presetEdit: (presetName: string) => void;
-  isLoding: boolean;
+  isLoading: boolean;
 }
 
-export default function EditForm({ presetEdit, isLoding }: Props) {
+export default function EditForm({ presetEdit, isLoading }: Props) {
   const {
     register,
     handleSubmit,
@@ -46,7 +46,7 @@ export default function EditForm({ presetEdit, isLoding }: Props) {
             label={"프리셋 수정"}
             autoFocus={true}
           />
-          <ModalButton disabled={isLoding}>수정하기</ModalButton>
+          <ModalButton disabled={isLoading}>수정하기</ModalButton>
         </ModalForm>
       </Box>
     </Container>

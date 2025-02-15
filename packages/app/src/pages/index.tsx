@@ -11,14 +11,7 @@ import { useRecoilState } from "recoil";
 
 export default function Main() {
   // 훅
-  const {
-    userId,
-    isLogin,
-    accessToken,
-    setUserId,
-    setUserMail,
-    setAccessToken,
-  } = useAuth();
+  const { userId, isLogin, accessToken } = useAuth();
   const { handleAuthModal, openAuthModal } = useAuthModal();
   const { viewPreset } = useFavoriteModal();
 
@@ -46,18 +39,12 @@ export default function Main() {
       </Head>
       {isLogin ? (
         <>
-          <MainContainer
-            favorites={dragFavoriteData}
-            setDragFavoriteData={setDragFavoriteData}
-          />
+          <MainContainer favorites={dragFavoriteData} />
         </>
       ) : (
         <LoginContainer>
           <LoginForm
-            setUserId={setUserId}
-            setUserMail={setUserMail}
             openAuthModal={openAuthModal}
-            setAccessToken={setAccessToken}
             handleAuthModal={handleAuthModal}
           />
         </LoginContainer>

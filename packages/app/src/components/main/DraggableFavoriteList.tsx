@@ -1,28 +1,26 @@
+import { dragFavoriteDataState } from "@/states";
 import { Favorite } from "@/types";
 import { Box } from "@mui/material";
 import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/gridstack.css";
 import { useEffect, useRef, useState } from "react";
-import { SetterOrUpdater } from "recoil";
+import { useRecoilState } from "recoil";
 import FavoriteCard from "../favorite/FavoriteCard";
 
 interface Props {
   selectValue: string;
-  dragFavoriteData: Favorite[];
-  setDragFavoriteData: SetterOrUpdater<Favorite[]>;
   isGrid: boolean;
 }
 
-export default function DraggableFavoriteList({
-  isGrid,
-  selectValue,
-  dragFavoriteData,
-  setDragFavoriteData,
-}: Props) {
+export default function DraggableFavoriteList({ isGrid, selectValue }: Props) {
+  const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
+    dragFavoriteDataState,
+  );
   console.log(dragFavoriteData);
-  const [orderList, setOrderList] = useState<Favorite[]>(null!);
-  const [gridData, setGridData] = useState<any[]>(null!);
+
   const gridRef = useRef<GridStack | null>(null);
+  const [gridData, setGridData] = useState<any[]>(null!);
+  const [orderList, setOrderList] = useState<Favorite[]>(null!);
 
   useEffect(() => {
     console.log(orderList);

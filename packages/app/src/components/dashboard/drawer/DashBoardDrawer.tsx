@@ -25,33 +25,22 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import { SetterOrUpdater, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import DraggablePresetList from "./DraggablePresetList";
 
 interface Props extends DashBoardChildProps {
-  setViewPreset: SetterOrUpdater<Preset>;
-  setdragPresetData: SetterOrUpdater<Preset[]>;
-  deletePresetEvent: (id: number) => void;
-  viewPreset: Preset;
   presets: Preset[];
 }
 
-export default function DashboardDrawer({
-  presets,
-  viewPreset,
-  logoutEvent,
-  setViewPreset,
-  setdragPresetData,
-  deletePresetEvent,
-}: Props) {
+export default function DashboardDrawer({ presets, logoutEvent }: Props) {
   const guideStep = useRecoilValue(guideStepState);
   const isGuideModal = useRecoilValue(isGuideModalState);
 
   const { isLogin } = useAuth();
+  const { addPresetModal } = usePresetModal();
   const { handleSignUpModal } = useAuthModal();
   const { pathname, moveGuest, moveLogin } = useRouters();
   const { isDashboard, handleIsDashboard } = useDashboard();
-  const { addPresetModal, editPresetModal } = usePresetModal();
 
   const [guideTipOpen, setGuideTipOpen] = useState(false);
 
@@ -138,14 +127,7 @@ export default function DashboardDrawer({
                 )}
               </Button>
             )}
-            <DraggablePresetList
-              viewPreset={viewPreset}
-              dragPresetData={presets}
-              setViewPreset={setViewPreset}
-              editPresetModal={editPresetModal}
-              setdragPresetData={setdragPresetData}
-              deletePresetEvent={deletePresetEvent}
-            />
+            <DraggablePresetList dragPresetData={presets} />
           </>
         )}
       </List>

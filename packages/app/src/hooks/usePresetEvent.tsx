@@ -1,37 +1,51 @@
 import {
   postPresetAdd,
+  postPresetDelete,
   postPresetRelocation,
   putPresetEdit,
 } from "@/api/preset";
-import { guestPresetAdd, guestPresetEdit } from "@/guest/preset";
+import {
+  guestPresetAdd,
+  guestPresetDelete,
+  guestPresetEdit,
+} from "@/guest/preset";
 import {
   dragPresetDataState,
+  guestFavoritesState,
+  guestPresetsState,
+  isLoadingState,
   isPresetEventState,
+  isPresetModalState,
+  selectedPresetIdState,
   viewPresetState,
 } from "@/states";
-import { errorAlert, setLocalStorageItem, successAlert } from "@/util";
-import { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  confirmAlert,
+  errorAlert,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+  successAlert,
+} from "@/util";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useResetQuery } from "./react-query";
+import { useAuth } from "./useAuth";
 
-type Props = {
-  isGuest: boolean;
-  accessToken: string;
-  selectedPresetId: number;
-  offPresetModal: () => void;
-  resetPresetList: () => void;
-};
+export const usePresetEvent = () => {
+  const { isGuest, userId, accessToken } = useAuth();
+  const { resetPresetList } = useResetQuery(userId);
 
-export const usePresetEvent = ({
-  isGuest,
-  accessToken,
-  selectedPresetId,
-  offPresetModal,
-  resetPresetList,
-}: Props) => {
-  const [isLoding, setIsLoding] = useState(false);
-  const setViewPreset = useSetRecoilState(viewPresetState);
   const dragPresetData = useRecoilValue(dragPresetDataState);
+  const selectedPresetId = useRecoilValue(selectedPresetIdState);
+
+  const setViewPreset = useSetRecoilState(viewPresetState);
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
+  const setGuestFavorites = useSetRecoilState(guestFavoritesState);
+  const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
+
+  const setIsPresetModal = useSetRecoilState(isPresetModalState);
+
+  const offPresetModal = () => setIsPresetModal(false);
 
   const relocationPresetEvent = async () => {
     if (!accessToken || !dragPresetData?.length) return;
@@ -66,7 +80,7 @@ export const usePresetEvent = ({
     }
 
     try {
-      setIsLoding(true);
+      setIsLoading(true);
       await relocationPresetEvent();
       const { message, preset } = await postPresetAdd(accessToken, presetName);
 
@@ -88,7 +102,7 @@ export const usePresetEvent = ({
         location.reload();
       }
     } finally {
-      setIsLoding(false);
+      setIsLoading(false);
     }
   };
 
@@ -107,7 +121,7 @@ export const usePresetEvent = ({
     }
 
     try {
-      setIsLoding(true);
+      setIsLoading(true);
       await relocationPresetEvent();
       const { message, preset } = await putPresetEdit(
         selectedPresetId,
@@ -141,9 +155,45 @@ export const usePresetEvent = ({
         location.reload();
       }
     } finally {
-      setIsLoding(false);
+      setIsLoading(false);
     }
   };
 
-  return { isLoding, presetAdd, presetEdit };
+  const presetDelete = async (id: number) => {
+    if (isGuest) {
+      try {
+        setIsLoading(true);
+        await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
+        const result = guestPresetDelete(guestPresets, id);
+        if (result) {
+          const { newPreset } = result;
+          setLocalStorageItem("presetList", [...newPreset]);
+          setGuestPresets([...newPreset]);
+          setViewPreset(newPreset[0]);
+          removeLocalStorageItem("favoriteList");
+        }
+      } finally {
+        setIsLoading(false);
+        setGuestFavorites([]);
+        return;
+      }
+    }
+
+    try {
+      setIsLoading(true);
+      await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
+      await relocationPresetEvent();
+      await postPresetDelete(id, accessToken);
+      setIsPresetEvent(true);
+      resetPresetList();
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { isLoading, presetAdd, presetEdit, presetDelete };
 };

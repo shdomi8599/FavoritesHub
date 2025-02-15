@@ -13,10 +13,10 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface Props {
   presetAdd: (presetName: string) => void;
-  isLoding: boolean;
+  isLoading: boolean;
 }
 
-export default function AddForm({ presetAdd, isLoding }: Props) {
+export default function AddForm({ presetAdd, isLoading }: Props) {
   const isGuideModal = useRecoilValue(isGuideModalState);
   const setGuideStep = useSetRecoilState(guideStepState);
   const {
@@ -53,7 +53,7 @@ export default function AddForm({ presetAdd, isLoding }: Props) {
             label={"프리셋 추가"}
             autoFocus={true}
           />
-          <ModalButton disabled={isLoding}>추가하기</ModalButton>
+          <ModalButton disabled={isLoading}>추가하기</ModalButton>
         </ModalForm>
       </Box>
     </Container>
