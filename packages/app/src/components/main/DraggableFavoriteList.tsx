@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/gridstack.css";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import FavoriteCard from "../favorite/FavoriteCard";
 
 interface Props {
@@ -12,7 +12,9 @@ interface Props {
 }
 
 export default function DraggableFavoriteList({ isGrid }: Props) {
-  const dragFavoriteData = useRecoilValue(dragFavoriteDataState);
+  const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
+    dragFavoriteDataState,
+  );
 
   const gridRef = useRef<GridStack | null>(null);
   const [gridData, setGridData] = useState<any[]>(null!);
@@ -103,6 +105,10 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
   }, [gridData, isGrid]);
 
   useEffect(() => {
+    setDragFavoriteData(orderList);
+  }, [isGrid]);
+
+  useEffect(() => {
     if (gridRef.current) {
       updateGridLayout(gridRef.current, isGrid);
     }
@@ -110,7 +116,7 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
 
   return (
     <Box className="grid-stack">
-      {dragFavoriteData.map((favorite, index) => (
+      {(dragFavoriteData || []).map((favorite, index) => (
         <FavoriteCard
           key={index}
           isDrag={true}
