@@ -1,9 +1,9 @@
 import { useHandler } from "@/hooks";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { Favorite } from "@/types";
+import { extractURLs, formatDate } from "@/util";
 import { successToast } from "@/util/alert";
 import { Card, CardContent, Grid } from "@mui/material";
-import moment from "moment";
 import "moment/locale/ko";
 import {
   CardBottomContainer,
@@ -52,27 +52,6 @@ function FavoriteCard({
     lastVisitedAt,
     order,
   } = favorite;
-
-  const formatDate = (date: string) => {
-    return moment(date).format("YYYY년 MMMM Do, a h:mm:ss");
-  };
-
-  const extractURLs = (text: string) => {
-    const urlRegex = /https?:\/\/[^\s/$.?#].[^\s]*/g;
-    const urls = text.match(urlRegex);
-
-    if (urls) {
-      return urls.map((url: string) => {
-        if (url.startsWith("https://")) {
-          return url.replace("https://", "").split("/")[0];
-        } else {
-          return url.split("/")[0];
-        }
-      });
-    } else {
-      return "";
-    }
-  };
 
   const formatCreatedAt = formatDate(createdAt);
   const formatLastVisitedAt = formatDate(lastVisitedAt);
