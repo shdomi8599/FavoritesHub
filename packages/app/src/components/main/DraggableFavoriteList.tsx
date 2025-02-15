@@ -42,15 +42,19 @@ export default function DraggableFavoriteList({ isGrid, selectValue }: Props) {
         gridRef.current = gridInstance;
         updateGridLayout(gridInstance, isGrid);
 
-        gridInstance.on("change", () => {
+        const savaItems = () => {
           const allItems: any = gridInstance.save();
           setGridData(allItems);
-        });
+        };
+
+        savaItems();
+        gridInstance.on("change", () => savaItems());
       });
     }
   }, []);
 
   useEffect(() => {
+    // 즐겨찾기 order 저장용 로직
     if (gridData?.length) {
       const updatedFavorites = dragFavoriteData.map((favorite) => {
         const gridItem = gridData.find((item) =>
