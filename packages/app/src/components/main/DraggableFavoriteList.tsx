@@ -35,7 +35,7 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
     grid.removeAll();
 
     saveData.map((item) => {
-      grid.addWidget(item);
+      grid.makeWidget(item);
     });
 
     grid.getGridItems().map((item) => {
