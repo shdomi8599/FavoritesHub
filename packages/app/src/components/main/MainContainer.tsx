@@ -31,21 +31,13 @@ import { SetterOrUpdater, useRecoilValue } from "recoil";
 import DraggableFavoriteList from "./DraggableFavoriteList";
 
 type Props = {
-  favoriteVisited: (id: number) => Promise<void>;
-  deleteFavoriteEvent: (id: number) => Promise<void>;
-  favoriteHandleStar: (id: number) => Promise<void>;
-  upFavoriteVisitedCount: (id: number) => Promise<void>;
-  setDragFavoriteData: SetterOrUpdater<Favorite[]>;
   favorites: Favorite[];
+  setDragFavoriteData: SetterOrUpdater<Favorite[]>;
 };
 
 export default function MainContainer({
-  favoriteVisited,
-  deleteFavoriteEvent,
-  favoriteHandleStar,
-  setDragFavoriteData,
-  upFavoriteVisitedCount,
   favorites,
+  setDragFavoriteData,
 }: Props) {
   // 상태
   const [open, setOpen] = useState(false);
@@ -62,8 +54,7 @@ export default function MainContainer({
   const { isMaxWidth600, isMaxWidth900 } = useBreakPoints();
   const isDashboard = useRecoilValue(isDashboardState);
   const isHideContent = isDashboard && isMaxWidth600;
-  const { viewPreset, addFavoriteModal, editFavoriteModal } =
-    useFavoriteModal();
+  const { viewPreset, addFavoriteModal } = useFavoriteModal();
 
   // 데이터
   const { viewData, autoBarData } = useFavoriteFilter({
@@ -200,13 +191,9 @@ export default function MainContainer({
       {selectValue === "default" && !isStar ? (
         <DraggableFavoriteList
           isGrid={isGrid}
+          selectValue={selectValue}
           dragFavoriteData={favorites}
-          editFavoriteModal={editFavoriteModal}
-          favoriteVisited={favoriteVisited}
           setDragFavoriteData={setDragFavoriteData}
-          deleteFavoriteEvent={deleteFavoriteEvent}
-          favoriteHandleStar={favoriteHandleStar}
-          upFavoriteVisitedCount={upFavoriteVisitedCount}
         />
       ) : (
         <Grid
@@ -219,16 +206,7 @@ export default function MainContainer({
           }}
         >
           {viewData?.map((favorite, index) => (
-            <FavoriteCard
-              key={index}
-              isGrid={isGrid}
-              favorite={favorite}
-              editFavoriteModal={editFavoriteModal}
-              favoriteVisited={favoriteVisited}
-              deleteFavoriteEvent={deleteFavoriteEvent}
-              favoriteHandleStar={favoriteHandleStar}
-              upFavoriteVisitedCount={upFavoriteVisitedCount}
-            />
+            <FavoriteCard key={index} isGrid={isGrid} favorite={favorite} />
           ))}
         </Grid>
       )}

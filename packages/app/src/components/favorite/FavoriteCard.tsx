@@ -1,5 +1,6 @@
-import { useHandler } from "@/hooks";
+import { useFavoriteEvent, useHandler } from "@/hooks";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
+import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { Favorite } from "@/types";
 import { extractURLs, formatDate } from "@/util";
 import { successToast } from "@/util/alert";
@@ -12,26 +13,21 @@ import {
 } from "./card";
 
 type Props = {
-  favoriteVisited: (favoriteId: number) => Promise<void>;
-  editFavoriteModal: (favoriteId: number, name?: string) => void;
-  favoriteHandleStar: (favoriteId: number) => void;
-  deleteFavoriteEvent: (favoriteId: number) => void;
-  upFavoriteVisitedCount: (favoriteId: number) => Promise<void>;
   favorite: Favorite;
   isGrid: boolean;
   isDrag?: boolean;
 };
 
-function FavoriteCard({
-  isDrag,
-  isGrid,
-  favorite,
-  favoriteVisited,
-  favoriteHandleStar,
-  deleteFavoriteEvent,
-  upFavoriteVisitedCount,
-  editFavoriteModal,
-}: Props) {
+function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
+  const {
+    deleteFavoriteEvent,
+    favoriteVisited,
+    favoriteHandleStar,
+    upFavoriteVisitedCount,
+  } = useFavoriteEvent();
+
+  const { editFavoriteModal } = useFavoriteModal();
+
   const { isMaxWidth900 } = useBreakPoints();
   const {
     isBoolean: isHover,

@@ -1,13 +1,13 @@
 import { LoginForm } from "@/components/auth/form";
 import { MainContainer } from "@/components/main";
-import { useAuth, useAuthModal, useFavoriteEvent } from "@/hooks";
-import { useFavoriteList, useResetQuery } from "@/hooks/react-query";
+import { useAuth, useAuthModal } from "@/hooks";
+import { useFavoriteList } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { dragFavoriteDataState, isLoadingState } from "@/states";
+import { dragFavoriteDataState } from "@/states";
 import { Box, styled } from "@mui/material";
 import Head from "next/head";
 import { useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 export default function Main() {
   // 훅
@@ -19,9 +19,7 @@ export default function Main() {
     setUserMail,
     setAccessToken,
   } = useAuth();
-  const setIsLoading = useSetRecoilState(isLoadingState);
   const { handleAuthModal, openAuthModal } = useAuthModal();
-  const { resetFavoriteList } = useResetQuery(userId);
   const { viewPreset } = useFavoriteModal();
 
   // 데이터
@@ -36,22 +34,8 @@ export default function Main() {
     dragFavoriteDataState,
   );
   useEffect(() => {
-    if (!favorites?.length) return;
-    setDragFavoriteData(favorites);
+    setDragFavoriteData(favorites || []);
   }, [favorites]);
-
-  // 이벤트
-  const {
-    deleteFavoriteEvent,
-    favoriteVisited,
-    favoriteHandleStar,
-    upFavoriteVisitedCount,
-  } = useFavoriteEvent({
-    id: viewPreset?.id,
-    accessToken,
-    setIsLoading,
-    resetFavoriteList,
-  });
 
   if (!!!accessToken) return <></>;
 
@@ -64,11 +48,7 @@ export default function Main() {
         <>
           <MainContainer
             favorites={dragFavoriteData}
-            favoriteVisited={favoriteVisited}
-            favoriteHandleStar={favoriteHandleStar}
             setDragFavoriteData={setDragFavoriteData}
-            deleteFavoriteEvent={deleteFavoriteEvent}
-            upFavoriteVisitedCount={upFavoriteVisitedCount}
           />
         </>
       ) : (

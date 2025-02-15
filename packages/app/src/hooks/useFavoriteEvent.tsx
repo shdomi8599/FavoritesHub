@@ -4,22 +4,25 @@ import {
   getFavoriteVisited,
   upVisitedCountFavorite,
 } from "@/api/favorite";
+import {
+  accessTokenState,
+  isLoadingState,
+  userIdState,
+  viewPresetState,
+} from "@/states";
 import { confirmAlert } from "@/util";
-import { SetterOrUpdater } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useResetQuery } from "./react-query";
 
-type Props = {
-  id: number;
-  accessToken: string;
-  setIsLoading: SetterOrUpdater<boolean>;
-  resetFavoriteList: (presetId: number) => void;
-};
+export const useFavoriteEvent = () => {
+  const userId = useRecoilValue(userIdState);
+  const accessToken = useRecoilValue(accessTokenState);
+  const viewPreset = useRecoilValue(viewPresetState);
+  const { id } = viewPreset;
 
-export const useFavoriteEvent = ({
-  id,
-  accessToken,
-  setIsLoading,
-  resetFavoriteList,
-}: Props) => {
+  const setIsLoading = useSetRecoilState(isLoadingState);
+  const { resetFavoriteList } = useResetQuery(userId);
+
   const deleteFavoriteEvent = async (favoriteId: number) => {
     try {
       setIsLoading(true);

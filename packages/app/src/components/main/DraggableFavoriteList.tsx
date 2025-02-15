@@ -7,33 +7,32 @@ import { SetterOrUpdater } from "recoil";
 import FavoriteCard from "../favorite/FavoriteCard";
 
 interface Props {
+  selectValue: string;
   dragFavoriteData: Favorite[];
   setDragFavoriteData: SetterOrUpdater<Favorite[]>;
-  favoriteVisited: (favoriteId: number) => Promise<void>;
-  editFavoriteModal: (favoriteId: number, name?: string) => void;
-  favoriteHandleStar: (favoriteId: number) => void;
-  deleteFavoriteEvent: (favoriteId: number) => void;
-  upFavoriteVisitedCount: (favoriteId: number) => Promise<void>;
   isGrid: boolean;
 }
 
 export default function DraggableFavoriteList({
   isGrid,
+  selectValue,
   dragFavoriteData,
   setDragFavoriteData,
-  favoriteVisited,
-  favoriteHandleStar,
-  deleteFavoriteEvent,
-  upFavoriteVisitedCount,
-  editFavoriteModal,
 }: Props) {
-  const [orderList, setOrderList] = useState<any[]>(null!);
+  console.log(dragFavoriteData);
+  const [orderList, setOrderList] = useState<Favorite[]>(null!);
   const [gridData, setGridData] = useState<any[]>(null!);
   const gridRef = useRef<GridStack | null>(null);
 
   useEffect(() => {
-    // console.log(orderList);
+    console.log(orderList);
   }, [orderList]);
+
+  useEffect(() => {
+    if (orderList?.length) {
+      // setDragFavoriteData(orderList);
+    }
+  }, [selectValue, orderList]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -43,7 +42,6 @@ export default function DraggableFavoriteList({
           float: false,
         });
         gridRef.current = gridInstance;
-
         updateGridLayout(gridInstance, isGrid);
 
         gridInstance.on("change", () => {
@@ -62,11 +60,6 @@ export default function DraggableFavoriteList({
         );
 
         if (gridItem) {
-          console.log(
-            `${favorite.favoriteName}` +
-              ":" +
-              `${(gridItem.y / 2) * 4 + gridItem.x / 3}`,
-          );
           return {
             ...favorite,
             order: (gridItem.y / 2) * 4 + gridItem.x / 3,
@@ -77,13 +70,13 @@ export default function DraggableFavoriteList({
 
       setOrderList(updatedFavorites.sort((a, b) => a.order - b.order));
     }
-  }, [gridData]);
+  }, [gridData, isGrid]);
 
   useEffect(() => {
     if (gridRef.current) {
       updateGridLayout(gridRef.current, isGrid);
     }
-  }, [isGrid]);
+  }, [isGrid, dragFavoriteData]);
 
   const updateGridLayout = (grid: GridStack, isGrid: boolean) => {
     grid.batchUpdate();
@@ -111,11 +104,6 @@ export default function DraggableFavoriteList({
           isDrag={true}
           isGrid={isGrid}
           favorite={favorite}
-          editFavoriteModal={editFavoriteModal}
-          favoriteVisited={favoriteVisited}
-          deleteFavoriteEvent={deleteFavoriteEvent}
-          favoriteHandleStar={favoriteHandleStar}
-          upFavoriteVisitedCount={upFavoriteVisitedCount}
         />
       ))}
     </Box>
