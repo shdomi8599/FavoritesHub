@@ -7,10 +7,8 @@ import { useDashboard } from "@/hooks/useDashboard";
 import { useRouters } from "@/hooks/useRouters";
 import {
   dragPresetDataState,
-  guestFavoritesState,
   guestPresetsState,
   isGuideModalState,
-  isLoadingState,
   isPresetEventState,
   presetLengthState,
   viewPresetState,
@@ -53,9 +51,7 @@ export default function Dashboard({
   const { pathname, moveGuest, moveLogin } = useRouters();
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
 
-  const setIsLoading = useSetRecoilState(isLoadingState);
   const setPresetLength = useSetRecoilState(presetLengthState);
-  const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
   const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);

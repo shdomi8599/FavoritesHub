@@ -1,3 +1,5 @@
+import { useAuth } from "@/hooks";
+import { useRouters } from "@/hooks/useRouters";
 import {
   AccountCircle as AccountCircleIcon,
   Close as CloseIcon,
@@ -16,29 +18,21 @@ import {
 import { styled } from "@mui/material/styles";
 
 type Props = {
-  handleOpen: () => void;
-  handleModalOpen: () => void;
-  isLogin: boolean;
   contentBoxTop: number;
-  pathname: string;
-  userMail: string;
-  isGuest: boolean;
+  handleOpen: () => void;
   logoutEvent: () => void;
-  moveGuest: () => void;
-  moveLogin: () => void;
+  handleModalOpen: () => void;
 };
 
 export default function BarUserModal({
-  handleOpen,
-  handleModalOpen,
-  isLogin,
-  pathname,
   contentBoxTop,
+  handleOpen,
   logoutEvent,
-  userMail,
-  moveLogin,
-  moveGuest,
+  handleModalOpen,
 }: Props) {
+  const { isLogin, userMail } = useAuth();
+  const { pathname, moveGuest, moveLogin } = useRouters();
+
   return (
     <UserContentBox top={contentBoxTop}>
       <CloseBox>
