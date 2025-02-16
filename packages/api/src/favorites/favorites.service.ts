@@ -108,9 +108,23 @@ export class FavoritesService {
     await this.favoriteTable.save(newFavorite);
   }
 
-  async remove(favoriteId: number) {
+  async remove(presetId: number, favoriteId: number) {
     const favorite = await this.findOne(favoriteId);
+    if (!favorite) return;
+
     await this.favoriteTable.delete(favorite);
+
+    const favorites = await this.favoriteTable.find({
+      where: { preset: { id: presetId } },
+      order: { order: "ASC" },
+    });
+
+    const updatedFavorites = favorites.map((fav, index) => ({
+      id: fav.id,
+      order: index + 1,
+    }));
+
+    await this.relocation(presetId, updatedFavorites);
   }
 
   async update(favoriteId: number, newFavoriteName: string) {

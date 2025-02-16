@@ -87,10 +87,11 @@ export const getFavoriteHandleStar = async (
 };
 
 export const deleteFavorite = async (
+  presetId: number,
   favoriteId: number,
   accessToken: string,
 ) => {
-  await api.delete(`/favorite/${favoriteId}`, {
+  await api.delete(`/favorite/${presetId}/${favoriteId}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

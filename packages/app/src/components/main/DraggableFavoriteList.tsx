@@ -18,7 +18,6 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
   const [favoriteOrderList, setFavoriteOrderList] = useRecoilState<Favorite[]>(
     favoriteOrderListState,
   );
-  console.log(favoriteOrderList);
 
   const gridRef = useRef<GridStack | null>(null);
   const [gridData, setGridData] = useState<any[]>(null!);

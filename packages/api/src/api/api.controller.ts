@@ -416,7 +416,7 @@ export class ApiController {
 
     if (favorites && favorites.length > 0) {
       for (const favorite of favorites) {
-        await this.favoritesService.remove(favorite.id);
+        await this.favoritesService.remove(presetId, favorite.id);
       }
     }
 
@@ -523,14 +523,17 @@ export class ApiController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete("favorite/:favoriteId")
+  @Delete("favorite/:presetId/:favoriteId")
   @ApiResponse({
     status: 200,
     description: "즐겨찾기 삭제에 사용되는 API입니다.",
     type: ResSuccessMessageDto,
   })
-  async deleteFavorite(@Param("favoriteId") favoriteId: number) {
-    await this.favoritesService.remove(favoriteId);
+  async deleteFavorite(
+    @Param("presetId") presetId: number,
+    @Param("favoriteId") favoriteId: number,
+  ) {
+    await this.favoritesService.remove(presetId, favoriteId);
   }
 
   @UseGuards(JwtAuthGuard)

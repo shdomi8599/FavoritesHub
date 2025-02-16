@@ -28,7 +28,7 @@ export const useFavoriteEvent = () => {
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
-      await deleteFavorite(favoriteId, accessToken);
+      await deleteFavorite(id, favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
       if (e?.code === 401) {
