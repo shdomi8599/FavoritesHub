@@ -60,10 +60,10 @@ export default function MainContainer({ favorites }: Props) {
   });
 
   useEffect(() => {
-    if (isStar) {
+    if (isStar || isGrid) {
       relocationFavorites();
     }
-  }, [isStar]);
+  }, [isStar, isGrid]);
 
   useEffect(() => {
     if (tags.length === 0) {
