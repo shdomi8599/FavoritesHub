@@ -1,133 +1,31 @@
-import { postFavoriteAdd, putFavoriteEdit } from "@/api/favorite";
-import { guestFavoriteAdd, guestFavoriteEdit } from "@/guest/favorite";
 import { useAuth, useFavoriteEvent } from "@/hooks";
-import { useResetQuery } from "@/hooks/react-query";
+import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import {
-  guestFavoritesState,
-  isDisableLayoutUpdateState,
-  selectedFavoriteIdState,
-} from "@/states";
-import { Favorite } from "@/types";
-import { errorAlert, getLocalStorageItem, successAlert } from "@/util";
+import { isLoadingState } from "@/states";
 import { Box, Modal } from "@mui/material";
-import { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
 import { AddForm, EditForm } from "./form";
 
 export default function FavoriteModal() {
-  const { accessToken, isGuest } = useAuth();
-  const [isLoading, setIsLoding] = useState(false);
-  const { favoriteRelocation } = useFavoriteEvent();
-  const setGuestFavorites = useSetRecoilState(guestFavoritesState);
-  const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
-  const setIsDisableLayoutUpdate = useSetRecoilState(
-    isDisableLayoutUpdateState,
-  );
-  const { viewPreset, isFavoriteModal, offFavoriteModal, favoriteModal } =
+  const isLoading = useRecoilValue(isLoadingState);
+
+  const { isGuest } = useAuth();
+  const { isFavoriteModal, offFavoriteModal, favoriteModal } =
     useFavoriteModal();
-  const { resetFavoriteList } = useResetQuery();
-
-  const guestFavoriteAddEvent = async (
-    favoriteName: string,
-    address: string,
-  ) => {
-    await guestFavoriteAdd(favoriteName, address);
-
-    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
-    setGuestFavorites([...favorites]);
-
-    offFavoriteModal();
-    successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
-  };
-
-  const favoriteAdd = async (favoriteName: string, address: string) => {
-    try {
-      setIsLoding(true);
-      await favoriteRelocation();
-      const { message } = await postFavoriteAdd(
-        viewPreset?.id,
-        favoriteName,
-        address,
-        accessToken,
-      );
-
-      if (message === "not exact") {
-        return errorAlert("도메인이 유효하지 않습니다.", "즐겨찾기 추가");
-      }
-
-      if (message === "cors") {
-        return errorAlert(
-          "주소 오류로 인해 등록할 수 없습니다.",
-          "즐겨찾기 추가",
-        );
-      }
-
-      if (message === "exist") {
-        return errorAlert("이미 존재하는 주소입니다.", "즐겨찾기 추가");
-      }
-
-      if (message === "success") {
-        resetFavoriteList(viewPreset?.id);
-        offFavoriteModal();
-        successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
-      }
-    } catch (e: any) {
-      if (e?.code === 401) {
-        location.reload();
-      }
-    } finally {
-      setIsLoding(false);
-    }
-  };
-
-  const guestFavoriteEditEvent = async (favoriteName: string) => {
-    await guestFavoriteEdit(favoriteName, selectedFavoriteId);
-
-    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
-    setGuestFavorites([...favorites]);
-
-    offFavoriteModal();
-    successAlert("즐겨찾기가 수정되었습니다.", "즐겨찾기 수정");
-  };
-
-  const favoriteEdit = async (favoriteName: string) => {
-    try {
-      setIsLoding(true);
-      await putFavoriteEdit(selectedFavoriteId, accessToken, favoriteName);
-      await favoriteRelocation();
-
-      setIsDisableLayoutUpdate(true);
-      resetFavoriteList(viewPreset?.id);
-      offFavoriteModal();
-      successAlert(
-        "즐겨찾기 별칭 수정이 완료되었습니다.",
-        "즐겨찾기 별칭 수정",
-      );
-    } catch (e: any) {
-      if (e?.code === 401) {
-        location.reload();
-      }
-    } finally {
-      setIsLoding(false);
-
-      setTimeout(() => {
-        setIsDisableLayoutUpdate(false);
-      }, 500);
-    }
-  };
+  const { favoriteAdd, favoriteEdit } = useFavoriteEvent();
+  const { favoriteAddGuest, favoriteEditGuest } = useGuestFavoriteEvent();
 
   const modalData: { [key: string]: JSX.Element } = {
     add: (
       <AddForm
-        favoriteAdd={isGuest ? guestFavoriteAddEvent : favoriteAdd}
+        favoriteAdd={isGuest ? favoriteAddGuest : favoriteAdd}
         isLoading={isLoading}
       />
     ),
     edit: (
       <EditForm
-        favoriteEdit={isGuest ? guestFavoriteEditEvent : favoriteEdit}
+        favoriteEdit={isGuest ? favoriteEditGuest : favoriteEdit}
         isLoading={isLoading}
       />
     ),

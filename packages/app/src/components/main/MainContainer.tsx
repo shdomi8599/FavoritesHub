@@ -3,7 +3,13 @@ import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
 import SearchSelect from "@/components/search/SearchSelect";
 import { SearchSelects } from "@/const";
-import { useFavoriteEvent, useFavoriteFilter, useHandler } from "@/hooks";
+import {
+  useAuth,
+  useFavoriteEvent,
+  useFavoriteFilter,
+  useHandler,
+} from "@/hooks";
+import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { guideStepState, isDashboardState, isGuideModalState } from "@/states";
@@ -35,6 +41,7 @@ type Props = {
 };
 
 export default function MainContainer({ favorites }: Props) {
+  const { isGuest } = useAuth();
   const [open, setOpen] = useState(false);
   const isGuideModal = useRecoilValue(isGuideModalState);
   const guideStep = useRecoilValue(guideStepState);
@@ -50,6 +57,7 @@ export default function MainContainer({ favorites }: Props) {
   const isDashboard = useRecoilValue(isDashboardState);
   const isHideContent = isDashboard && isMaxWidth600;
   const { favoriteRelocation } = useFavoriteEvent();
+  const { favoriteRelocationGuest } = useGuestFavoriteEvent();
 
   const { viewData, autoBarData } = useFavoriteFilter({
     selectValue,
@@ -61,9 +69,13 @@ export default function MainContainer({ favorites }: Props) {
 
   useEffect(() => {
     if (isStar || isGrid) {
+      if (isGuest) {
+        favoriteRelocationGuest();
+        return;
+      }
       favoriteRelocation();
     }
-  }, [isStar, isGrid]);
+  }, [isStar, isGrid, isGuest]);
 
   useEffect(() => {
     if (tags.length === 0) {

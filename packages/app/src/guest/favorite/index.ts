@@ -65,7 +65,9 @@ export const guestFavoriteDelete = async (id: number) => {
 
   const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
 
-  const newFavoriteList = favoriteList.filter((fav) => fav.id !== id);
+  const newFavoriteList = favoriteList
+    .filter((fav) => fav.id !== id)
+    .map((fav, index) => ({ ...fav, order: index }));
 
   setLocalStorageItem("favoriteList", newFavoriteList);
 };
@@ -105,6 +107,33 @@ export const guestFavoriteHandleStar = async (id: number) => {
       fav.star = !fav.star;
     }
     return fav;
+  });
+
+  setLocalStorageItem("favoriteList", newFavoriteList);
+};
+
+export const guestFavoriteRelocation = async (
+  favoriteOrderList: Favorite[],
+) => {
+  const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
+
+  const orderList = favoriteOrderList.map(({ id, order }) => ({ id, order }));
+  const sortedDragFavoriteData = (favoriteList || [])
+    .slice()
+    .sort((a, b) => a.order - b.order);
+
+  const isSameOrder = sortedDragFavoriteData.every(
+    ({ id, order }, index) =>
+      id === orderList[index]?.id && order === orderList[index]?.order,
+  );
+
+  if (isSameOrder) return;
+
+  const newFavoriteList = favoriteList.map((favorite) => {
+    const updatedOrder = orderList.find(({ id }) => id === favorite.id)?.order;
+    return updatedOrder !== undefined
+      ? { ...favorite, order: updatedOrder }
+      : favorite;
   });
 
   setLocalStorageItem("favoriteList", newFavoriteList);

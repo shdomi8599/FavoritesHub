@@ -1,5 +1,11 @@
 import { mainBlueColor } from "@/const";
-import { useFavoriteEvent, usePresetEvent, usePresetModal } from "@/hooks";
+import {
+  useAuth,
+  useFavoriteEvent,
+  usePresetEvent,
+  usePresetModal,
+} from "@/hooks";
+import { useGuestPresetEvent } from "@/hooks/guest/useGuestPresetEvent";
 import { useDashboard } from "@/hooks/useDashboard";
 import { isPresetEventState, viewPresetState } from "@/states";
 import { Preset } from "@/types";
@@ -25,9 +31,11 @@ interface Props {
 }
 
 export default function PresetItem({ preset }: Props) {
+  const { isGuest } = useAuth();
   const { presetName, id } = preset;
   const { isDashboard } = useDashboard();
   const { presetDelete } = usePresetEvent();
+  const { presetDeleteGuest } = useGuestPresetEvent();
   const { editPresetModal } = usePresetModal();
   const { favoriteRelocation } = useFavoriteEvent();
 
@@ -83,6 +91,10 @@ export default function PresetItem({ preset }: Props) {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
+            if (isGuest) {
+              presetDeleteGuest(id);
+              return;
+            }
             presetDelete(id);
           }}
         >

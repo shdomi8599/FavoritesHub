@@ -2,7 +2,9 @@ import {
   deleteFavorite,
   getFavoriteHandleStar,
   getFavoriteVisited,
+  postFavoriteAdd,
   postFavoriteRelocation,
+  putFavoriteEdit,
   upVisitedCountFavorite,
 } from "@/api/favorite";
 import {
@@ -11,24 +13,94 @@ import {
   favoriteOrderListState,
   isDisableLayoutUpdateState,
   isLoadingState,
+  selectedFavoriteIdState,
   viewPresetState,
 } from "@/states";
-import { confirmAlert } from "@/util";
+import { confirmAlert, errorAlert, successAlert } from "@/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useResetQuery } from "./react-query";
+import { useFavoriteModal } from "./useFavoriteModal";
 
 export const useFavoriteEvent = () => {
   const { resetFavoriteList } = useResetQuery();
+  const { offFavoriteModal } = useFavoriteModal();
   const viewPreset = useRecoilValue(viewPresetState);
   const accessToken = useRecoilValue(accessTokenState);
   const dragFavoriteData = useRecoilValue(dragFavoriteDataState);
   const favoriteOrderList = useRecoilValue(favoriteOrderListState);
+  const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
   const id = viewPreset?.id;
 
   const setIsLoading = useSetRecoilState(isLoadingState);
   const setIsDisableLayoutUpdate = useSetRecoilState(
     isDisableLayoutUpdateState,
   );
+
+  const favoriteAdd = async (favoriteName: string, address: string) => {
+    try {
+      setIsLoading(true);
+      await favoriteRelocation();
+      const { message } = await postFavoriteAdd(
+        viewPreset?.id,
+        favoriteName,
+        address,
+        accessToken,
+      );
+
+      if (message === "not exact") {
+        return errorAlert("도메인이 유효하지 않습니다.", "즐겨찾기 추가");
+      }
+
+      if (message === "cors") {
+        return errorAlert(
+          "주소 오류로 인해 등록할 수 없습니다.",
+          "즐겨찾기 추가",
+        );
+      }
+
+      if (message === "exist") {
+        return errorAlert("이미 존재하는 주소입니다.", "즐겨찾기 추가");
+      }
+
+      if (message === "success") {
+        resetFavoriteList(viewPreset?.id);
+        offFavoriteModal();
+        successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
+      }
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const favoriteEdit = async (favoriteName: string) => {
+    try {
+      setIsLoading(true);
+      await putFavoriteEdit(selectedFavoriteId, accessToken, favoriteName);
+      await favoriteRelocation();
+
+      setIsDisableLayoutUpdate(true);
+      resetFavoriteList(viewPreset?.id);
+      offFavoriteModal();
+      successAlert(
+        "즐겨찾기 별칭 수정이 완료되었습니다.",
+        "즐겨찾기 별칭 수정",
+      );
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
+    } finally {
+      setIsLoading(false);
+
+      setTimeout(() => {
+        setIsDisableLayoutUpdate(false);
+      }, 500);
+    }
+  };
 
   const favoriteDelete = async (favoriteId: number) => {
     try {
@@ -123,6 +195,8 @@ export const useFavoriteEvent = () => {
   };
 
   return {
+    favoriteAdd,
+    favoriteEdit,
     favoriteDelete,
     favoriteVisited,
     favoriteHandleStar,

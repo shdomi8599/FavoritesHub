@@ -5,47 +5,29 @@ import {
   putPresetEdit,
 } from "@/api/preset";
 import {
-  guestPresetAdd,
-  guestPresetDelete,
-  guestPresetEdit,
-} from "@/guest/preset";
-import {
   dragPresetDataState,
-  guestFavoritesState,
-  guestPresetsState,
   isLoadingState,
   isPresetEventState,
-  isPresetModalState,
   selectedPresetIdState,
   viewPresetState,
 } from "@/states";
-import {
-  confirmAlert,
-  errorAlert,
-  removeLocalStorageItem,
-  setLocalStorageItem,
-  successAlert,
-} from "@/util";
+import { confirmAlert, errorAlert, successAlert } from "@/util";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useResetQuery } from "./react-query";
 import { useAuth } from "./useAuth";
+import { usePresetModal } from "./usePresetModal";
 
 export const usePresetEvent = () => {
-  const { isGuest, accessToken } = useAuth();
+  const { accessToken } = useAuth();
+  const { offPresetModal } = usePresetModal();
   const { resetPresetList } = useResetQuery();
 
   const dragPresetData = useRecoilValue(dragPresetDataState);
   const selectedPresetId = useRecoilValue(selectedPresetIdState);
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
 
   const setViewPreset = useSetRecoilState(viewPresetState);
-  const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
-  const setGuestFavorites = useSetRecoilState(guestFavoritesState);
-  const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
-
-  const setIsPresetModal = useSetRecoilState(isPresetModalState);
-
-  const offPresetModal = () => setIsPresetModal(false);
 
   const presetRelocation = async () => {
     if (!accessToken || !dragPresetData?.length) return;
@@ -62,23 +44,6 @@ export const usePresetEvent = () => {
   };
 
   const presetAdd = async (presetName: string) => {
-    if (isGuest) {
-      const result = guestPresetAdd(presetName)!;
-      if (result) {
-        const { presetList, preset } = result;
-        if (presetList) {
-          setLocalStorageItem("presetList", [...presetList, preset]);
-        } else {
-          setLocalStorageItem("presetList", [preset]);
-        }
-        successAlert("프리셋이 추가되었습니다.", "프리셋 추가");
-        offPresetModal();
-        setIsPresetEvent(true);
-        setViewPreset(preset!);
-      }
-      return;
-    }
-
     try {
       setIsLoading(true);
       await presetRelocation();
@@ -107,19 +72,6 @@ export const usePresetEvent = () => {
   };
 
   const presetEdit = async (newPresetName: string) => {
-    if (isGuest) {
-      const result = guestPresetEdit(selectedPresetId, newPresetName)!;
-      if (result) {
-        const { newPresetList, findNewPreset } = result;
-        setLocalStorageItem("presetList", [...newPresetList]);
-        successAlert("프리셋이 수정되었습니다.", "프리셋 수정");
-        offPresetModal();
-        setViewPreset(findNewPreset!);
-        setIsPresetEvent(true);
-      }
-      return;
-    }
-
     try {
       setIsLoading(true);
       await presetRelocation();
@@ -160,25 +112,6 @@ export const usePresetEvent = () => {
   };
 
   const presetDelete = async (id: number) => {
-    if (isGuest) {
-      try {
-        setIsLoading(true);
-        await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-        const result = guestPresetDelete(guestPresets, id);
-        if (result) {
-          const { newPreset } = result;
-          setLocalStorageItem("presetList", [...newPreset]);
-          setGuestPresets([...newPreset]);
-          setViewPreset(newPreset[0]);
-          removeLocalStorageItem("favoriteList");
-        }
-      } finally {
-        setIsLoading(false);
-        setGuestFavorites([]);
-        return;
-      }
-    }
-
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
@@ -195,5 +128,11 @@ export const usePresetEvent = () => {
     }
   };
 
-  return { isLoading, presetAdd, presetEdit, presetDelete, presetRelocation };
+  return {
+    isLoading,
+    presetAdd,
+    presetEdit,
+    presetDelete,
+    presetRelocation,
+  };
 };

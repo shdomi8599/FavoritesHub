@@ -5,6 +5,7 @@ import {
   useFavoriteEvent,
   usePresetEvent,
 } from "@/hooks";
+import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useDashboard } from "@/hooks/useDashboard";
@@ -54,6 +55,7 @@ export default function Dashboard({
   const { ref: barRef, barHeight } = useBarHeight();
   const { presetRelocation } = usePresetEvent();
   const { favoriteRelocation } = useFavoriteEvent();
+  const { favoriteRelocationGuest } = useGuestFavoriteEvent();
   const { pathname, moveGuest, moveLogin } = useRouters();
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
 
@@ -98,14 +100,19 @@ export default function Dashboard({
 
   useEffect(() => {
     const relocationEvents = async () => {
-      await favoriteRelocation();
+      if (isGuest) {
+        await favoriteRelocationGuest();
+      } else {
+        await favoriteRelocation();
+      }
+
       await presetRelocation();
     };
     window.addEventListener("beforeunload", relocationEvents);
     return () => {
       window.removeEventListener("beforeunload", relocationEvents);
     };
-  }, [presetRelocation, favoriteRelocation]);
+  }, [presetRelocation, favoriteRelocation, favoriteRelocationGuest]);
 
   useEffect(() => {
     if (isMaxWidth900) {
