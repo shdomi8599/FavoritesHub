@@ -87,6 +87,7 @@ export default function Dashboard({
   };
 
   const logoutEvent = async () => {
+    await relocationFavorites();
     await relocationPresetEvent();
     const { message } = await postAuthLogout(accessToken);
 
