@@ -4,7 +4,7 @@ import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { Favorite } from "@/types";
 import { extractURLs, formatDate } from "@/util";
 import { successToast } from "@/util/alert";
-import { Card, CardContent, Grid } from "@mui/material";
+import { Box, Card, CardContent, Grid } from "@mui/material";
 import "moment/locale/ko";
 import { useState } from "react";
 import {
@@ -87,7 +87,7 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
 
   if (isDrag) {
     return (
-      <div
+      <Box
         id={`favorite-${order}`}
         className="grid-stack-item"
         gs-no-resize="true"
@@ -134,7 +134,7 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
             formatLastVisitedAt={formatLastVisitedAt}
           />
         </Card>
-      </div>
+      </Box>
     );
   }
 
