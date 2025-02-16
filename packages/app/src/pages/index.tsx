@@ -2,21 +2,19 @@ import { LoginForm } from "@/components/auth/form";
 import { MainContainer } from "@/components/main";
 import { useAuth, useAuthModal } from "@/hooks";
 import { useFavoriteList } from "@/hooks/react-query";
-import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { dragFavoriteDataState } from "@/states";
+import { dragFavoriteDataState, viewPresetState } from "@/states";
 import { Box, styled } from "@mui/material";
 import Head from "next/head";
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 export default function Main() {
-  // 훅
   const { userId, isLogin, accessToken } = useAuth();
   const { handleAuthModal, openAuthModal } = useAuthModal();
-  const { viewPreset } = useFavoriteModal();
 
   // 데이터
-  const { data: favorites } = useFavoriteList(
+  const viewPreset = useRecoilValue(viewPresetState);
+  const { data: favorites, refetch } = useFavoriteList(
     userId,
     viewPreset?.id,
     accessToken,
@@ -29,6 +27,10 @@ export default function Main() {
   useEffect(() => {
     setDragFavoriteData(favorites || []);
   }, [favorites]);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (!!!accessToken) return <></>;
 
