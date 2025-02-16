@@ -1,4 +1,8 @@
-import { dragFavoriteDataState, favoriteOrderListState } from "@/states";
+import {
+  dragFavoriteDataState,
+  favoriteOrderListState,
+  isDisableLayoutUpdateState,
+} from "@/states";
 import { Favorite } from "@/types";
 import { Box } from "@mui/material";
 import { GridStack, GridStackNode } from "gridstack";
@@ -12,6 +16,9 @@ interface Props {
 }
 
 export default function DraggableFavoriteList({ isGrid }: Props) {
+  const [isDiableLayoutUpdate, setIsDiableLayoutUpdate] = useRecoilState(
+    isDisableLayoutUpdateState,
+  );
   const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
     dragFavoriteDataState,
   );
@@ -23,6 +30,10 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
   const [gridData, setGridData] = useState<any[]>(null!);
 
   const updateGridLayout = (grid: GridStack, isGrid: boolean) => {
+    if (isDiableLayoutUpdate) {
+      return;
+    }
+
     /**
      * 로직 정리
      * 1. 기존 아이템들 저장

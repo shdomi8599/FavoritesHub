@@ -147,3 +147,8 @@ export const guideStepState = atom({
   key: "guideStepState",
   default: 1,
 });
+
+export const isDisableLayoutUpdateState = atom({
+  key: "isDisableLayoutUpdateState",
+  default: false,
+});

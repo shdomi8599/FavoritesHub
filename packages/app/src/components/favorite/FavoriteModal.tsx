@@ -1,9 +1,13 @@
 import { postFavoriteAdd, putFavoriteEdit } from "@/api/favorite";
 import { guestFavoriteAdd, guestFavoriteEdit } from "@/guest/favorite";
-import { useAuth } from "@/hooks";
+import { useAuth, useFavoriteEvent } from "@/hooks";
 import { useResetQuery } from "@/hooks/react-query";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { guestFavoritesState, selectedFavoriteIdState } from "@/states";
+import {
+  guestFavoritesState,
+  isDisableLayoutUpdateState,
+  selectedFavoriteIdState,
+} from "@/states";
 import { Favorite } from "@/types";
 import { errorAlert, getLocalStorageItem, successAlert } from "@/util";
 import { Box, Modal } from "@mui/material";
@@ -15,11 +19,14 @@ import { AddForm, EditForm } from "./form";
 export default function FavoriteModal() {
   const { accessToken, isGuest } = useAuth();
   const [isLoading, setIsLoding] = useState(false);
+  const { relocationFavorites } = useFavoriteEvent();
   const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
+  const setIsDisableLayoutUpdate = useSetRecoilState(
+    isDisableLayoutUpdateState,
+  );
   const { viewPreset, isFavoriteModal, offFavoriteModal, favoriteModal } =
     useFavoriteModal();
-
   const { resetFavoriteList } = useResetQuery();
 
   const guestFavoriteAddEvent = async (
@@ -38,6 +45,7 @@ export default function FavoriteModal() {
   const favoriteAdd = async (favoriteName: string, address: string) => {
     try {
       setIsLoding(true);
+      await relocationFavorites();
       const { message } = await postFavoriteAdd(
         viewPreset?.id,
         favoriteName,
@@ -88,7 +96,9 @@ export default function FavoriteModal() {
     try {
       setIsLoding(true);
       await putFavoriteEdit(selectedFavoriteId, accessToken, favoriteName);
+      await relocationFavorites();
 
+      setIsDisableLayoutUpdate(true);
       resetFavoriteList(viewPreset?.id);
       offFavoriteModal();
       successAlert(
@@ -101,6 +111,10 @@ export default function FavoriteModal() {
       }
     } finally {
       setIsLoding(false);
+
+      setTimeout(() => {
+        setIsDisableLayoutUpdate(false);
+      }, 500);
     }
   };
 
