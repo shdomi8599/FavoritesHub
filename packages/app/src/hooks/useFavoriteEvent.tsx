@@ -41,6 +41,7 @@ export const useFavoriteEvent = () => {
 
   const favoriteVisited = async (favoriteId: number) => {
     try {
+      await relocationFavorites();
       await getFavoriteVisited(favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
@@ -52,6 +53,7 @@ export const useFavoriteEvent = () => {
 
   const favoriteHandleStar = async (favoriteId: number) => {
     try {
+      await relocationFavorites();
       await getFavoriteHandleStar(favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
@@ -63,6 +65,7 @@ export const useFavoriteEvent = () => {
 
   const upFavoriteVisitedCount = async (id: number) => {
     try {
+      await relocationFavorites();
       await upVisitedCountFavorite(id, accessToken);
     } catch (e: any) {
       if (e?.code === 401) {
