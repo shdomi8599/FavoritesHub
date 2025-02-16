@@ -21,8 +21,8 @@ import { useResetQuery } from "./react-query";
 import { useAuth } from "./useAuth";
 
 export const usePresetModal = () => {
-  const { isGuest, userId, accessToken } = useAuth();
-  const { resetPresetList } = useResetQuery(userId);
+  const { isGuest, accessToken } = useAuth();
+  const { resetPresetList } = useResetQuery();
 
   const dragPresetData = useRecoilValue(dragPresetDataState);
   const [presetModal, setPresetModal] = useRecoilState(presetModalState);

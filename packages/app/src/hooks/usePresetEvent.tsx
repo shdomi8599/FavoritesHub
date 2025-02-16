@@ -31,8 +31,8 @@ import { useResetQuery } from "./react-query";
 import { useAuth } from "./useAuth";
 
 export const usePresetEvent = () => {
-  const { isGuest, userId, accessToken } = useAuth();
-  const { resetPresetList } = useResetQuery(userId);
+  const { isGuest, accessToken } = useAuth();
+  const { resetPresetList } = useResetQuery();
 
   const dragPresetData = useRecoilValue(dragPresetDataState);
   const selectedPresetId = useRecoilValue(selectedPresetIdState);

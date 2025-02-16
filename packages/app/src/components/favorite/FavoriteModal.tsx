@@ -13,14 +13,14 @@ import { ModalContentBox } from "../modal";
 import { AddForm, EditForm } from "./form";
 
 export default function FavoriteModal() {
-  const { userId, accessToken, isGuest } = useAuth();
+  const { accessToken, isGuest } = useAuth();
   const [isLoading, setIsLoding] = useState(false);
   const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
   const { viewPreset, isFavoriteModal, offFavoriteModal, favoriteModal } =
     useFavoriteModal();
 
-  const { resetFavoriteList } = useResetQuery(userId);
+  const { resetFavoriteList } = useResetQuery();
 
   const guestFavoriteAddEvent = async (
     favoriteName: string,

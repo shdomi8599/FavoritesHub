@@ -46,7 +46,7 @@ export default function Dashboard({
     setAccessToken,
   } = useAuth();
   const { setIsDashboard } = useDashboard();
-  const { resetPresetList } = useResetQuery(userId);
+  const { resetPresetList } = useResetQuery();
   const { ref: barRef, barHeight } = useBarHeight();
   const { pathname, moveGuest, moveLogin } = useRouters();
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
