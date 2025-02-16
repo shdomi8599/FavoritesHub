@@ -61,12 +61,12 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     window.open(address, "_blank");
   };
 
-  const handleStar = () => {
-    favoriteHandleStar(id);
+  const handleStar = async () => {
+    await favoriteHandleStar(id);
   };
 
-  const deleteEvent = () => {
-    deleteFavoriteEvent(id);
+  const deleteEvent = async () => {
+    await deleteFavoriteEvent(id);
   };
 
   const editEvent = () => {

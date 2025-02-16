@@ -3,7 +3,7 @@ import { MainTitle } from "@/components/main";
 import { SearchAutoBar, SearchTag } from "@/components/search";
 import SearchSelect from "@/components/search/SearchSelect";
 import { SearchSelects } from "@/const";
-import { useFavoriteFilter, useHandler } from "@/hooks";
+import { useFavoriteEvent, useFavoriteFilter, useHandler } from "@/hooks";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { guideStepState, isDashboardState, isGuideModalState } from "@/states";
@@ -35,7 +35,6 @@ type Props = {
 };
 
 export default function MainContainer({ favorites }: Props) {
-  // 상태
   const [open, setOpen] = useState(false);
   const isGuideModal = useRecoilValue(isGuideModalState);
   const guideStep = useRecoilValue(guideStepState);
@@ -46,13 +45,12 @@ export default function MainContainer({ favorites }: Props) {
   const searchLabel = tags.includes("전체") ? "전체" : tags.join(", ");
   const { isBoolean: isStar, handleBoolean: handleStar } = useHandler(false);
 
-  // 훅
   const { isMaxWidth600, isMaxWidth900 } = useBreakPoints();
+  const { viewPreset, addFavoriteModal } = useFavoriteModal();
   const isDashboard = useRecoilValue(isDashboardState);
   const isHideContent = isDashboard && isMaxWidth600;
-  const { viewPreset, addFavoriteModal } = useFavoriteModal();
+  const { relocationFavorites } = useFavoriteEvent();
 
-  // 데이터
   const { viewData, autoBarData } = useFavoriteFilter({
     selectValue,
     favorites,
@@ -60,6 +58,12 @@ export default function MainContainer({ favorites }: Props) {
     tags,
     inputValue,
   });
+
+  useEffect(() => {
+    if (isStar) {
+      relocationFavorites();
+    }
+  }, [isStar]);
 
   useEffect(() => {
     if (tags.length === 0) {

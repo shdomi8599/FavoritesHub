@@ -4,12 +4,11 @@ import {
   favoriteOrderListState,
   isDisableLayoutUpdateState,
 } from "@/states";
-import { Favorite } from "@/types";
 import { Box } from "@mui/material";
 import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/gridstack.css";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import FavoriteCard from "../favorite/FavoriteCard";
 
 interface Props {
@@ -18,32 +17,28 @@ interface Props {
 
 export default function DraggableFavoriteList({ isGrid }: Props) {
   const { isMaxWidth900, isMaxWidth1200 } = useBreakPoints();
+  const dragFavoriteData = useRecoilValue(dragFavoriteDataState);
+  const setFavoriteOrderList = useSetRecoilState(favoriteOrderListState);
   const isDiableLayoutUpdate = useRecoilValue(isDisableLayoutUpdateState);
-  const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
-    dragFavoriteDataState,
-  );
-  const [favoriteOrderList, setFavoriteOrderList] = useRecoilState<Favorite[]>(
-    favoriteOrderListState,
-  );
 
   const gridRef = useRef<GridStack | null>(null);
   const [gridData, setGridData] = useState<any[]>(null!);
 
+  /**
+   * 로직 정리
+   * 1. 기존 아이템들 저장
+   * 2. 기존 아이템 모두 삭제
+   * 3. 1에서 저장한 아이템들 다시 추가
+   * 4. 위치 재배치 후 업데이트하여 적용
+   *
+   * 이렇게 만든 이유는 즐겨찾기 데이터가 바뀔때마다 기존 아이템들의 잔상이 남았어서
+   * 기존 잔상들을 모두 없애고, 새롭게 자리 재배치를 시켜버려서 랜더링 오류를 해결함
+   */
   const updateGridLayout = (grid: GridStack, isGrid: boolean) => {
     if (isDiableLayoutUpdate) {
       return;
     }
 
-    /**
-     * 로직 정리
-     * 1. 기존 아이템들 저장
-     * 2. 기존 아이템 모두 삭제
-     * 3. 1에서 저장한 아이템들 다시 추가
-     * 4. 위치 재배치 후 업데이트하여 적용
-     *
-     * 이렇게 만든 이유는 즐겨찾기 데이터가 바뀔때마다 기존 아이템들의 잔상이 남았어서
-     * 기존 잔상들을 모두 없애고, 새롭게 자리 재배치를 시켜버려서 랜더링 오류를 해결함
-     */
     const saveData = grid.getGridItems();
 
     grid.removeAll();
@@ -70,6 +65,27 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
     grid.commit();
   };
 
+  const updateOrderList = () => {
+    const sortedGridData = [...gridData].sort((a, b) =>
+      a.y === b.y ? a.x - b.x : a.y - b.y,
+    );
+
+    const updatedFavorites = dragFavoriteData.map((favorite) => {
+      const gridItem = sortedGridData.find((item) =>
+        item.content.includes(`favorite-${favorite.order}`),
+      );
+
+      if (gridItem) {
+        const order = sortedGridData.indexOf(gridItem);
+        return { ...favorite, order };
+      }
+
+      return favorite;
+    });
+
+    setFavoriteOrderList(updatedFavorites.sort((a, b) => a.order - b.order));
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("gridstack").then((module) => {
@@ -93,30 +109,9 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
 
   useEffect(() => {
     if (gridData?.length) {
-      const sortedGridData = [...gridData].sort((a, b) =>
-        a.y === b.y ? a.x - b.x : a.y - b.y,
-      );
-
-      const updatedFavorites = dragFavoriteData.map((favorite) => {
-        const gridItem = sortedGridData.find((item) =>
-          item.content.includes(`favorite-${favorite.order}`),
-        );
-
-        if (gridItem) {
-          const order = sortedGridData.indexOf(gridItem);
-          return { ...favorite, order };
-        }
-
-        return favorite;
-      });
-
-      setFavoriteOrderList(updatedFavorites.sort((a, b) => a.order - b.order));
+      updateOrderList();
     }
   }, [gridData, isGrid]);
-
-  useEffect(() => {
-    setDragFavoriteData(favoriteOrderList);
-  }, [isGrid]);
 
   useEffect(() => {
     if (gridRef.current) {

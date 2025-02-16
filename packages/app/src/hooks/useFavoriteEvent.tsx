@@ -8,6 +8,7 @@ import {
 import {
   accessTokenState,
   favoriteOrderListState,
+  isDisableLayoutUpdateState,
   isLoadingState,
   viewPresetState,
 } from "@/states";
@@ -16,13 +17,16 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useResetQuery } from "./react-query";
 
 export const useFavoriteEvent = () => {
+  const { resetFavoriteList } = useResetQuery();
   const viewPreset = useRecoilValue(viewPresetState);
   const accessToken = useRecoilValue(accessTokenState);
   const favoriteOrderList = useRecoilValue(favoriteOrderListState);
   const id = viewPreset?.id;
 
   const setIsLoading = useSetRecoilState(isLoadingState);
-  const { resetFavoriteList } = useResetQuery();
+  const setIsDisableLayoutUpdate = useSetRecoilState(
+    isDisableLayoutUpdateState,
+  );
 
   const deleteFavoriteEvent = async (favoriteId: number) => {
     try {
@@ -42,33 +46,51 @@ export const useFavoriteEvent = () => {
 
   const favoriteVisited = async (favoriteId: number) => {
     try {
+      setIsDisableLayoutUpdate(true);
+      await relocationFavorites();
       await getFavoriteVisited(favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
       if (e?.code === 401) {
         location.reload();
       }
+    } finally {
+      setTimeout(() => {
+        setIsDisableLayoutUpdate(false);
+      }, 500);
     }
   };
 
   const favoriteHandleStar = async (favoriteId: number) => {
     try {
+      setIsDisableLayoutUpdate(true);
+      await relocationFavorites();
       await getFavoriteHandleStar(favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
       if (e?.code === 401) {
         location.reload();
       }
+    } finally {
+      setTimeout(() => {
+        setIsDisableLayoutUpdate(false);
+      }, 500);
     }
   };
 
   const upFavoriteVisitedCount = async (id: number) => {
     try {
+      setIsDisableLayoutUpdate(true);
+      await relocationFavorites();
       await upVisitedCountFavorite(id, accessToken);
     } catch (e: any) {
       if (e?.code === 401) {
         location.reload();
       }
+    } finally {
+      setTimeout(() => {
+        setIsDisableLayoutUpdate(false);
+      }, 500);
     }
   };
 
