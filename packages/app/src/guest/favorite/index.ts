@@ -1,10 +1,5 @@
 import { Favorite } from "@/types";
-import {
-  confirmAlert,
-  errorAlert,
-  getLocalStorageItem,
-  setLocalStorageItem,
-} from "@/util";
+import { confirmAlert, getLocalStorageItem, setLocalStorageItem } from "@/util";
 import moment from "moment";
 
 export const guestFavoriteAdd = async (
@@ -17,7 +12,7 @@ export const guestFavoriteAdd = async (
   const existFavorite = favoriteList?.find((fav) => fav.address === address);
 
   if (existFavorite) {
-    return errorAlert("이미 존재하는 주소입니다.", "즐겨찾기 추가");
+    throw new Error("이미 존재하는 주소입니다."); // 예외 발생
   }
 
   const isNotFavoriteList = favoriteList?.length === 0 || !favoriteList;

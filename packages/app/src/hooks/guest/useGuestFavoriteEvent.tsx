@@ -14,7 +14,7 @@ import {
   selectedFavoriteIdState,
 } from "@/states";
 import { Favorite } from "@/types";
-import { getLocalStorageItem, successAlert } from "@/util";
+import { errorAlert, getLocalStorageItem, successAlert } from "@/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useFavoriteModal } from "../useFavoriteModal";
 
@@ -29,14 +29,18 @@ export const useGuestFavoriteEvent = () => {
   );
 
   const favoriteAddGuest = async (favoriteName: string, address: string) => {
-    await favoriteRelocationGuest();
-    await guestFavoriteAdd(favoriteName, address);
+    try {
+      await favoriteRelocationGuest();
+      await guestFavoriteAdd(favoriteName, address);
 
-    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
-    setGuestFavorites([...favorites]);
+      const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+      setGuestFavorites([...favorites]);
+      offFavoriteModal();
 
-    offFavoriteModal();
-    successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
+      successAlert("즐겨찾기가 추가되었습니다.", "즐겨찾기 추가");
+    } catch (e) {
+      return errorAlert("이미 존재하는 주소입니다.", "즐겨찾기 추가");
+    }
   };
 
   const favoriteEditGuest = async (favoriteName: string) => {
