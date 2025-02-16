@@ -1,6 +1,9 @@
+import { userIdState } from "@/states";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
 
-export const useResetQuery = (userId: number) => {
+export const useResetQuery = () => {
+  const userId = useRecoilValue(userIdState);
   const queryClient = useQueryClient();
 
   const resetFavoriteList = (presetId: number) => {

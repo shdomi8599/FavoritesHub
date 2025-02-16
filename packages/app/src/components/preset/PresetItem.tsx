@@ -1,7 +1,14 @@
+import { postFavoriteRelocation } from "@/api/favorite";
 import { mainBlueColor } from "@/const";
 import { usePresetEvent, usePresetModal } from "@/hooks";
+import { useResetQuery } from "@/hooks/react-query";
 import { useDashboard } from "@/hooks/useDashboard";
-import { isPresetEventState, viewPresetState } from "@/states";
+import {
+  accessTokenState,
+  favoriteOrderListState,
+  isPresetEventState,
+  viewPresetState,
+} from "@/states";
 import { Preset } from "@/types";
 import {
   Dashboard as DashboardIcon,
@@ -18,13 +25,14 @@ import {
   styled,
 } from "@mui/material";
 import { useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 interface Props {
   preset: Preset;
 }
 
 export default function PresetItem({ preset }: Props) {
+  const accessToken = useRecoilValue(accessTokenState);
   const { presetName, id } = preset;
   const { isDashboard } = useDashboard();
   const { presetDelete } = usePresetEvent();
@@ -32,6 +40,19 @@ export default function PresetItem({ preset }: Props) {
 
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
+  const { resetFavoriteList } = useResetQuery();
+
+  const favoriteOrderList = useRecoilValue(favoriteOrderListState);
+
+  const handleViewPreset = async () => {
+    const currentPresetId = viewPreset.id;
+    const orderList = favoriteOrderList.map(({ id, order }) => {
+      return { id, order };
+    });
+    await postFavoriteRelocation(currentPresetId, orderList, accessToken);
+    resetFavoriteList(currentPresetId);
+    setViewPreset(preset);
+  };
 
   useEffect(() => {
     setIsPresetEvent(false);
@@ -39,7 +60,7 @@ export default function PresetItem({ preset }: Props) {
 
   return (
     <ListItemButton
-      onClick={() => setViewPreset(preset)}
+      onClick={handleViewPreset}
       sx={{
         padding: "8px 0px",
         ...(isDashboard && {

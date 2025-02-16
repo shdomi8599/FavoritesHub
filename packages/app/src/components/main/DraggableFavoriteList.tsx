@@ -1,4 +1,4 @@
-import { dragFavoriteDataState } from "@/states";
+import { dragFavoriteDataState, favoriteOrderListState } from "@/states";
 import { Favorite } from "@/types";
 import { Box } from "@mui/material";
 import { GridStack, GridStackNode } from "gridstack";
@@ -15,11 +15,13 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
   const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
     dragFavoriteDataState,
   );
+  const [favoriteOrderList, setFavoriteOrderList] = useRecoilState<Favorite[]>(
+    favoriteOrderListState,
+  );
+  console.log(favoriteOrderList);
 
   const gridRef = useRef<GridStack | null>(null);
   const [gridData, setGridData] = useState<any[]>(null!);
-  const [orderList, setOrderList] = useState<Favorite[]>(null!);
-  console.log(orderList);
 
   const updateGridLayout = (grid: GridStack, isGrid: boolean) => {
     /**
@@ -100,12 +102,12 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
         return favorite;
       });
 
-      setOrderList(updatedFavorites.sort((a, b) => a.order - b.order));
+      setFavoriteOrderList(updatedFavorites.sort((a, b) => a.order - b.order));
     }
   }, [gridData, isGrid]);
 
   useEffect(() => {
-    setDragFavoriteData(orderList);
+    setDragFavoriteData(favoriteOrderList);
   }, [isGrid]);
 
   useEffect(() => {

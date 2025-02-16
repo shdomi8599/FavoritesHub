@@ -49,6 +49,21 @@ export const putFavoriteEdit = async (
     .then((res) => res.data);
 };
 
+export const postFavoriteRelocation = async (
+  presetId: number,
+  orderList: { id: number; order: number }[],
+  accessToken: string,
+) => {
+  const body = { presetId, orderList };
+  await api
+    .post<ApiResultMessage>(`favorites/relocation`, body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.data);
+};
+
 export const getFavoriteVisited = async (
   favoriteId: number,
   accessToken: string,
