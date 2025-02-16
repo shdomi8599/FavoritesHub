@@ -61,6 +61,7 @@ export const guestFavoriteDelete = async (id: number) => {
   const favoriteList: Favorite[] = getLocalStorageItem("favoriteList");
 
   const newFavoriteList = favoriteList
+    .sort((a, b) => a.order - b.order)
     .filter((fav) => fav.id !== id)
     .map((fav, index) => ({ ...fav, order: index }));
 
