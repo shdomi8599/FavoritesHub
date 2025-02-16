@@ -76,8 +76,15 @@ export const useFavoriteEvent = () => {
     const orderList = favoriteOrderList.map(({ id, order }) => {
       return { id, order };
     });
-    await postFavoriteRelocation(currentPresetId, orderList, accessToken);
-    resetFavoriteList(currentPresetId);
+    try {
+      await postFavoriteRelocation(currentPresetId, orderList, accessToken);
+    } catch (e: any) {
+      if (e?.code === 401) {
+        location.reload();
+      }
+    } finally {
+      resetFavoriteList(currentPresetId);
+    }
   };
 
   return {
