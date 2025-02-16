@@ -36,11 +36,12 @@ export const guestPresetAdd = (presetName: string) => {
 
   const isNotPresetList = presetList?.length === 0 || !presetList;
   const id = isNotPresetList ? 1 : presetList[presetList?.length - 1]?.id + 1;
-  const order = 0;
+  const presetLength = presetList?.length;
+
   const preset: Preset = {
     id,
     presetName,
-    order,
+    order: presetLength ? presetLength : 0,
   };
 
   return {

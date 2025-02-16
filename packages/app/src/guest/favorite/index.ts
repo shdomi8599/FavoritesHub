@@ -24,6 +24,7 @@ export const guestFavoriteAdd = async (
   const id = isNotFavoriteList
     ? 1
     : favoriteList[favoriteList?.length - 1]?.id + 1;
+  const favoriteLength = favoriteList?.length;
 
   const favorite: Favorite = {
     id,
@@ -36,6 +37,7 @@ export const guestFavoriteAdd = async (
     star: false,
     title: "",
     visitedCount: 0,
+    order: favoriteLength ? favoriteLength : 0,
   };
 
   if (isNotFavoriteList) {

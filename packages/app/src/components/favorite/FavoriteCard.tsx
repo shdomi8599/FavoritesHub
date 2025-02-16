@@ -1,4 +1,5 @@
-import { useFavoriteEvent, useHandler } from "@/hooks";
+import { useAuth, useFavoriteEvent, useHandler } from "@/hooks";
+import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { Favorite } from "@/types";
@@ -19,6 +20,14 @@ type Props = {
 };
 
 function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
+  const { isGuest } = useAuth();
+  const {
+    favoriteDeleteGuest,
+    favoriteVisitedCountGuest,
+    favoriteVisitedGuest,
+    favoriteHandleStarGuest,
+  } = useGuestFavoriteEvent();
+
   const {
     favoriteDelete,
     favoriteVisited,
@@ -27,7 +36,6 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
   } = useFavoriteEvent();
 
   const { editFavoriteModal } = useFavoriteModal();
-
   const { isMaxWidth900 } = useBreakPoints();
   const {
     isBoolean: isHover,
@@ -56,16 +64,30 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     : `https://${extractURLs(address) + imgHref}`;
 
   const openSite = async () => {
+    if (isGuest) {
+      await favoriteVisitedCountGuest(id);
+      await favoriteVisitedGuest(id);
+      window.open(address, "_blank");
+      return;
+    }
     await favoriteVisitedCount(id);
     await favoriteVisited(id);
     window.open(address, "_blank");
   };
 
   const handleStar = async () => {
+    if (isGuest) {
+      await favoriteHandleStarGuest(id);
+      return;
+    }
     await favoriteHandleStar(id);
   };
 
   const deleteEvent = async () => {
+    if (isGuest) {
+      await favoriteDeleteGuest(id);
+      return;
+    }
     await favoriteDelete(id);
   };
 
