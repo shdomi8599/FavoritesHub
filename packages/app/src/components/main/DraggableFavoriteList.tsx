@@ -52,13 +52,16 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
       grid.makeWidget(item);
     });
 
+    const gridWidth = isMaxWidth900 || isGrid ? 12 : isMaxWidth1200 ? 4 : 3;
+    const perRow = isGrid ? 1 : 12 / gridWidth;
+
     grid.getGridItems().map((item) => {
       const id = Number(item.id.slice(9));
       const newNode: Partial<GridStackNode> = {
-        w: !isGrid ? 3 : 12,
+        w: gridWidth,
         h: 2,
-        x: !isGrid ? (id % 4) * 3 : 0,
-        y: !isGrid ? Math.floor(id / 4) * 2 : id * 2,
+        x: isGrid ? 0 : (id % perRow) * gridWidth,
+        y: isGrid ? id * 2 : Math.floor(id / perRow) * 2,
       };
       grid.update(item, newNode);
     });
@@ -119,7 +122,7 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
     if (gridRef.current) {
       updateGridLayout(gridRef.current, isGrid);
     }
-  }, [isGrid, dragFavoriteData]);
+  }, [isGrid, dragFavoriteData, isMaxWidth900, isMaxWidth1200]);
 
   return (
     <Box className="grid-stack">
