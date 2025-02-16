@@ -47,7 +47,7 @@ export const usePresetEvent = () => {
 
   const offPresetModal = () => setIsPresetModal(false);
 
-  const relocationPresetEvent = async () => {
+  const presetRelocation = async () => {
     if (!accessToken || !dragPresetData?.length) return;
     await postPresetRelocation(
       accessToken,
@@ -81,7 +81,7 @@ export const usePresetEvent = () => {
 
     try {
       setIsLoading(true);
-      await relocationPresetEvent();
+      await presetRelocation();
       const { message, preset } = await postPresetAdd(accessToken, presetName);
 
       if (message === "max") {
@@ -122,7 +122,7 @@ export const usePresetEvent = () => {
 
     try {
       setIsLoading(true);
-      await relocationPresetEvent();
+      await presetRelocation();
       const { message, preset } = await putPresetEdit(
         selectedPresetId,
         accessToken,
@@ -182,7 +182,7 @@ export const usePresetEvent = () => {
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-      await relocationPresetEvent();
+      await presetRelocation();
       await postPresetDelete(id, accessToken);
       setIsPresetEvent(true);
       resetPresetList();
@@ -195,5 +195,5 @@ export const usePresetEvent = () => {
     }
   };
 
-  return { isLoading, presetAdd, presetEdit, presetDelete };
+  return { isLoading, presetAdd, presetEdit, presetDelete, presetRelocation };
 };

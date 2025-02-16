@@ -1,7 +1,6 @@
-import { postPresetDelete, postPresetRelocation } from "@/api/preset";
+import { postPresetDelete } from "@/api/preset";
 import { guestPresetDelete } from "@/guest/preset";
 import {
-  dragPresetDataState,
   guestFavoritesState,
   guestPresetsState,
   isLoadingState,
@@ -16,15 +15,16 @@ import {
   removeLocalStorageItem,
   setLocalStorageItem,
 } from "@/util";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useResetQuery } from "./react-query";
 import { useAuth } from "./useAuth";
+import { usePresetEvent } from "./usePresetEvent";
 
 export const usePresetModal = () => {
   const { isGuest, accessToken } = useAuth();
+  const { presetRelocation } = usePresetEvent();
   const { resetPresetList } = useResetQuery();
 
-  const dragPresetData = useRecoilValue(dragPresetDataState);
   const [presetModal, setPresetModal] = useRecoilState(presetModalState);
   const [isPresetModal, setIsPresetModal] = useRecoilState(isPresetModalState);
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
@@ -50,20 +50,6 @@ export const usePresetModal = () => {
   };
 
   // 이벤트
-  const relocationPresetEvent = async () => {
-    if (!accessToken || !dragPresetData?.length) return;
-    await postPresetRelocation(
-      accessToken,
-      dragPresetData?.map((preset, index) => {
-        const order = index;
-        return {
-          ...preset,
-          order,
-        };
-      })!,
-    );
-  };
-
   const deletePresetEvent = async (id: number) => {
     if (isGuest) {
       try {
@@ -87,7 +73,7 @@ export const usePresetModal = () => {
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "프리셋 삭제가");
-      await relocationPresetEvent();
+      await presetRelocation();
       await postPresetDelete(id, accessToken);
       setIsPresetEvent(true);
       resetPresetList();

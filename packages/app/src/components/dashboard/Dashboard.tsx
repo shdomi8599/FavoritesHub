@@ -1,6 +1,10 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
-import { postPresetRelocation } from "@/api/preset";
-import { useAuth, useBarHeight, useFavoriteEvent } from "@/hooks";
+import {
+  useAuth,
+  useBarHeight,
+  useFavoriteEvent,
+  usePresetEvent,
+} from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useDashboard } from "@/hooks/useDashboard";
@@ -48,6 +52,7 @@ export default function Dashboard({
   const { setIsDashboard } = useDashboard();
   const { resetPresetList } = useResetQuery();
   const { ref: barRef, barHeight } = useBarHeight();
+  const { presetRelocation } = usePresetEvent();
   const { relocationFavorites } = useFavoriteEvent();
   const { pathname, moveGuest, moveLogin } = useRouters();
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
@@ -71,24 +76,9 @@ export default function Dashboard({
   // 게스트용 데이터
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
 
-  // 이벤트
-  const relocationPresetEvent = async () => {
-    if (!accessToken || !dragPresetData?.length) return;
-    await postPresetRelocation(
-      accessToken,
-      dragPresetData?.map((preset, index) => {
-        const order = index;
-        return {
-          ...preset,
-          order,
-        };
-      })!,
-    );
-  };
-
   const logoutEvent = async () => {
     await relocationFavorites();
-    await relocationPresetEvent();
+    await presetRelocation();
     const { message } = await postAuthLogout(accessToken);
 
     if (message === "success") {
@@ -109,13 +99,13 @@ export default function Dashboard({
   useEffect(() => {
     const relocationEvents = async () => {
       await relocationFavorites();
-      await relocationPresetEvent();
+      await presetRelocation();
     };
     window.addEventListener("beforeunload", relocationEvents);
     return () => {
       window.removeEventListener("beforeunload", relocationEvents);
     };
-  }, [relocationPresetEvent, relocationFavorites]);
+  }, [presetRelocation, relocationFavorites]);
 
   useEffect(() => {
     if (isMaxWidth900) {
