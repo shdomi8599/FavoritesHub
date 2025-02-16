@@ -1,3 +1,4 @@
+import { useBreakPoints } from "@/hooks/useBreakPoints";
 import {
   dragFavoriteDataState,
   favoriteOrderListState,
@@ -8,7 +9,7 @@ import { Box } from "@mui/material";
 import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/gridstack.css";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import FavoriteCard from "../favorite/FavoriteCard";
 
 interface Props {
@@ -16,9 +17,8 @@ interface Props {
 }
 
 export default function DraggableFavoriteList({ isGrid }: Props) {
-  const [isDiableLayoutUpdate, setIsDiableLayoutUpdate] = useRecoilState(
-    isDisableLayoutUpdateState,
-  );
+  const { isMaxWidth900, isMaxWidth1200 } = useBreakPoints();
+  const isDiableLayoutUpdate = useRecoilValue(isDisableLayoutUpdateState);
   const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
     dragFavoriteDataState,
   );
@@ -89,26 +89,21 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
   }, []);
 
   useEffect(() => {
-    // 즐겨찾기 order 저장용 로직
     if (gridData?.length) {
+      const sortedGridData = [...gridData].sort((a, b) =>
+        a.y === b.y ? a.x - b.x : a.y - b.y,
+      );
+
       const updatedFavorites = dragFavoriteData.map((favorite) => {
-        const gridItem = gridData.find((item) =>
+        const gridItem = sortedGridData.find((item) =>
           item.content.includes(`favorite-${favorite.order}`),
         );
 
         if (gridItem) {
-          if (isGrid) {
-            return {
-              ...favorite,
-              order: gridItem.y / 2,
-            };
-          } else {
-            return {
-              ...favorite,
-              order: (gridItem.y / 2) * 4 + gridItem.x / 3,
-            };
-          }
+          const order = sortedGridData.indexOf(gridItem);
+          return { ...favorite, order };
         }
+
         return favorite;
       });
 
