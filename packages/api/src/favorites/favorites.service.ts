@@ -121,7 +121,7 @@ export class FavoritesService {
 
     const updatedFavorites = favorites.map((fav, index) => ({
       id: fav.id,
-      order: index + 1,
+      order: index,
     }));
 
     await this.relocation(presetId, updatedFavorites);
