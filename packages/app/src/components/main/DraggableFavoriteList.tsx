@@ -1,4 +1,3 @@
-import { useBreakPoints } from "@/hooks/useBreakPoints";
 import {
   dragFavoriteDataState,
   favoriteOrderListState,
@@ -9,7 +8,7 @@ import { Box } from "@mui/material";
 import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/gridstack.css";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import FavoriteCard from "../favorite/FavoriteCard";
 
 interface Props {
@@ -17,9 +16,9 @@ interface Props {
 }
 
 export default function DraggableFavoriteList({ isGrid }: Props) {
-  const { isMaxWidth900, isMaxWidth1200, isMinWidth1200 } = useBreakPoints();
-  const isDiableLayoutUpdate = useRecoilValue(isDisableLayoutUpdateState);
-
+  const [isDiableLayoutUpdate, setIsDiableLayoutUpdate] = useRecoilState(
+    isDisableLayoutUpdateState,
+  );
   const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
     dragFavoriteDataState,
   );
@@ -46,26 +45,20 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
      * 기존 잔상들을 모두 없애고, 새롭게 자리 재배치를 시켜버려서 랜더링 오류를 해결함
      */
     const saveData = grid.getGridItems();
+
     grid.removeAll();
 
     saveData.map((item) => {
       grid.makeWidget(item);
     });
 
-    const itemsPerRow = isMinWidth1200 ? 4 : 3;
-    const itemWidth = isGrid || isMaxWidth900 ? 12 : 12 / itemsPerRow;
-
     grid.getGridItems().map((item) => {
       const id = Number(item.id.slice(9));
       const newNode: Partial<GridStackNode> = {
-        w: itemWidth,
+        w: !isGrid ? 3 : 12,
         h: 2,
-        x: isGrid ? 0 : isMaxWidth900 ? 0 : (id % itemsPerRow) * itemWidth,
-        y: isGrid
-          ? id * 2
-          : isMaxWidth900
-          ? id * 2
-          : Math.floor(id / itemsPerRow) * 2,
+        x: !isGrid ? (id % 4) * 3 : 0,
+        y: !isGrid ? Math.floor(id / 4) * 2 : id * 2,
       };
       grid.update(item, newNode);
     });
@@ -131,7 +124,7 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
     if (gridRef.current) {
       updateGridLayout(gridRef.current, isGrid);
     }
-  }, [isGrid, dragFavoriteData, isMaxWidth900, isMaxWidth1200, isMinWidth1200]);
+  }, [isGrid, dragFavoriteData]);
 
   return (
     <Box className="grid-stack">
