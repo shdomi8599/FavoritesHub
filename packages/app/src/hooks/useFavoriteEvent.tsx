@@ -7,6 +7,7 @@ import {
 } from "@/api/favorite";
 import {
   accessTokenState,
+  dragFavoriteDataState,
   favoriteOrderListState,
   isDisableLayoutUpdateState,
   isLoadingState,
@@ -20,6 +21,7 @@ export const useFavoriteEvent = () => {
   const { resetFavoriteList } = useResetQuery();
   const viewPreset = useRecoilValue(viewPresetState);
   const accessToken = useRecoilValue(accessTokenState);
+  const dragFavoriteData = useRecoilValue(dragFavoriteDataState);
   const favoriteOrderList = useRecoilValue(favoriteOrderListState);
   const id = viewPreset?.id;
 
@@ -96,9 +98,19 @@ export const useFavoriteEvent = () => {
 
   const relocationFavorites = async () => {
     const currentPresetId = viewPreset.id;
-    const orderList = favoriteOrderList.map(({ id, order }) => {
-      return { id, order };
-    });
+
+    const orderList = favoriteOrderList.map(({ id, order }) => ({ id, order }));
+    const sortedDragFavoriteData = dragFavoriteData
+      .slice()
+      .sort((a, b) => a.order - b.order);
+
+    const isSameOrder = sortedDragFavoriteData.every(
+      ({ id, order }, index) =>
+        id === orderList[index]?.id && order === orderList[index]?.order,
+    );
+
+    if (isSameOrder) return;
+
     try {
       await postFavoriteRelocation(currentPresetId, orderList, accessToken);
     } catch (e: any) {
