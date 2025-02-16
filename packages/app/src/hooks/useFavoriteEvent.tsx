@@ -19,7 +19,7 @@ export const useFavoriteEvent = () => {
   const viewPreset = useRecoilValue(viewPresetState);
   const accessToken = useRecoilValue(accessTokenState);
   const favoriteOrderList = useRecoilValue(favoriteOrderListState);
-  const { id } = viewPreset;
+  const id = viewPreset?.id;
 
   const setIsLoading = useSetRecoilState(isLoadingState);
   const { resetFavoriteList } = useResetQuery();
