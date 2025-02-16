@@ -29,13 +29,13 @@ export default function PresetItem({ preset }: Props) {
   const { isDashboard } = useDashboard();
   const { presetDelete } = usePresetEvent();
   const { editPresetModal } = usePresetModal();
-  const { relocationFavorites } = useFavoriteEvent();
+  const { favoriteRelocation } = useFavoriteEvent();
 
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
 
   const handleViewPreset = async () => {
-    await relocationFavorites();
+    await favoriteRelocation();
     setViewPreset(preset);
   };
 

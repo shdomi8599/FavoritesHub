@@ -49,7 +49,7 @@ export default function MainContainer({ favorites }: Props) {
   const { viewPreset, addFavoriteModal } = useFavoriteModal();
   const isDashboard = useRecoilValue(isDashboardState);
   const isHideContent = isDashboard && isMaxWidth600;
-  const { relocationFavorites } = useFavoriteEvent();
+  const { favoriteRelocation } = useFavoriteEvent();
 
   const { viewData, autoBarData } = useFavoriteFilter({
     selectValue,
@@ -61,7 +61,7 @@ export default function MainContainer({ favorites }: Props) {
 
   useEffect(() => {
     if (isStar || isGrid) {
-      relocationFavorites();
+      favoriteRelocation();
     }
   }, [isStar, isGrid]);
 

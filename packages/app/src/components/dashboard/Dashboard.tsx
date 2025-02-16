@@ -53,7 +53,7 @@ export default function Dashboard({
   const { resetPresetList } = useResetQuery();
   const { ref: barRef, barHeight } = useBarHeight();
   const { presetRelocation } = usePresetEvent();
-  const { relocationFavorites } = useFavoriteEvent();
+  const { favoriteRelocation } = useFavoriteEvent();
   const { pathname, moveGuest, moveLogin } = useRouters();
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
 
@@ -77,7 +77,7 @@ export default function Dashboard({
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
 
   const logoutEvent = async () => {
-    await relocationFavorites();
+    await favoriteRelocation();
     await presetRelocation();
     const { message } = await postAuthLogout(accessToken);
 
@@ -98,14 +98,14 @@ export default function Dashboard({
 
   useEffect(() => {
     const relocationEvents = async () => {
-      await relocationFavorites();
+      await favoriteRelocation();
       await presetRelocation();
     };
     window.addEventListener("beforeunload", relocationEvents);
     return () => {
       window.removeEventListener("beforeunload", relocationEvents);
     };
-  }, [presetRelocation, relocationFavorites]);
+  }, [presetRelocation, favoriteRelocation]);
 
   useEffect(() => {
     if (isMaxWidth900) {

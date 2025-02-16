@@ -20,10 +20,10 @@ type Props = {
 
 function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
   const {
-    deleteFavoriteEvent,
+    favoriteDelete,
     favoriteVisited,
     favoriteHandleStar,
-    upFavoriteVisitedCount,
+    favoriteVisitedCount,
   } = useFavoriteEvent();
 
   const { editFavoriteModal } = useFavoriteModal();
@@ -56,7 +56,7 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     : `https://${extractURLs(address) + imgHref}`;
 
   const openSite = async () => {
-    await upFavoriteVisitedCount(id);
+    await favoriteVisitedCount(id);
     await favoriteVisited(id);
     window.open(address, "_blank");
   };
@@ -66,7 +66,7 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
   };
 
   const deleteEvent = async () => {
-    await deleteFavoriteEvent(id);
+    await favoriteDelete(id);
   };
 
   const editEvent = () => {

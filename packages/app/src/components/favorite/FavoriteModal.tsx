@@ -19,7 +19,7 @@ import { AddForm, EditForm } from "./form";
 export default function FavoriteModal() {
   const { accessToken, isGuest } = useAuth();
   const [isLoading, setIsLoding] = useState(false);
-  const { relocationFavorites } = useFavoriteEvent();
+  const { favoriteRelocation } = useFavoriteEvent();
   const setGuestFavorites = useSetRecoilState(guestFavoritesState);
   const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
   const setIsDisableLayoutUpdate = useSetRecoilState(
@@ -45,7 +45,7 @@ export default function FavoriteModal() {
   const favoriteAdd = async (favoriteName: string, address: string) => {
     try {
       setIsLoding(true);
-      await relocationFavorites();
+      await favoriteRelocation();
       const { message } = await postFavoriteAdd(
         viewPreset?.id,
         favoriteName,
@@ -96,7 +96,7 @@ export default function FavoriteModal() {
     try {
       setIsLoding(true);
       await putFavoriteEdit(selectedFavoriteId, accessToken, favoriteName);
-      await relocationFavorites();
+      await favoriteRelocation();
 
       setIsDisableLayoutUpdate(true);
       resetFavoriteList(viewPreset?.id);

@@ -30,11 +30,11 @@ export const useFavoriteEvent = () => {
     isDisableLayoutUpdateState,
   );
 
-  const deleteFavoriteEvent = async (favoriteId: number) => {
+  const favoriteDelete = async (favoriteId: number) => {
     try {
       setIsLoading(true);
       await confirmAlert("정말 삭제하시겠습니까?", "즐겨찾기 삭제가");
-      await relocationFavorites();
+      await favoriteRelocation();
       await deleteFavorite(id, favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
@@ -49,7 +49,7 @@ export const useFavoriteEvent = () => {
   const favoriteVisited = async (favoriteId: number) => {
     try {
       setIsDisableLayoutUpdate(true);
-      await relocationFavorites();
+      await favoriteRelocation();
       await getFavoriteVisited(favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
@@ -66,7 +66,7 @@ export const useFavoriteEvent = () => {
   const favoriteHandleStar = async (favoriteId: number) => {
     try {
       setIsDisableLayoutUpdate(true);
-      await relocationFavorites();
+      await favoriteRelocation();
       await getFavoriteHandleStar(favoriteId, accessToken);
       resetFavoriteList(id);
     } catch (e: any) {
@@ -80,10 +80,10 @@ export const useFavoriteEvent = () => {
     }
   };
 
-  const upFavoriteVisitedCount = async (id: number) => {
+  const favoriteVisitedCount = async (id: number) => {
     try {
       setIsDisableLayoutUpdate(true);
-      await relocationFavorites();
+      await favoriteRelocation();
       await upVisitedCountFavorite(id, accessToken);
     } catch (e: any) {
       if (e?.code === 401) {
@@ -96,7 +96,7 @@ export const useFavoriteEvent = () => {
     }
   };
 
-  const relocationFavorites = async () => {
+  const favoriteRelocation = async () => {
     const currentPresetId = viewPreset.id;
 
     const orderList = favoriteOrderList.map(({ id, order }) => ({ id, order }));
@@ -123,10 +123,10 @@ export const useFavoriteEvent = () => {
   };
 
   return {
-    deleteFavoriteEvent,
+    favoriteDelete,
     favoriteVisited,
     favoriteHandleStar,
-    upFavoriteVisitedCount,
-    relocationFavorites,
+    favoriteVisitedCount,
+    favoriteRelocation,
   };
 };
