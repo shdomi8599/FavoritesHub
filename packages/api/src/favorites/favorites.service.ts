@@ -166,4 +166,14 @@ export class FavoritesService {
     favorite.visitedCount = favorite.visitedCount + 1;
     await this.favoriteTable.save(favorite);
   }
+
+  async relocation(
+    presetId: number,
+    orderList: { id: number; order: number }[],
+  ) {
+    const updatePromises = orderList.map(({ id, order }) =>
+      this.favoriteTable.update({ id, preset: { id: presetId } }, { order }),
+    );
+    await Promise.all(updatePromises);
+  }
 }

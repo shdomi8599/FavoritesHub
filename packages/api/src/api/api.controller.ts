@@ -21,6 +21,7 @@ import { Favorite, Preset } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
 import { generateRandomNumber } from "src/util";
 import { ReqPostFavoriteAddDto, ReqPutPavoriteDto } from "./dto/req/favorite";
+import { ReqPostFavoriteRelocationDto } from "./dto/req/favorite/reqPostFavoriteRelocation.dto";
 import { ReqPostPresetAddDto, ReqPutPresetDto } from "./dto/req/preset";
 import { ReqPostPresetRelocationDto } from "./dto/req/preset/reqPostPresetRelocation.dto";
 import { ReqPostUserSignUpDto } from "./dto/req/user";
@@ -577,5 +578,19 @@ export class ApiController {
   })
   async getFavoriteUpVisitedCount(@Param("favoriteId") favoriteId: number) {
     await this.favoritesService.upVisitedCount(favoriteId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("favorites/relocation")
+  @ApiResponse({
+    status: 200,
+    description: "즐겨찾기 재배치에 사용되는 API입니다.",
+  })
+  async postRelocationFavorites(
+    @Request() req,
+    @Body() dto: ReqPostFavoriteRelocationDto,
+  ) {
+    const { presetId, orderList } = dto;
+    await this.favoritesService.relocation(presetId, orderList);
   }
 }
