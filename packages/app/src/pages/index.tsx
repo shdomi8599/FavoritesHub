@@ -16,7 +16,7 @@ export default function Main() {
   const { viewPreset } = useFavoriteModal();
 
   // 데이터
-  const { data: favorites, refetch } = useFavoriteList(
+  const { data: favorites } = useFavoriteList(
     userId,
     viewPreset?.id,
     accessToken,
@@ -29,11 +29,6 @@ export default function Main() {
   useEffect(() => {
     setDragFavoriteData(favorites || []);
   }, [favorites]);
-
-  useEffect(() => {
-    // 최초 프리셋 데이터만 리페치로 배치 문제 수정
-    refetch();
-  }, []);
 
   if (!!!accessToken) return <></>;
 
