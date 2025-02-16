@@ -2,16 +2,23 @@ import {
   deleteFavorite,
   getFavoriteHandleStar,
   getFavoriteVisited,
+  postFavoriteRelocation,
   upVisitedCountFavorite,
 } from "@/api/favorite";
-import { accessTokenState, isLoadingState, viewPresetState } from "@/states";
+import {
+  accessTokenState,
+  favoriteOrderListState,
+  isLoadingState,
+  viewPresetState,
+} from "@/states";
 import { confirmAlert } from "@/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useResetQuery } from "./react-query";
 
 export const useFavoriteEvent = () => {
-  const accessToken = useRecoilValue(accessTokenState);
   const viewPreset = useRecoilValue(viewPresetState);
+  const accessToken = useRecoilValue(accessTokenState);
+  const favoriteOrderList = useRecoilValue(favoriteOrderListState);
   const { id } = viewPreset;
 
   const setIsLoading = useSetRecoilState(isLoadingState);
@@ -64,10 +71,20 @@ export const useFavoriteEvent = () => {
     }
   };
 
+  const relocationFavorites = async () => {
+    const currentPresetId = viewPreset.id;
+    const orderList = favoriteOrderList.map(({ id, order }) => {
+      return { id, order };
+    });
+    await postFavoriteRelocation(currentPresetId, orderList, accessToken);
+    resetFavoriteList(currentPresetId);
+  };
+
   return {
     deleteFavoriteEvent,
     favoriteVisited,
     favoriteHandleStar,
     upFavoriteVisitedCount,
+    relocationFavorites,
   };
 };

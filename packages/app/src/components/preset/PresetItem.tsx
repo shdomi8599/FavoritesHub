@@ -1,14 +1,7 @@
-import { postFavoriteRelocation } from "@/api/favorite";
 import { mainBlueColor } from "@/const";
-import { usePresetEvent, usePresetModal } from "@/hooks";
-import { useResetQuery } from "@/hooks/react-query";
+import { useFavoriteEvent, usePresetEvent, usePresetModal } from "@/hooks";
 import { useDashboard } from "@/hooks/useDashboard";
-import {
-  accessTokenState,
-  favoriteOrderListState,
-  isPresetEventState,
-  viewPresetState,
-} from "@/states";
+import { isPresetEventState, viewPresetState } from "@/states";
 import { Preset } from "@/types";
 import {
   Dashboard as DashboardIcon,
@@ -25,32 +18,24 @@ import {
   styled,
 } from "@mui/material";
 import { useEffect } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 interface Props {
   preset: Preset;
 }
 
 export default function PresetItem({ preset }: Props) {
-  const accessToken = useRecoilValue(accessTokenState);
   const { presetName, id } = preset;
   const { isDashboard } = useDashboard();
   const { presetDelete } = usePresetEvent();
   const { editPresetModal } = usePresetModal();
+  const { relocationFavorites } = useFavoriteEvent();
 
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
-  const { resetFavoriteList } = useResetQuery();
-
-  const favoriteOrderList = useRecoilValue(favoriteOrderListState);
 
   const handleViewPreset = async () => {
-    const currentPresetId = viewPreset.id;
-    const orderList = favoriteOrderList.map(({ id, order }) => {
-      return { id, order };
-    });
-    await postFavoriteRelocation(currentPresetId, orderList, accessToken);
-    resetFavoriteList(currentPresetId);
+    await relocationFavorites();
     setViewPreset(preset);
   };
 
