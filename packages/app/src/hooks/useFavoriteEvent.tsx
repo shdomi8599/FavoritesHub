@@ -43,6 +43,7 @@ export const useFavoriteEvent = () => {
   const favoriteVisited = async (favoriteId: number) => {
     try {
       await getFavoriteVisited(favoriteId, accessToken);
+      resetFavoriteList(id);
     } catch (e: any) {
       if (e?.code === 401) {
         location.reload();
@@ -53,6 +54,7 @@ export const useFavoriteEvent = () => {
   const favoriteHandleStar = async (favoriteId: number) => {
     try {
       await getFavoriteHandleStar(favoriteId, accessToken);
+      resetFavoriteList(id);
     } catch (e: any) {
       if (e?.code === 401) {
         location.reload();

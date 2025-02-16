@@ -2,11 +2,11 @@ import { Box, CardActions, Tooltip, styled } from "@mui/material";
 
 type Props = {
   formatLastVisitedAt: string;
-  visitCount: number;
+  visitedCount: number;
 };
 
 export default function CardBottomContainer({
-  visitCount,
+  visitedCount,
   formatLastVisitedAt,
 }: Props) {
   return (
@@ -24,7 +24,7 @@ export default function CardBottomContainer({
         }}
         color="text.secondary"
       >
-        방문 횟수: {visitCount}
+        방문 횟수: {visitedCount}
       </Box>
       <Tooltip title={formatLastVisitedAt} enterDelay={300}>
         <Box
