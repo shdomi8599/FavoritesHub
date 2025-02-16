@@ -16,13 +16,14 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useResetQuery } from "./react-query";
 
 export const useFavoriteEvent = () => {
+  const { resetFavoriteList } = useResetQuery();
+
   const viewPreset = useRecoilValue(viewPresetState);
   const accessToken = useRecoilValue(accessTokenState);
   const favoriteOrderList = useRecoilValue(favoriteOrderListState);
-  const { id } = viewPreset;
-
   const setIsLoading = useSetRecoilState(isLoadingState);
-  const { resetFavoriteList } = useResetQuery();
+
+  const id = viewPreset?.id;
 
   const deleteFavoriteEvent = async (favoriteId: number) => {
     try {

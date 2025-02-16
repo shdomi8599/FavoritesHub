@@ -1,6 +1,6 @@
 import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
 import { postPresetRelocation } from "@/api/preset";
-import { useAuth, useBarHeight } from "@/hooks";
+import { useAuth, useBarHeight, useFavoriteEvent } from "@/hooks";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useDashboard } from "@/hooks/useDashboard";
@@ -47,6 +47,7 @@ export default function Dashboard({
   } = useAuth();
   const { setIsDashboard } = useDashboard();
   const { resetPresetList } = useResetQuery();
+  const { relocationFavorites } = useFavoriteEvent();
   const { ref: barRef, barHeight } = useBarHeight();
   const { pathname, moveGuest, moveLogin } = useRouters();
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
@@ -105,11 +106,15 @@ export default function Dashboard({
   }, [accessToken]);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", relocationPresetEvent);
-    return () => {
-      window.removeEventListener("beforeunload", relocationPresetEvent);
+    const relocationEvents = async () => {
+      await relocationFavorites();
+      await relocationPresetEvent();
     };
-  }, [relocationPresetEvent]);
+    window.addEventListener("beforeunload", relocationEvents);
+    return () => {
+      window.removeEventListener("beforeunload", relocationEvents);
+    };
+  }, [relocationPresetEvent, relocationFavorites]);
 
   useEffect(() => {
     if (isMaxWidth900) {
