@@ -24,7 +24,7 @@ const randomColorTable: Record<number, string> = {
 type Props = {
   id: number;
   title: string;
-  star: boolean;
+  isStar: boolean;
   imgSrc: string;
   favoriteName: string;
   handleStar: () => void;
@@ -34,7 +34,7 @@ type Props = {
 
 export default function CardTopContainer({
   id,
-  star,
+  isStar,
   title,
   imgSrc,
   favoriteName,
@@ -82,7 +82,11 @@ export default function CardTopContainer({
             handleStar();
           }}
         >
-          {star ? <StarIcon sx={{ color: "#e96363d2" }} /> : <StarBorderIcon />}
+          {isStar ? (
+            <StarIcon sx={{ color: "#e96363d2" }} />
+          ) : (
+            <StarBorderIcon />
+          )}
         </IconButton>
         <IconButton
           onClick={(e) => {

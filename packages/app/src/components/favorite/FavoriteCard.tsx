@@ -6,6 +6,7 @@ import { extractURLs, formatDate } from "@/util";
 import { successToast } from "@/util/alert";
 import { Card, CardContent, Grid } from "@mui/material";
 import "moment/locale/ko";
+import { useState } from "react";
 import {
   CardBottomContainer,
   CardMiddleContainer,
@@ -55,14 +56,20 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     ? imgHref
     : `https://${extractURLs(address) + imgHref}`;
 
+  // 클라이언트로 상태 관리
+  const [visitCount, setVisitCount] = useState(visitedCount || 0);
+  const [isStar, setIsStar] = useState(star || false);
+
   const openSite = async () => {
     await upFavoriteVisitedCount(id);
     await favoriteVisited(id);
+    setVisitCount(visitCount + 1);
     window.open(address, "_blank");
   };
 
-  const handleStar = () => {
-    favoriteHandleStar(id);
+  const handleStar = async () => {
+    await favoriteHandleStar(id);
+    setIsStar(!isStar);
   };
 
   const deleteEvent = () => {
@@ -106,8 +113,8 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
           >
             <CardTopContainer
               id={id}
-              star={star}
               title={title}
+              isStar={isStar}
               imgSrc={!imgHref ? imgHref : imgSrc}
               favoriteName={favoriteName}
               handleStar={handleStar}
@@ -123,7 +130,7 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
             />
           </CardContent>
           <CardBottomContainer
-            visitedCount={visitedCount}
+            visitCount={visitCount}
             formatLastVisitedAt={formatLastVisitedAt}
           />
         </Card>
@@ -160,7 +167,7 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
         >
           <CardTopContainer
             id={id}
-            star={star}
+            isStar={isStar}
             title={title}
             imgSrc={!imgHref ? imgHref : imgSrc}
             favoriteName={favoriteName}
@@ -177,7 +184,7 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
           />
         </CardContent>
         <CardBottomContainer
-          visitedCount={visitedCount}
+          visitCount={visitCount}
           formatLastVisitedAt={formatLastVisitedAt}
         />
       </Card>
