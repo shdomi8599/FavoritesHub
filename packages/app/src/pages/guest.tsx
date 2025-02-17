@@ -2,6 +2,7 @@ import { MainContainer } from "@/components/main";
 
 import {
   dragFavoriteDataState,
+  favoritesLengthState,
   guestFavoritesState,
   viewPresetState,
 } from "@/states";
@@ -12,11 +13,11 @@ import { useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 export default function Guest() {
+  const setFavoritesLength = useSetRecoilState(favoritesLengthState);
   const setViewPreset = useSetRecoilState(viewPresetState);
   const [guestFavorites, setGuestFavorites] =
     useRecoilState(guestFavoritesState);
 
-  // 드래그 즐겨찾기 데이터
   const [dragFavoriteData, setDragFavoriteData] = useRecoilState(
     dragFavoriteDataState,
   );
@@ -24,6 +25,7 @@ export default function Guest() {
   useEffect(() => {
     if (!guestFavorites?.length) return;
     setDragFavoriteData(guestFavorites || []);
+    setFavoritesLength(guestFavorites?.length || 0);
   }, [guestFavorites]);
 
   useEffect(() => {

@@ -93,6 +93,11 @@ export const favoriteOrderListState = atom<Favorite[]>({
   default: [],
 });
 
+export const favoritesLengthState = atom({
+  key: "favoritesLengthState",
+  default: 0,
+});
+
 export const viewPresetState = atom<Preset>({
   key: "viewPresetState",
   default: null!,

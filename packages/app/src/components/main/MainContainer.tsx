@@ -12,7 +12,12 @@ import {
 import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
 import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useFavoriteModal } from "@/hooks/useFavoriteModal";
-import { guideStepState, isDashboardState, isGuideModalState } from "@/states";
+import {
+  favoritesLengthState,
+  guideStepState,
+  isDashboardState,
+  isGuideModalState,
+} from "@/states";
 import { Favorite } from "@/types";
 import {
   FileDownload as FileDownloadIcon,
@@ -45,6 +50,7 @@ type Props = {
 export default function MainContainer({ favorites }: Props) {
   const { isGuest } = useAuth();
   const [open, setOpen] = useState(false);
+  const favoritesLength = useRecoilValue(favoritesLengthState);
   const isGuideModal = useRecoilValue(isGuideModalState);
   const guideStep = useRecoilValue(guideStepState);
   const [isGrid, setIsGrid] = useState(false);
@@ -203,12 +209,15 @@ export default function MainContainer({ favorites }: Props) {
                   즐겨찾기 추가
                 </Button>
               )}
-              <IconButton onClick={importFavoritesModal}>
-                <FileUploadIcon fontSize="large" />
-              </IconButton>
-              <IconButton onClick={exportFavoritesModal}>
-                <FileDownloadIcon fontSize="large" />
-              </IconButton>
+              {favoritesLength ? (
+                <IconButton onClick={exportFavoritesModal}>
+                  <FileDownloadIcon fontSize="large" />
+                </IconButton>
+              ) : (
+                <IconButton onClick={importFavoritesModal}>
+                  <FileUploadIcon fontSize="large" />
+                </IconButton>
+              )}
             </>
           )}
         </Box>
