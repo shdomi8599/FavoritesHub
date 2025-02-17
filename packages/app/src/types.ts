@@ -97,6 +97,11 @@ export interface Favorite {
   order: number;
 }
 
+export interface ImportFavorite {
+  address: string;
+  [key: string]: any;
+}
+
 export interface AutoBarItem {
   label: string;
 }

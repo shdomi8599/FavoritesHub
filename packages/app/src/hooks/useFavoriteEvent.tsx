@@ -3,6 +3,7 @@ import {
   getFavoriteHandleStar,
   getFavoriteVisited,
   postFavoriteAdd,
+  postFavoriteImport,
   postFavoriteRelocation,
   putFavoriteEdit,
   upVisitedCountFavorite,
@@ -16,6 +17,7 @@ import {
   selectedFavoriteIdState,
   viewPresetState,
 } from "@/states";
+import { ImportFavorite } from "@/types";
 import { confirmAlert, errorAlert, successAlert } from "@/util";
 import { downloadJsonFile } from "@/util/download";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -224,6 +226,22 @@ export const useFavoriteEvent = () => {
     }
   };
 
+  const favoriteImport = async (fileData: ImportFavorite[]) => {
+    setIsLoading(true);
+    try {
+      await confirmAlert(
+        "즐겨찾기 삽입을 진행하시겠습니까?",
+        "즐겨찾기 삽입이",
+      );
+      await postFavoriteImport(viewPreset.id, fileData, accessToken);
+      resetFavoriteList(viewPreset?.id);
+      offFavoriteModal();
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     favoriteAdd,
     favoriteEdit,
@@ -233,5 +251,6 @@ export const useFavoriteEvent = () => {
     favoriteVisitedCount,
     favoriteRelocation,
     favoriteExport,
+    favoriteImport,
   };
 };

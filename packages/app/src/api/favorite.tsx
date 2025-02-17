@@ -1,4 +1,9 @@
-import { ApiResultMessage, Favorite, ResPostFavoritePut } from "@/types";
+import {
+  ApiResultMessage,
+  Favorite,
+  ImportFavorite,
+  ResPostFavoritePut,
+} from "@/types";
 import { api } from ".";
 
 export const getFavoriteList = async (
@@ -57,6 +62,21 @@ export const postFavoriteRelocation = async (
   const body = { presetId, orderList };
   await api
     .post<ApiResultMessage>(`favorites/relocation`, body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.data);
+};
+
+export const postFavoriteImport = async (
+  presetId: number,
+  favorites: ImportFavorite[],
+  accessToken: string,
+) => {
+  const body = { presetId, favorites };
+  await api
+    .post<ApiResultMessage>(`favorites/import`, body, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
