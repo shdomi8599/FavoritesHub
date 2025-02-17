@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { ImportFavorite } from "src/api/dto/req/favorite/reqPostFavoriteImport.dto";
 import { Favorite } from "src/source/entity/Favorite";
 import { Preset } from "src/source/entity/Preset";
 import { Repository } from "typeorm";
@@ -189,5 +190,45 @@ export class FavoritesService {
       this.favoriteTable.update({ id, preset: { id: presetId } }, { order }),
     );
     await Promise.all(updatePromises);
+  }
+
+  async import(presetId: number, favorites: ImportFavorite[]) {
+    const existingFavorites = await this.findAll(presetId);
+
+    if (existingFavorites.length > 0) {
+      throw new Error("이미 즐겨찾기가 존재하여 Import할 수 없습니다.");
+    }
+
+    const preset = new Preset();
+    preset.id = presetId;
+
+    await Promise.all(
+      favorites.map(
+        async (
+          { favoriteName, address, description, imgHref, star, title, order },
+          index,
+        ) => {
+          const favoriteData = {
+            address,
+            favoriteName: favoriteName || "",
+            title: title || "",
+            description: description || "",
+            imgHref: imgHref || "",
+            star: star || false,
+            order: order || index,
+          };
+
+          const newFavorite = this.favoriteTable.create({
+            ...favoriteData,
+            preset,
+          });
+
+          await this.favoriteTable.save(newFavorite);
+        },
+      ),
+    );
+
+    const savedFavorites = await this.findAll(presetId);
+    return savedFavorites;
   }
 }

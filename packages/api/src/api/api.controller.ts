@@ -21,6 +21,7 @@ import { Favorite, Preset } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
 import { generateRandomNumber } from "src/util";
 import { ReqPostFavoriteAddDto, ReqPutPavoriteDto } from "./dto/req/favorite";
+import { ReqPostFavoriteImportDto } from "./dto/req/favorite/reqPostFavoriteImport.dto";
 import { ReqPostFavoriteRelocationDto } from "./dto/req/favorite/reqPostFavoriteRelocation.dto";
 import { ReqPostPresetAddDto, ReqPutPresetDto } from "./dto/req/preset";
 import { ReqPostPresetRelocationDto } from "./dto/req/preset/reqPostPresetRelocation.dto";
@@ -595,5 +596,23 @@ export class ApiController {
   ) {
     const { presetId, orderList } = dto;
     await this.favoritesService.relocation(presetId, orderList);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("favorites/import")
+  @ApiResponse({
+    status: 200,
+    description: "즐겨찾기 삽입에 사용되는 API입니다.",
+  })
+  async postImportFavorites(
+    @Request() req,
+    @Body() dto: ReqPostFavoriteImportDto,
+  ) {
+    const { presetId, favorites } = dto;
+    const savedFavorites = await this.favoritesService.import(
+      presetId,
+      favorites,
+    );
+    return savedFavorites;
   }
 }
