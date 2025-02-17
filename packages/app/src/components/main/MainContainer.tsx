@@ -137,7 +137,29 @@ export default function MainContainer({ favorites }: Props) {
           },
         }}
       >
-        <MainTitle presetName={viewPreset?.presetName} />
+        {isMaxWidth600 ? (
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <MainTitle presetName={viewPreset?.presetName} />
+            {favoritesLength ? (
+              <IconButton onClick={exportFavoritesModal}>
+                <FileDownloadIcon fontSize="large" />
+              </IconButton>
+            ) : (
+              <IconButton onClick={importFavoritesModal}>
+                <FileUploadIcon fontSize="large" />
+              </IconButton>
+            )}
+          </Box>
+        ) : (
+          <MainTitle presetName={viewPreset?.presetName} />
+        )}
         <Box
           sx={{
             display: "flex",
@@ -209,15 +231,16 @@ export default function MainContainer({ favorites }: Props) {
                   즐겨찾기 추가
                 </Button>
               )}
-              {favoritesLength ? (
-                <IconButton onClick={exportFavoritesModal}>
-                  <FileDownloadIcon fontSize="large" />
-                </IconButton>
-              ) : (
-                <IconButton onClick={importFavoritesModal}>
-                  <FileUploadIcon fontSize="large" />
-                </IconButton>
-              )}
+              {!isMaxWidth600 &&
+                (favoritesLength ? (
+                  <IconButton onClick={exportFavoritesModal}>
+                    <FileDownloadIcon fontSize="large" />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={importFavoritesModal}>
+                    <FileUploadIcon fontSize="large" />
+                  </IconButton>
+                ))}
             </>
           )}
         </Box>
