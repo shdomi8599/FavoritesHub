@@ -18,11 +18,15 @@ import {
   viewPresetState,
 } from "@/states";
 import { ImportFavorite } from "@/types";
-import { confirmAlert, errorAlert, successAlert } from "@/util";
-import { downloadJsonFile } from "@/util/download";
+import {
+  confirmAlert,
+  downloadJsonFile,
+  errorAlert,
+  successAlert,
+} from "@/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useResetQuery } from "./react-query";
-import { useFavoriteModal } from "./useFavoriteModal";
+import { useFavoriteModal } from "../modal/useFavoriteModal";
+import { useResetQuery } from "../react-query";
 
 export const useFavoriteEvent = () => {
   const { resetFavoriteList } = useResetQuery();

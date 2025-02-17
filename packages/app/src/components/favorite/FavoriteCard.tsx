@@ -1,12 +1,13 @@
-import { useAuth, useFavoriteEvent, useHandler } from "@/hooks";
-import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
-import { useBreakPoints } from "@/hooks/useBreakPoints";
-import { useFavoriteModal } from "@/hooks/useFavoriteModal";
+import { useBreakPoints, useHandler } from "@/hooks/common";
+import { useAuth } from "@/hooks/data";
+import { useFavoriteEvent } from "@/hooks/event";
+import { useGuestFavoriteEvent } from "@/hooks/guest";
+import { useFavoriteModal } from "@/hooks/modal";
 import { Favorite } from "@/types";
 import { extractURLs, formatDate } from "@/util";
-import { successToast } from "@/util/alert";
 import { Card, CardContent, Grid } from "@mui/material";
 import "moment/locale/ko";
+import { MouseEventHandler } from "react";
 import {
   CardBottomContainer,
   CardMiddleContainer,
@@ -75,7 +76,8 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     window.open(address, "_blank");
   };
 
-  const handleStar = async () => {
+  const handleStar: MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.stopPropagation();
     if (isGuest) {
       await favoriteHandleStarGuest(id);
       return;
@@ -83,7 +85,8 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     await favoriteHandleStar(id);
   };
 
-  const deleteEvent = async () => {
+  const deleteEvent: MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.stopPropagation();
     if (isGuest) {
       await favoriteDeleteGuest(id);
       return;
@@ -91,13 +94,9 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     await favoriteDelete(id);
   };
 
-  const editEvent = () => {
+  const editEvent: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
     editFavoriteModal(id, favoriteName);
-  };
-
-  const copyURL = () => {
-    navigator.clipboard.writeText(address);
-    successToast("주소가 복사되었습니다.");
   };
 
   if (isDrag) {
@@ -138,7 +137,6 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
             />
             <CardMiddleContainer
               title={title}
-              copyURL={copyURL}
               address={address}
               description={description}
               formatCreatedAt={formatCreatedAt}
@@ -192,7 +190,6 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
           />
           <CardMiddleContainer
             title={title}
-            copyURL={copyURL}
             address={address}
             description={description}
             formatCreatedAt={formatCreatedAt}

@@ -1,5 +1,5 @@
-import { useFavoriteList, useMemoFavorites } from "./favorite";
+import { useFavoriteList } from "./favorite/useFavoriteList";
 import { usePresetList } from "./preset/usePresetList";
 import { useResetQuery } from "./useResetQuery";
 
-export { useFavoriteList, useMemoFavorites, usePresetList, useResetQuery };
+export { useFavoriteList, usePresetList, useResetQuery };

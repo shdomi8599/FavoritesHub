@@ -1,16 +1,15 @@
+import { copyURL } from "@/util";
 import { Box, Tooltip, Typography, styled } from "@mui/material";
 
 type Props = {
   title: string;
   address: string;
-  copyURL: () => void;
   description: string;
   formatCreatedAt: string;
 };
 
 export default function CardMiddleContainer({
   title,
-  copyURL,
   address,
   description,
   formatCreatedAt,
@@ -46,7 +45,7 @@ export default function CardMiddleContainer({
           }}
           onClick={(e) => {
             e.stopPropagation();
-            copyURL();
+            copyURL(address);
           }}
         >
           {address}

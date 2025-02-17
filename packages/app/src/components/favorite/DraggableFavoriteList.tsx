@@ -1,4 +1,4 @@
-import { useBreakPoints } from "@/hooks/useBreakPoints";
+import { useBreakPoints } from "@/hooks/common";
 import {
   dragFavoriteDataState,
   favoriteOrderListState,
@@ -9,7 +9,7 @@ import { GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/gridstack.css";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import FavoriteCard from "../favorite/FavoriteCard";
+import FavoriteCard from "./FavoriteCard";
 
 interface Props {
   isGrid: boolean;
@@ -21,7 +21,7 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
   const setFavoriteOrderList = useSetRecoilState(favoriteOrderListState);
   const isDiableLayoutUpdate = useRecoilValue(isDisableLayoutUpdateState);
 
-  const gridRef = useRef<GridStack | null>(null);
+  const gridRef = useRef<GridStack>(null!);
   const [gridData, setGridData] = useState<any[]>(null!);
 
   /**

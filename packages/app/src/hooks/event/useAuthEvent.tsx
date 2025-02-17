@@ -31,9 +31,12 @@ import {
   successAlert,
 } from "@/util";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useAuth, useAuthModal, useFavoriteEvent, usePresetEvent } from ".";
-import { useResetQuery } from "./react-query";
-import { useRouters } from "./useRouters";
+import { useRouters } from "../common/useRouters";
+import { useAuth } from "../data";
+import { useAuthModal } from "../modal";
+import { useResetQuery } from "../react-query";
+import { useFavoriteEvent } from "./useFavoriteEvent";
+import { usePresetEvent } from "./usePresetEvent";
 
 export const useAuthEvent = () => {
   const setIsLoading = useSetRecoilState(isLoadingState);

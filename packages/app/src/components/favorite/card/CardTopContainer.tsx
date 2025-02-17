@@ -7,6 +7,7 @@ import {
   Star as StarIcon,
 } from "@mui/icons-material";
 import { Box, IconButton, Tooltip, styled } from "@mui/material";
+import { MouseEventHandler } from "react";
 
 const randomColorTable: Record<number, string> = {
   1: "#FF5733",
@@ -27,9 +28,9 @@ type Props = {
   star: boolean;
   imgSrc: string;
   favoriteName: string;
-  handleStar: () => void;
-  deleteEvent: () => void;
-  editEvent: () => void;
+  handleStar: MouseEventHandler<HTMLButtonElement>;
+  deleteEvent: MouseEventHandler<HTMLButtonElement>;
+  editEvent: MouseEventHandler<HTMLButtonElement>;
 };
 
 export default function CardTopContainer({
@@ -66,30 +67,15 @@ export default function CardTopContainer({
             <Box>{favoriteName}</Box>
           </TopNameBox>
         )}
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            editEvent();
-          }}
-        >
+        <IconButton onClick={editEvent}>
           <ModeIcon />
         </IconButton>
       </TopImgBox>
       <TopIconContainer>
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            handleStar();
-          }}
-        >
+        <IconButton onClick={handleStar}>
           {star ? <StarIcon sx={{ color: "#e96363d2" }} /> : <StarBorderIcon />}
         </IconButton>
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            deleteEvent();
-          }}
-        >
+        <IconButton onClick={deleteEvent}>
           <ClearIcon />
         </IconButton>
       </TopIconContainer>

@@ -20,7 +20,7 @@ import {
   successAlert,
 } from "@/util";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { usePresetModal } from "../usePresetModal";
+import { usePresetModal } from "../modal/usePresetModal";
 
 export const useGuestPresetEvent = () => {
   const { offPresetModal } = usePresetModal();

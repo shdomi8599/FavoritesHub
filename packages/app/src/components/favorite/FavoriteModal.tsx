@@ -1,13 +1,12 @@
-import { useAuth, useFavoriteEvent } from "@/hooks";
-import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
-import { useFavoriteModal } from "@/hooks/useFavoriteModal";
+import { useAuth } from "@/hooks/data";
+import { useFavoriteEvent } from "@/hooks/event";
+import { useGuestFavoriteEvent } from "@/hooks/guest";
+import { useFavoriteModal } from "@/hooks/modal";
 import { isLoadingState } from "@/states";
 import { Box, Modal } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
-import { AddForm, EditForm } from "./form";
-import ExportForm from "./form/ExportForm";
-import ImportForm from "./form/ImportForm";
+import { AddForm, EditForm, ExportForm, ImportForm } from "./form";
 
 export default function FavoriteModal() {
   const isLoading = useRecoilValue(isLoadingState);

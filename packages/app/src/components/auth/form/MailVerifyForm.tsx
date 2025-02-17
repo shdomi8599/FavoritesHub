@@ -7,7 +7,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions } from "@/const";
-import { useAuth } from "@/hooks";
+import { useAuth } from "@/hooks/data";
 import { MailVerifyInput } from "@/types";
 import { successAlert } from "@/util";
 import { Box, Container, Grid, TextField } from "@mui/material";

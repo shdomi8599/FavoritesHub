@@ -1,15 +1,14 @@
 import { getAuthRefreshToken } from "@/api/auth";
 import {
-  useAuth,
   useBarHeight,
-  useFavoriteEvent,
-  usePresetEvent,
-} from "@/hooks";
-import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
+  useBreakPoints,
+  useDashboard,
+  useRouters,
+} from "@/hooks/common";
+import { useAuth } from "@/hooks/data";
+import { useFavoriteEvent, usePresetEvent } from "@/hooks/event";
+import { useGuestFavoriteEvent } from "@/hooks/guest";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
-import { useBreakPoints } from "@/hooks/useBreakPoints";
-import { useDashboard } from "@/hooks/useDashboard";
-import { useRouters } from "@/hooks/useRouters";
 import {
   dragPresetDataState,
   guestPresetsState,
@@ -30,8 +29,8 @@ import { styled } from "@mui/material/styles";
 import { ReactNode, useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import Blind from "../blind/Blind";
-import { DashboardBar } from "./bar";
-import { DashboardDrawer } from "./drawer";
+import DashboardBar from "./bar/DashBoardBar";
+import DashboardDrawer from "./drawer/DashBoardDrawer";
 
 export default function Dashboard({
   children,

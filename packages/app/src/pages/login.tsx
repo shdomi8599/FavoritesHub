@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/auth/form";
-import { useAuthModal } from "@/hooks";
+import { useAuthModal } from "@/hooks/modal";
 import { Box, styled } from "@mui/material";
 import Head from "next/head";
 

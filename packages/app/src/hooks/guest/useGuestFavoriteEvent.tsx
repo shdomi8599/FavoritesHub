@@ -21,7 +21,7 @@ import {
   successAlert,
 } from "@/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useFavoriteModal } from "../useFavoriteModal";
+import { useFavoriteModal } from "../modal/useFavoriteModal";
 
 export const useGuestFavoriteEvent = () => {
   const { offFavoriteModal } = useFavoriteModal();

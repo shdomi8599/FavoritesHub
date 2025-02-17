@@ -1,8 +1,8 @@
 import Blind from "@/components/blind/Blind";
-import { useAuth, useAuthModal, usePresetModal } from "@/hooks";
-import { useAuthEvent } from "@/hooks/useAuthEvent";
-import { useDashboard } from "@/hooks/useDashboard";
-import { useRouters } from "@/hooks/useRouters";
+import { useDashboard, useRouters } from "@/hooks/common";
+import { useAuth } from "@/hooks/data";
+import { useAuthEvent } from "@/hooks/event";
+import { useAuthModal, usePresetModal } from "@/hooks/modal";
 import { guideStepState, isGuideModalState } from "@/states";
 import { Preset } from "@/types";
 import {

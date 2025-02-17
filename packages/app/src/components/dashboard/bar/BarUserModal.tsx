@@ -1,6 +1,7 @@
-import { useAuth, useAuthModal } from "@/hooks";
-import { useAuthEvent } from "@/hooks/useAuthEvent";
-import { useRouters } from "@/hooks/useRouters";
+import { useRouters } from "@/hooks/common/useRouters";
+import { useAuth } from "@/hooks/data";
+import { useAuthEvent } from "@/hooks/event/useAuthEvent";
+import { useAuthModal } from "@/hooks/modal";
 import {
   AccountCircle as AccountCircleIcon,
   Close as CloseIcon,

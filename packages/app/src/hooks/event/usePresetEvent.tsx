@@ -13,9 +13,9 @@ import {
 } from "@/states";
 import { confirmAlert, errorAlert, successAlert } from "@/util";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useResetQuery } from "./react-query";
-import { useAuth } from "./useAuth";
-import { usePresetModal } from "./usePresetModal";
+import { useAuth } from "../data/useAuth";
+import { usePresetModal } from "../modal/usePresetModal";
+import { useResetQuery } from "../react-query";
 
 export const usePresetEvent = () => {
   const { accessToken } = useAuth();

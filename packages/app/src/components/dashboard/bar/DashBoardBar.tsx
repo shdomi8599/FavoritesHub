@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useHandler, useOutSideRef } from "@/hooks";
-import { useDashboard } from "@/hooks/useDashboard";
+import { useDashboard, useHandler, useOutSideRef } from "@/hooks/common";
 import {
   AccountCircle as AccountCircleIcon,
   Menu as MenuIcon,

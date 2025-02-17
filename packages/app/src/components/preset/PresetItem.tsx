@@ -1,12 +1,9 @@
 import { mainBlueColor } from "@/const";
-import {
-  useAuth,
-  useFavoriteEvent,
-  usePresetEvent,
-  usePresetModal,
-} from "@/hooks";
-import { useGuestPresetEvent } from "@/hooks/guest/useGuestPresetEvent";
-import { useDashboard } from "@/hooks/useDashboard";
+import { useDashboard } from "@/hooks/common";
+import { useAuth } from "@/hooks/data";
+import { useFavoriteEvent, usePresetEvent } from "@/hooks/event";
+import { useGuestPresetEvent } from "@/hooks/guest";
+import { usePresetModal } from "@/hooks/modal";
 import { isPresetEventState, viewPresetState } from "@/states";
 import { Preset } from "@/types";
 import {
@@ -35,9 +32,9 @@ export default function PresetItem({ preset }: Props) {
   const { presetName, id } = preset;
   const { isDashboard } = useDashboard();
   const { presetDelete } = usePresetEvent();
-  const { presetDeleteGuest } = useGuestPresetEvent();
   const { editPresetModal } = usePresetModal();
   const { favoriteRelocation } = useFavoriteEvent();
+  const { presetDeleteGuest } = useGuestPresetEvent();
 
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);

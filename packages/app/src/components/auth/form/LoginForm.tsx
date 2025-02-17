@@ -8,8 +8,8 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
-import { useAuth } from "@/hooks";
-import { useRouters } from "@/hooks/useRouters";
+import { useRouters } from "@/hooks/common/useRouters";
+import { useAuth } from "@/hooks/data";
 import { isPasswordForgotState, isRefreshTokenState } from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";

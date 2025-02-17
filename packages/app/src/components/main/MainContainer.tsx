@@ -1,17 +1,12 @@
 import FavoriteCard from "@/components/favorite/FavoriteCard";
 import { MainTitle } from "@/components/main";
-import { SearchAutoBar, SearchTag } from "@/components/search";
-import SearchSelect from "@/components/search/SearchSelect";
+import { SearchAutoBar, SearchSelect, SearchTag } from "@/components/search";
 import { SearchSelects } from "@/const";
-import {
-  useAuth,
-  useFavoriteEvent,
-  useFavoriteFilter,
-  useHandler,
-} from "@/hooks";
-import { useGuestFavoriteEvent } from "@/hooks/guest/useGuestFavoriteEvent";
-import { useBreakPoints } from "@/hooks/useBreakPoints";
-import { useFavoriteModal } from "@/hooks/useFavoriteModal";
+import { useBreakPoints, useHandler } from "@/hooks/common";
+import { useAuth, useFavoriteFilter } from "@/hooks/data";
+import { useFavoriteEvent } from "@/hooks/event";
+import { useGuestFavoriteEvent } from "@/hooks/guest";
+import { useFavoriteModal } from "@/hooks/modal";
 import {
   favoritesLengthState,
   guideStepState,
@@ -41,7 +36,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import DraggableFavoriteList from "./DraggableFavoriteList";
+import DraggableFavoriteList from "../favorite/DraggableFavoriteList";
 
 type Props = {
   favorites: Favorite[];

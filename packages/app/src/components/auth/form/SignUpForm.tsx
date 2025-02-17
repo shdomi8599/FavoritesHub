@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
-import { useRouters } from "@/hooks/useRouters";
+import { useRouters } from "@/hooks/common";
 import { AuthProps, SignUpFormInput } from "@/types";
 import { Box, Container, Grid } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";

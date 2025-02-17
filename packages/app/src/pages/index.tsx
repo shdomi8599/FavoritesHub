@@ -1,6 +1,7 @@
 import { LoginForm } from "@/components/auth/form";
 import { MainContainer } from "@/components/main";
-import { useAuth, useAuthModal } from "@/hooks";
+import { useAuth } from "@/hooks/data";
+import { useAuthModal } from "@/hooks/modal";
 import { useFavoriteList } from "@/hooks/react-query";
 import {
   dragFavoriteDataState,

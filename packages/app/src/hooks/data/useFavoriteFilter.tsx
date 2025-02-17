@@ -1,5 +1,5 @@
 import { Favorite } from "@/types";
-import { useMemoFavorites } from "./react-query";
+import { useMemoFavorites } from "./useMemoFavorites";
 
 type Props = {
   selectValue: string;

@@ -1,5 +1,5 @@
-import { useAuthModal } from "@/hooks";
-import { useAuthEvent } from "@/hooks/useAuthEvent";
+import { useAuthEvent } from "@/hooks/event";
+import { useAuthModal } from "@/hooks/modal";
 import { Modal } from "@mui/material";
 import { ModalContentBox } from "../modal";
 import {

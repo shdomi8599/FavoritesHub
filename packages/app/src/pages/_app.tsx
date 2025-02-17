@@ -3,7 +3,7 @@ import Dashboard from "@/components/dashboard/Dashboard";
 import FavoriteModal from "@/components/favorite/FavoriteModal";
 import Loading from "@/components/loading/Loading";
 import PresetModal from "@/components/preset/PresetModal";
-import { useHandler } from "@/hooks";
+import { useHandler } from "@/hooks/common";
 import "@/styles/globals.css";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
