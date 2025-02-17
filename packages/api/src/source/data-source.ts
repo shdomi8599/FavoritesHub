@@ -1,5 +1,10 @@
-import { DB_PASSWORD } from "src/constants";
+import dotenv from "dotenv";
+import "dotenv/config";
 import { DataSource, DataSourceOptions } from "typeorm";
+
+dotenv.config();
+
+export const { DB_PASSWORD } = process.env;
 
 //  AWS
 // docker run --platform linux/amd64 --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=DB_PASSWORD -d mysql:5.7
