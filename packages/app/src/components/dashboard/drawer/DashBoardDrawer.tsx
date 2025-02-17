@@ -1,9 +1,10 @@
 import Blind from "@/components/blind/Blind";
 import { useAuth, useAuthModal, usePresetModal } from "@/hooks";
+import { useAuthEvent } from "@/hooks/useAuthEvent";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useRouters } from "@/hooks/useRouters";
 import { guideStepState, isGuideModalState } from "@/states";
-import { DashBoardChildProps, Preset } from "@/types";
+import { Preset } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
   AddCircleOutline as AddCircleOutlineIcon,
@@ -28,15 +29,16 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import DraggablePresetList from "./DraggablePresetList";
 
-interface Props extends DashBoardChildProps {
+interface Props {
   presets: Preset[];
 }
 
-export default function DashboardDrawer({ presets, logoutEvent }: Props) {
+export default function DashboardDrawer({ presets }: Props) {
   const guideStep = useRecoilValue(guideStepState);
   const isGuideModal = useRecoilValue(isGuideModalState);
 
   const { isLogin } = useAuth();
+  const { authLogout } = useAuthEvent();
   const { addPresetModal } = usePresetModal();
   const { handleSignUpModal } = useAuthModal();
   const { pathname, moveGuest, moveLogin } = useRouters();
@@ -148,7 +150,7 @@ export default function DashboardDrawer({ presets, logoutEvent }: Props) {
             {isLogin ? (
               <>
                 <DirectionsRunIcon fontSize="large" />
-                <span onClick={logoutEvent}>로그아웃</span>
+                <span onClick={authLogout}>로그아웃</span>
               </>
             ) : pathname === "/guest" ? (
               <>

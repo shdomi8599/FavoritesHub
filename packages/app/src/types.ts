@@ -77,10 +77,6 @@ export interface ApiResultAccessToken {
   mail: string;
 }
 
-export interface DashBoardChildProps {
-  logoutEvent: () => void;
-}
-
 export interface Preset {
   id: number;
   order: number;

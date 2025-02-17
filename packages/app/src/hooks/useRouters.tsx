@@ -21,10 +21,15 @@ export const useRouters = () => {
     router.push("/login");
   };
 
+  const moveReload = () => {
+    router.reload();
+  };
+
   return {
     pathname,
     moveHome,
     moveGuest,
     moveLogin,
+    moveReload,
   };
 };

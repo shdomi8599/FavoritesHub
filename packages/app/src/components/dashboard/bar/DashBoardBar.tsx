@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { useAuthModal, useHandler, useOutSideRef } from "@/hooks";
+import { useHandler, useOutSideRef } from "@/hooks";
 import { useDashboard } from "@/hooks/useDashboard";
-import { DashBoardChildProps } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
   Menu as MenuIcon,
@@ -18,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import { MutableRefObject } from "react";
 import BarUserModal from "./BarUserModal";
 
-interface Props extends DashBoardChildProps {
+interface Props {
   barHeight: number;
   barRef: MutableRefObject<HTMLDivElement>;
   isMinWidth600: boolean;
@@ -28,11 +27,8 @@ export default function DashboardBar({
   barRef,
   barHeight,
   isMinWidth600,
-  logoutEvent,
 }: Props) {
   const contentBoxTop = isMinWidth600 ? barHeight - 27 : barHeight - 25;
-
-  const { handleSignUpModal } = useAuthModal();
   const { isDashboard, handleIsDashboard } = useDashboard();
   const {
     isBoolean: isOpen,
@@ -78,8 +74,6 @@ export default function DashboardBar({
             <BarUserModal
               contentBoxTop={contentBoxTop}
               handleOpen={handleOpen}
-              logoutEvent={logoutEvent}
-              handleModalOpen={handleSignUpModal}
             />
           )}
         </UserIconBox>

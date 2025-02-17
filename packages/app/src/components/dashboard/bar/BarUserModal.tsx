@@ -1,4 +1,5 @@
-import { useAuth } from "@/hooks";
+import { useAuth, useAuthModal } from "@/hooks";
+import { useAuthEvent } from "@/hooks/useAuthEvent";
 import { useRouters } from "@/hooks/useRouters";
 import {
   AccountCircle as AccountCircleIcon,
@@ -20,17 +21,12 @@ import { styled } from "@mui/material/styles";
 type Props = {
   contentBoxTop: number;
   handleOpen: () => void;
-  logoutEvent: () => void;
-  handleModalOpen: () => void;
 };
 
-export default function BarUserModal({
-  contentBoxTop,
-  handleOpen,
-  logoutEvent,
-  handleModalOpen,
-}: Props) {
+export default function BarUserModal({ contentBoxTop, handleOpen }: Props) {
+  const { authLogout } = useAuthEvent();
   const { isLogin, userMail } = useAuth();
+  const { handleSignUpModal } = useAuthModal();
   const { pathname, moveGuest, moveLogin } = useRouters();
 
   return (
@@ -56,7 +52,7 @@ export default function BarUserModal({
             }}
           >
             {isLogin ? (
-              <CenterBox onClick={logoutEvent} sx={{ cursor: "pointer" }}>
+              <CenterBox onClick={authLogout} sx={{ cursor: "pointer" }}>
                 <DirectionsRunIcon />
                 <span>로그아웃</span>
               </CenterBox>
@@ -80,7 +76,7 @@ export default function BarUserModal({
                   sx={{
                     cursor: "pointer",
                   }}
-                  onClick={handleModalOpen}
+                  onClick={handleSignUpModal}
                 >
                   <AccountCircleIcon fontSize="large" />
                   <span>회원가입</span>

@@ -1,4 +1,5 @@
 import {
+  postAuthLogout,
   postAuthVerify,
   postAuthVerifyLogin,
   postSignUp,
@@ -7,9 +8,12 @@ import {
 } from "@/api/auth";
 import { guestFavoritesAdd } from "@/api/favorite";
 import {
+  dragFavoriteDataState,
+  dragPresetDataState,
   isLoadingState,
   isPasswordForgotState,
   isRefreshTokenState,
+  viewPresetState,
 } from "@/states";
 import {
   Favorite,
@@ -27,17 +31,35 @@ import {
   successAlert,
 } from "@/util";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useAuth, useAuthModal } from ".";
+import { useAuth, useAuthModal, useFavoriteEvent, usePresetEvent } from ".";
+import { useResetQuery } from "./react-query";
 import { useRouters } from "./useRouters";
 
 export const useAuthEvent = () => {
   const setIsLoading = useSetRecoilState(isLoadingState);
+  const setViewPreset = useSetRecoilState(viewPresetState);
+  const setDragPresetData = useSetRecoilState(dragPresetDataState);
+  const setDragFavoriteData = useSetRecoilState(dragFavoriteDataState);
   const isRefreshToken = useRecoilValue(isRefreshTokenState);
   const [isForgot, setIsForgot] = useRecoilState(isPasswordForgotState);
 
-  const { moveLogin, moveHome } = useRouters();
-  const { setUserId, setAccessToken, userMail, setUserMail } = useAuth();
+  const { resetPresetList } = useResetQuery();
+  const { presetRelocation } = usePresetEvent();
+  const { favoriteRelocation } = useFavoriteEvent();
+  const { moveLogin, moveHome, moveReload } = useRouters();
   const { offAuthModal, handleAuthModal } = useAuthModal();
+  const { userMail, accessToken, setUserId, setAccessToken, setUserMail } =
+    useAuth();
+
+  const resetUserData = () => {
+    setUserMail("");
+    setAccessToken("");
+    setViewPreset(null!);
+    setDragPresetData([]);
+    setDragFavoriteData([]);
+    resetPresetList();
+    moveLogin();
+  };
 
   const alertEvent = () => {
     handleAuthModal("verify");
@@ -137,5 +159,27 @@ export const useAuthEvent = () => {
     }
   };
 
-  return { authForgotPassword, authSignUp, authMailVerify, authUpdatePassword };
+  const authLogout = async () => {
+    try {
+      await favoriteRelocation();
+      await presetRelocation();
+      const { message } = await postAuthLogout(accessToken);
+
+      if (message === "success") {
+        resetUserData();
+        moveLogin();
+      }
+    } catch {
+      resetUserData();
+      moveReload();
+    }
+  };
+
+  return {
+    authForgotPassword,
+    authSignUp,
+    authMailVerify,
+    authUpdatePassword,
+    authLogout,
+  };
 };

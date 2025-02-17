@@ -14,7 +14,6 @@ export const useBarHeight = () => {
     handleheight();
     window.addEventListener("resize", handleheight);
     return () => window.removeEventListener("resize", handleheight);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

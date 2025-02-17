@@ -1,4 +1,4 @@
-import { getAuthRefreshToken, postAuthLogout } from "@/api/auth";
+import { getAuthRefreshToken } from "@/api/auth";
 import {
   useAuth,
   useBarHeight,
@@ -11,7 +11,6 @@ import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useRouters } from "@/hooks/useRouters";
 import {
-  dragFavoriteDataState,
   dragPresetDataState,
   guestPresetsState,
   isGuideModalState,
@@ -57,7 +56,7 @@ export default function Dashboard({
   const { presetRelocation } = usePresetEvent();
   const { favoriteRelocation } = useFavoriteEvent();
   const { favoriteRelocationGuest } = useGuestFavoriteEvent();
-  const { pathname, moveGuest, moveLogin } = useRouters();
+  const { pathname, moveGuest } = useRouters();
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
 
   const setPresetLength = useSetRecoilState(presetLengthState);
@@ -67,7 +66,6 @@ export default function Dashboard({
 
   const { data: presets } = usePresetList(userId, accessToken);
 
-  const setDragFavoriteData = useSetRecoilState(dragFavoriteDataState);
   const [dragPresetData, setDragPresetData] =
     useRecoilState(dragPresetDataState);
   useEffect(() => {
@@ -76,22 +74,6 @@ export default function Dashboard({
   }, [presets]);
 
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
-
-  const logoutEvent = async () => {
-    await favoriteRelocation();
-    await presetRelocation();
-    const { message } = await postAuthLogout(accessToken);
-
-    if (message === "success") {
-      setUserMail("");
-      setAccessToken("");
-      setViewPreset(null!);
-      setDragPresetData([]);
-      setDragFavoriteData([]);
-      resetPresetList();
-      moveLogin();
-    }
-  };
 
   // 이펙트
   useEffect(() => {
@@ -209,12 +191,8 @@ export default function Dashboard({
           barRef={barRef}
           barHeight={barHeight}
           isMinWidth600={isMinWidth600}
-          logoutEvent={logoutEvent}
         />
-        <DashboardDrawer
-          presets={isGuest ? guestPresets : dragPresetData!}
-          logoutEvent={logoutEvent}
-        />
+        <DashboardDrawer presets={isGuest ? guestPresets : dragPresetData!} />
         <Main component="main" barheight={barHeight}>
           {children}
         </Main>
