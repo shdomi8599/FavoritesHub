@@ -5,6 +5,7 @@ import {
 } from "@/guest/preset";
 import {
   dragFavoriteDataState,
+  favoritesLengthState,
   guestFavoritesState,
   guestPresetsState,
   isLoadingState,
@@ -31,6 +32,7 @@ export const useGuestPresetEvent = () => {
   const setViewPreset = useSetRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
   const setGuestFavorites = useSetRecoilState(guestFavoritesState);
+  const setFavoritesLength = useSetRecoilState(favoritesLengthState);
   const setDragFavoriteData = useSetRecoilState(dragFavoriteDataState);
 
   const presetAddGuest = async (presetName: string) => {
@@ -74,6 +76,7 @@ export const useGuestPresetEvent = () => {
         setGuestPresets([...newPreset]);
         setViewPreset(newPreset[0]);
         removeLocalStorageItem("favoriteList");
+        setFavoritesLength(0);
       }
     } finally {
       setIsLoading(false);
