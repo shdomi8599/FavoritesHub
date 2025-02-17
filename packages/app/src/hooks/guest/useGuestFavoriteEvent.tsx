@@ -13,8 +13,13 @@ import {
   isDisableLayoutUpdateState,
   selectedFavoriteIdState,
 } from "@/states";
-import { Favorite } from "@/types";
-import { errorAlert, getLocalStorageItem, successAlert } from "@/util";
+import { Favorite, ImportFavorite } from "@/types";
+import {
+  confirmAlert,
+  errorAlert,
+  getLocalStorageItem,
+  successAlert,
+} from "@/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useFavoriteModal } from "../useFavoriteModal";
 
@@ -113,6 +118,28 @@ export const useGuestFavoriteEvent = () => {
     }
   };
 
+  const favoriteImportGuest = async (fileData: ImportFavorite[]) => {
+    try {
+      await confirmAlert(
+        "즐겨찾기 삽입을 진행하시겠습니까?",
+        "즐겨찾기 삽입이",
+      );
+
+      await Promise.all(
+        fileData.map(
+          async ({ favoriteName, address }) =>
+            await guestFavoriteAdd(favoriteName, address),
+        ),
+      );
+
+      const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+      setGuestFavorites([...favorites]);
+      offFavoriteModal();
+    } catch {
+    } finally {
+    }
+  };
+
   return {
     favoriteAddGuest,
     favoriteEditGuest,
@@ -121,5 +148,6 @@ export const useGuestFavoriteEvent = () => {
     favoriteVisitedGuest,
     favoriteHandleStarGuest,
     favoriteRelocationGuest,
+    favoriteImportGuest,
   };
 };

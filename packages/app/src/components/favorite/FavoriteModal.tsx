@@ -17,7 +17,8 @@ export default function FavoriteModal() {
     useFavoriteModal();
   const { favoriteAdd, favoriteEdit, favoriteExport, favoriteImport } =
     useFavoriteEvent();
-  const { favoriteAddGuest, favoriteEditGuest } = useGuestFavoriteEvent();
+  const { favoriteAddGuest, favoriteEditGuest, favoriteImportGuest } =
+    useGuestFavoriteEvent();
 
   const modalData: { [key: string]: JSX.Element } = {
     add: (
@@ -33,7 +34,10 @@ export default function FavoriteModal() {
       />
     ),
     import: (
-      <ImportForm isLoading={isLoading} favoriteImport={favoriteImport} />
+      <ImportForm
+        isLoading={isLoading}
+        favoriteImport={isGuest ? favoriteImportGuest : favoriteImport}
+      />
     ),
     export: (
       <ExportForm isLoading={isLoading} favoriteExport={favoriteExport} />

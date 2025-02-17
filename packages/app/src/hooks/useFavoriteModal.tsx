@@ -42,6 +42,10 @@ export const useFavoriteModal = () => {
   };
 
   const importFavoritesModal = async () => {
+    if (!presetLength) {
+      return errorAlert("프리셋을 추가해주세요.", "즐겨찾기 추출");
+    }
+
     setFavoriteModal("import");
     openFavoriteModal();
   };
