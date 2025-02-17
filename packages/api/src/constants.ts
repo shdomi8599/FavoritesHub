@@ -15,6 +15,7 @@ export const {
   NODE_ENV,
   JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET,
+  DB_PASSWORD,
 } = process.env;
 
 export const baseClientURL =

@@ -1,18 +1,19 @@
+import { DB_PASSWORD } from "src/constants";
 import { DataSource, DataSourceOptions } from "typeorm";
 
 //  AWS
-// docker run --platform linux/amd64 --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=a7BSQzn5PaQVCfkX -d mysql:5.7
+// docker run --platform linux/amd64 --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=DB_PASSWORD -d mysql:5.7
 
 // M1칩 arm64v8 사용 < 오라클
 // sudo docker pull arm64v8/mysql
-// sudo docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=a7BSQzn5PaQVCfkX -d arm64v8/mysql
+// sudo docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=DB_PASSWORD -d arm64v8/mysql
 
 export const dataSourceOptions: DataSourceOptions = {
   type: "mysql",
   host: "127.0.0.1",
   port: 3306,
   username: "root",
-  password: "a7BSQzn5PaQVCfkX",
+  password: DB_PASSWORD,
   database: "dev",
   synchronize: false,
   logging: false,
