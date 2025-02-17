@@ -1,7 +1,6 @@
-import { useAuth, useAuthModal } from "@/hooks";
-import { isPasswordForgotState, isRefreshTokenState } from "@/states";
+import { useAuthModal } from "@/hooks";
+import { useAuthEvent } from "@/hooks/useAuthEvent";
 import { Modal } from "@mui/material";
-import { useRecoilState, useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
 import {
   ForgotPasswordForm,
@@ -11,45 +10,30 @@ import {
 } from "./form";
 
 export default function AuthModal() {
-  const isRefreshToken = useRecoilValue(isRefreshTokenState);
-  const { setUserId, setAccessToken, userMail, setUserMail } = useAuth();
   const { isAuthModal, offAuthModal, handleAuthModal, authModal } =
     useAuthModal();
 
-  const [isForgot, setIsForgot] = useRecoilState(isPasswordForgotState);
+  const { authForgotPassword, authSignUp, authMailVerify, authUpdatePassword } =
+    useAuthEvent();
 
-  const modalData: Record<string, JSX.Element> = {
+  const modalData = {
     password: (
       <ForgotPasswordForm
-        handleClose={offAuthModal}
+        authForgotPassword={authForgotPassword}
+        offAuthModal={offAuthModal}
         handleAuthModal={handleAuthModal}
-        setIsForgot={setIsForgot}
-        setUserMail={setUserMail}
       />
     ),
     signUp: (
       <SignUpForm
+        authSignUp={authSignUp}
         handleAuthModal={handleAuthModal}
-        handleClose={offAuthModal}
+        offAuthModal={offAuthModal}
       />
     ),
-    verify: (
-      <MailVerifyForm
-        setUserMail={setUserMail}
-        handleAuthModal={handleAuthModal}
-        handleClose={offAuthModal}
-        setAccessToken={setAccessToken}
-        setUserId={setUserId}
-        userMail={userMail}
-        isForgot={isForgot}
-        isRefreshToken={isRefreshToken}
-      />
-    ),
+    verify: <MailVerifyForm authMailVerify={authMailVerify} />,
     updatePassword: (
-      <UpdatePasswordForm
-        handleClose={offAuthModal}
-        setUserMail={setUserMail}
-      />
+      <UpdatePasswordForm authUpdatePassword={authUpdatePassword} />
     ),
   };
 

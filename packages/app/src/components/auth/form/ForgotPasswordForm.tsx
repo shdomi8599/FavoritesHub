@@ -1,4 +1,3 @@
-import { postUserExist } from "@/api/auth";
 import {
   ModalButton,
   ModalForm,
@@ -9,21 +8,17 @@ import {
 import { authFormOptions, authInputLabel } from "@/const";
 import { useRouters } from "@/hooks/useRouters";
 import { AuthProps, LoginFormInput } from "@/types";
-import { callbackSuccessAlert, errorAlert } from "@/util";
 import { Box, Container, Grid } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SetterOrUpdater } from "recoil";
 
 interface Props extends AuthProps {
-  setIsForgot: SetterOrUpdater<boolean>;
-  setUserMail: SetterOrUpdater<string>;
+  authForgotPassword: (data: LoginFormInput) => Promise<void>;
 }
 
 export default function ForgotPasswordForm({
   handleAuthModal,
-  setIsForgot,
-  setUserMail,
-  handleClose,
+  offAuthModal,
+  authForgotPassword,
 }: Props) {
   const { moveLogin } = useRouters();
   const {
@@ -32,27 +27,8 @@ export default function ForgotPasswordForm({
     formState: { errors, isSubmitted },
   } = useForm<LoginFormInput>();
 
-  const alertEvent = () => {
-    handleAuthModal("verify");
-  };
-
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
-    const { mail } = data;
-
-    const user = await postUserExist(mail);
-
-    if (!user) {
-      return errorAlert("가입되지 않은 이메일입니다.", "이메일 확인");
-    }
-
-    setUserMail(mail);
-    setIsForgot(true);
-
-    return callbackSuccessAlert(
-      "이메일 인증을 부탁드려요.",
-      "인증 하러가기",
-      alertEvent,
-    );
+    await authForgotPassword(data);
   };
 
   return (
@@ -81,7 +57,7 @@ export default function ForgotPasswordForm({
             <Grid item>
               <ModalLink
                 clickEvent={() => {
-                  handleClose();
+                  offAuthModal();
                   moveLogin();
                 }}
               >

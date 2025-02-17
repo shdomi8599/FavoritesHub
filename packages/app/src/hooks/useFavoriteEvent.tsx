@@ -172,7 +172,7 @@ export const useFavoriteEvent = () => {
   };
 
   const favoriteRelocation = async () => {
-    const currentPresetId = viewPreset.id;
+    const currentPresetId = viewPreset?.id;
 
     const orderList = favoriteOrderList.map(({ id, order }) => ({ id, order }));
     const sortedDragFavoriteData = dragFavoriteData

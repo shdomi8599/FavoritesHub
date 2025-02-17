@@ -6,6 +6,10 @@ export interface SignUpFormInput extends LoginFormInput {
   confirmPassword?: string;
 }
 
+export interface MailVerifyInput {
+  verifyCode: string;
+}
+
 export interface updatePasswordFormInput {
   password: string;
   confirmPassword: string;
@@ -19,7 +23,7 @@ export type AuthModalState =
 
 export interface AuthProps {
   handleAuthModal: (path: AuthModalState) => void;
-  handleClose: () => void;
+  offAuthModal: () => void;
 }
 
 export type PresetModalState = "add" | "edit";

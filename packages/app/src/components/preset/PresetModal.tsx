@@ -14,7 +14,7 @@ export default function PresetModal() {
   const { presetAddGuest, presetEditGuest } = useGuestPresetEvent();
   const { isPresetModal, offPresetModal, presetModal } = usePresetModal();
 
-  const modalData: { [key: string]: JSX.Element } = {
+  const modalData = {
     add: (
       <AddForm
         presetAdd={isGuest ? presetAddGuest : presetAdd}

@@ -20,7 +20,7 @@ export default function FavoriteModal() {
   const { favoriteAddGuest, favoriteEditGuest, favoriteImportGuest } =
     useGuestFavoriteEvent();
 
-  const modalData: { [key: string]: JSX.Element } = {
+  const modalData = {
     add: (
       <AddForm
         favoriteAdd={isGuest ? favoriteAddGuest : favoriteAdd}

@@ -1,4 +1,4 @@
-import { postAuthMail, postAuthVerify, postAuthVerifyLogin } from "@/api/auth";
+import { postAuthMail } from "@/api/auth";
 import {
   ModalAlertMessage,
   ModalButton,
@@ -7,35 +7,20 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions } from "@/const";
-import { useRouters } from "@/hooks/useRouters";
-import { AuthProps } from "@/types";
-import { errorAlert, successAlert } from "@/util";
+import { useAuth } from "@/hooks";
+import { MailVerifyInput } from "@/types";
+import { successAlert } from "@/util";
 import { Box, Container, Grid, TextField } from "@mui/material";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTimer } from "react-timer-hook";
-import { SetterOrUpdater } from "recoil";
 
-interface Props extends AuthProps {
-  handleClose: () => void;
-  setAccessToken: SetterOrUpdater<string>;
-  setUserId: SetterOrUpdater<number>;
-  setUserMail: SetterOrUpdater<string>;
-  userMail: string;
-  isForgot: boolean;
-  isRefreshToken: boolean;
+interface Props {
+  authMailVerify: (data: MailVerifyInput) => Promise<void>;
 }
 
-export default function MailVerifyForm({
-  handleClose,
-  setAccessToken,
-  userMail,
-  isForgot,
-  isRefreshToken,
-  handleAuthModal,
-  setUserId,
-  setUserMail,
-}: Props) {
+export default function MailVerifyForm({ authMailVerify }: Props) {
+  const { userMail } = useAuth();
   const expiryTimestamp = new Date();
   expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 180);
   const { seconds, restart, minutes } = useTimer({ expiryTimestamp });
@@ -43,8 +28,7 @@ export default function MailVerifyForm({
     register,
     handleSubmit,
     formState: { errors, isSubmitted },
-  } = useForm<{ verifyCode: string }>();
-  const { moveHome } = useRouters();
+  } = useForm<MailVerifyInput>();
 
   const onVerifyMail = async () => {
     restart(expiryTimestamp);
@@ -52,37 +36,12 @@ export default function MailVerifyForm({
     await postAuthMail(userMail);
   };
 
-  const onSubmit: SubmitHandler<{ verifyCode: string }> = async (data) => {
-    const { verifyCode } = data;
-    const { message } = await postAuthVerify(userMail, verifyCode);
-
-    if (message === "not verify") {
-      return errorAlert("인증번호가 일치하지 않습니다.", "인증번호");
-    }
-
-    if (message === "success") {
-      successAlert("이메일 인증에 성공했습니다.", "이메일 인증");
-    }
-
-    if (isForgot) {
-      return handleAuthModal("updatePassword");
-    }
-
-    const { accessToken, userId } = await postAuthVerifyLogin(
-      userMail,
-      isRefreshToken,
-    );
-
-    setUserMail(userMail);
-    setUserId(userId);
-    setAccessToken(accessToken!);
-    handleClose();
-    moveHome();
+  const onSubmit: SubmitHandler<MailVerifyInput> = async (data) => {
+    await authMailVerify(data);
   };
 
   useEffect(() => {
     onVerifyMail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

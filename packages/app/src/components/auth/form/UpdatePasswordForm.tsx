@@ -1,4 +1,3 @@
-import { putUpdatePassword } from "@/api/auth";
 import {
   ModalButton,
   ModalForm,
@@ -6,23 +5,15 @@ import {
   ModalTitle,
 } from "@/components/modal";
 import { authFormOptions, authInputLabel } from "@/const";
-import { userMailState } from "@/states";
 import { updatePasswordFormInput } from "@/types";
-import { successAlert } from "@/util";
 import { Box, Container } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SetterOrUpdater, useRecoilValue } from "recoil";
 
 interface Props {
-  handleClose: () => void;
-  setUserMail: SetterOrUpdater<string>;
+  authUpdatePassword: (data: updatePasswordFormInput) => Promise<void>;
 }
 
-export default function UpdatePasswordForm({
-  handleClose,
-  setUserMail,
-}: Props) {
-  const userMail = useRecoilValue(userMailState);
+export default function UpdatePasswordForm({ authUpdatePassword }: Props) {
   const {
     register,
     handleSubmit,
@@ -38,14 +29,7 @@ export default function UpdatePasswordForm({
   };
 
   const onSubmit: SubmitHandler<updatePasswordFormInput> = async (data) => {
-    const { password } = data;
-    const { message } = await putUpdatePassword(userMail, password);
-
-    if (message === "success") {
-      setUserMail("");
-      handleClose();
-      successAlert("재설정이 완료되었습니다.", "비밀번호 재설정");
-    }
+    await authUpdatePassword(data);
   };
 
   return (
