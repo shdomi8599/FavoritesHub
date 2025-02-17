@@ -227,8 +227,5 @@ export class FavoritesService {
         },
       ),
     );
-
-    const savedFavorites = await this.findAll(presetId);
-    return savedFavorites;
   }
 }

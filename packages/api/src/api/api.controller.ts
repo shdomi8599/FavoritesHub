@@ -609,10 +609,6 @@ export class ApiController {
     @Body() dto: ReqPostFavoriteImportDto,
   ) {
     const { presetId, favorites } = dto;
-    const savedFavorites = await this.favoritesService.import(
-      presetId,
-      favorites,
-    );
-    return savedFavorites;
+    await this.favoritesService.import(presetId, favorites);
   }
 }
