@@ -58,7 +58,14 @@ export default function ImportForm({ isLoading, favoriteImport }: Props) {
       >
         <ModalTitle name="즐겨찾기 삽입" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <input type="file" accept=".json" onChange={handleFileUpload} />
+          <input
+            style={{
+              paddingTop: "8px",
+            }}
+            type="file"
+            accept=".json"
+            onChange={handleFileUpload}
+          />
           {error && <Typography color="error">{error}</Typography>}
           {fileData && (
             <Typography color="primary">
