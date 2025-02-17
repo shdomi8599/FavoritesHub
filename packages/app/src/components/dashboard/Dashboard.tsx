@@ -11,6 +11,7 @@ import { useBreakPoints } from "@/hooks/useBreakPoints";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useRouters } from "@/hooks/useRouters";
 import {
+  dragFavoriteDataState,
   dragPresetDataState,
   guestPresetsState,
   isGuideModalState,
@@ -64,10 +65,9 @@ export default function Dashboard({
   const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
   const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);
 
-  // 데이터 훅
   const { data: presets } = usePresetList(userId, accessToken);
 
-  // 드래그 프리셋 데이터
+  const setDragFavoriteData = useSetRecoilState(dragFavoriteDataState);
   const [dragPresetData, setDragPresetData] =
     useRecoilState(dragPresetDataState);
   useEffect(() => {
@@ -75,7 +75,6 @@ export default function Dashboard({
     setDragPresetData(presets);
   }, [presets]);
 
-  // 게스트용 데이터
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
 
   const logoutEvent = async () => {
@@ -86,6 +85,9 @@ export default function Dashboard({
     if (message === "success") {
       setUserMail("");
       setAccessToken("");
+      setViewPreset(null!);
+      setDragPresetData([]);
+      setDragFavoriteData([]);
       resetPresetList();
       moveLogin();
     }
