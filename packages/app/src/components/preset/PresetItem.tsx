@@ -79,28 +79,30 @@ export default function PresetItem({ preset }: Props) {
       <Tooltip title={presetName}>
         <ListItemText sx={itemTextStyle} primary={presetName} />
       </Tooltip>
-      <IconContainer>
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            editPresetModal(id);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            if (isGuest) {
-              presetDeleteGuest(id);
-              return;
-            }
-            presetDelete(id);
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </IconContainer>
+      {isDashboard && (
+        <IconContainer>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              editPresetModal(id);
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isGuest) {
+                presetDeleteGuest(id);
+                return;
+              }
+              presetDelete(id);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </IconContainer>
+      )}
     </ListItemButton>
   );
 }
