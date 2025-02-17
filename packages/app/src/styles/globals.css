@@ -6,7 +6,7 @@
 
   :root{
     font-size: 80%;
-    /* @media screen and (max-width: 1400px) { 반응형으로 폰트 사이즈 조절할 수 있음
+    /* @media screen and (max-width: 1400px) {
       font-size: 70%;
     } */
   }
@@ -17,4 +17,21 @@
 
   .swal2-container{
     z-index: 999998 !important;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
