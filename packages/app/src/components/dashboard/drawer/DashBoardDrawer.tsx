@@ -66,7 +66,17 @@ export default function DashboardDrawer({ presets, logoutEvent }: Props) {
         </IconButton>
       </Toolbar>
       <Divider />
-      <List component="nav" sx={{ pt: 0, flex: 1 }}>
+      <List
+        component="nav"
+        sx={{
+          pt: 0,
+          flex: 1,
+          overflowY: "auto",
+          "::-webkit-scrollbar": {
+            width: "6px",
+          },
+        }}
+      >
         {pathname === "/login" ? (
           isDashboard && (
             <Box sx={{ p: 1, textAlign: "center" }}>로그인을 부탁드려요.</Box>
@@ -189,14 +199,11 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
+    overflow: "hidden",
     maxHeight: "100vh",
-    overflowY: "auto",
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
-    "::-webkit-scrollbar": {
-      width: "6px",
-    },
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
