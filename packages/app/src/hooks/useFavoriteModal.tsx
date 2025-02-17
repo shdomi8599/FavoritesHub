@@ -41,6 +41,16 @@ export const useFavoriteModal = () => {
     openFavoriteModal();
   };
 
+  const importFavoritesModal = async () => {
+    setFavoriteModal("import");
+    openFavoriteModal();
+  };
+
+  const exportFavoritesModal = async () => {
+    setFavoriteModal("export");
+    openFavoriteModal();
+  };
+
   return {
     viewPreset,
     favoriteModal,
@@ -50,5 +60,7 @@ export const useFavoriteModal = () => {
     setFavoriteModal,
     addFavoriteModal,
     editFavoriteModal,
+    importFavoritesModal,
+    exportFavoritesModal,
   };
 };

@@ -6,6 +6,8 @@ import { Box, Modal } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { ModalContentBox } from "../modal";
 import { AddForm, EditForm } from "./form";
+import ExportForm from "./form/ExportForm";
+import ImportForm from "./form/ImportForm";
 
 export default function FavoriteModal() {
   const isLoading = useRecoilValue(isLoadingState);
@@ -13,7 +15,7 @@ export default function FavoriteModal() {
   const { isGuest } = useAuth();
   const { isFavoriteModal, offFavoriteModal, favoriteModal } =
     useFavoriteModal();
-  const { favoriteAdd, favoriteEdit } = useFavoriteEvent();
+  const { favoriteAdd, favoriteEdit, favoriteExport } = useFavoriteEvent();
   const { favoriteAddGuest, favoriteEditGuest } = useGuestFavoriteEvent();
 
   const modalData: { [key: string]: JSX.Element } = {
@@ -28,6 +30,10 @@ export default function FavoriteModal() {
         favoriteEdit={isGuest ? favoriteEditGuest : favoriteEdit}
         isLoading={isLoading}
       />
+    ),
+    import: <ImportForm isLoading={isLoading} />,
+    export: (
+      <ExportForm isLoading={isLoading} favoriteExport={favoriteExport} />
     ),
   };
 

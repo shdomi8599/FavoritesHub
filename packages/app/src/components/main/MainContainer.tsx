@@ -15,6 +15,8 @@ import { useFavoriteModal } from "@/hooks/useFavoriteModal";
 import { guideStepState, isDashboardState, isGuideModalState } from "@/states";
 import { Favorite } from "@/types";
 import {
+  FileDownload as FileDownloadIcon,
+  FileUpload as FileUploadIcon,
   Search as SearchIcon,
   StarBorder as StarBorderIcon,
   Star as StarIcon,
@@ -53,7 +55,12 @@ export default function MainContainer({ favorites }: Props) {
   const { isBoolean: isStar, handleBoolean: handleStar } = useHandler(false);
 
   const { isMaxWidth600, isMaxWidth900 } = useBreakPoints();
-  const { viewPreset, addFavoriteModal } = useFavoriteModal();
+  const {
+    viewPreset,
+    addFavoriteModal,
+    exportFavoritesModal,
+    importFavoritesModal,
+  } = useFavoriteModal();
   const isDashboard = useRecoilValue(isDashboardState);
   const isHideContent = isDashboard && isMaxWidth600;
   const { favoriteRelocation } = useFavoriteEvent();
@@ -196,6 +203,12 @@ export default function MainContainer({ favorites }: Props) {
                   즐겨찾기 추가
                 </Button>
               )}
+              <IconButton onClick={importFavoritesModal}>
+                <FileUploadIcon fontSize="large" />
+              </IconButton>
+              <IconButton onClick={exportFavoritesModal}>
+                <FileDownloadIcon fontSize="large" />
+              </IconButton>
             </>
           )}
         </Box>

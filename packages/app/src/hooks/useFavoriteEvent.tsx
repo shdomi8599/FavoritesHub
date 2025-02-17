@@ -194,6 +194,49 @@ export const useFavoriteEvent = () => {
     }
   };
 
+  const downloadJsonFile = (data: object, filename: string) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${filename}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const favoriteExport = async (checkedItems: boolean[]) => {
+    setIsLoading(true);
+    try {
+      await confirmAlert(
+        "즐겨찾기 추출을 진행하시겠습니까?",
+        "즐겨찾기 추출이",
+      );
+
+      const selectedFavorites = dragFavoriteData.filter(
+        (_, index) => checkedItems[index],
+      );
+
+      const resetFavorites = selectedFavorites.map((favorite) => {
+        return {
+          ...favorite,
+          id: 0,
+          visitedCount: 0,
+          createdAt: "",
+          lastVisitedAt: "",
+        };
+      });
+      downloadJsonFile(resetFavorites, "favorites");
+      offFavoriteModal();
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     favoriteAdd,
     favoriteEdit,
@@ -202,5 +245,6 @@ export const useFavoriteEvent = () => {
     favoriteHandleStar,
     favoriteVisitedCount,
     favoriteRelocation,
+    favoriteExport,
   };
 };

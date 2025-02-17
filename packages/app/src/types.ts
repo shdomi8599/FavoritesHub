@@ -24,7 +24,7 @@ export interface AuthProps {
 
 export type PresetModalState = "add" | "edit";
 
-export type FavoriteModalState = "add" | "edit";
+export type FavoriteModalState = "add" | "edit" | "import" | "export";
 
 export interface PresetAddFormInput {
   presetName: string;
