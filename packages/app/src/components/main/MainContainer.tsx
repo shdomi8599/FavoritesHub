@@ -200,7 +200,7 @@ export default function MainContainer({ favorites }: Props) {
           )}
         </Box>
       </CenterContainer>
-      {selectValue === "default" && !isStar ? (
+      {selectValue === "default" && !isStar && !inputValue ? (
         <DraggableFavoriteList isGrid={isGrid} />
       ) : (
         <Grid
