@@ -6,7 +6,6 @@ import {
   Checkbox,
   Container,
   FormControlLabel,
-  FormGroup,
   FormLabel,
 } from "@mui/material";
 import { useState } from "react";
@@ -57,8 +56,17 @@ export default function ExportForm({ isLoading, favoriteExport }: Props) {
       >
         <ModalTitle name="즐겨찾기 추출" />
         <ModalForm submitEvent={handleSubmit(onSubmit)}>
-          <FormGroup sx={{ pt: 1 }}>
-            <FormLabel>추출할 즐겨찾기 선택</FormLabel>
+          <FormLabel>추출할 즐겨찾기 선택</FormLabel>
+          <Box
+            sx={{
+              pt: 1,
+              overflowY: "auto",
+              overflowX: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              maxHeight: "200px",
+            }}
+          >
             {formData.map(({ label }, index) => (
               <FormControlLabel
                 key={index}
@@ -71,7 +79,7 @@ export default function ExportForm({ isLoading, favoriteExport }: Props) {
                 label={label}
               />
             ))}
-          </FormGroup>
+          </Box>
           <ModalButton disabled={isLoading}>추출하기</ModalButton>
         </ModalForm>
       </Box>
