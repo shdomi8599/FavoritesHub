@@ -241,9 +241,13 @@ export class FavoritesService {
       );
     }
 
+    const targetFavorites = await this.findAll(targetPresetId);
+    const targetFavoriteLength = targetFavorites.length;
+
     const targetPreset = new Preset();
     targetPreset.id = targetPresetId;
     favorite.preset = targetPreset;
+    favorite.order = targetFavoriteLength;
     await this.favoriteTable.save(favorite);
 
     const remainingFavorites = await this.favoriteTable.find({
@@ -256,17 +260,6 @@ export class FavoritesService {
       order: index,
     }));
 
-    const targetFavorites = await this.favoriteTable.find({
-      where: { preset: { id: targetPresetId } },
-      order: { order: "ASC" },
-    });
-
-    const updatedTargetOrder = targetFavorites.map((fav, index) => ({
-      id: fav.id,
-      order: index,
-    }));
-
     await this.relocation(presetId, updatedOrder);
-    await this.relocation(targetPresetId, updatedTargetOrder);
   }
 }
