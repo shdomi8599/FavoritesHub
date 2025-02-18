@@ -266,7 +266,6 @@ export const useFavoriteEvent = () => {
       resetFavoriteList(viewPreset?.id);
       resetFavoriteList(targetPresetId);
     } catch {
-      location.reload();
     } finally {
       setIsLoading(false);
     }
