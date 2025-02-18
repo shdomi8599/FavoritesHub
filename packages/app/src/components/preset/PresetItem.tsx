@@ -38,9 +38,8 @@ export default function PresetItem({ preset }: Props) {
   const { isDashboard } = useDashboard();
   const { presetDelete } = usePresetEvent();
   const { editPresetModal } = usePresetModal();
-  const { favoriteTransfer } = useFavoriteEvent();
-  const { favoriteRelocation } = useFavoriteEvent();
   const { presetDeleteGuest } = useGuestPresetEvent();
+  const { favoriteRelocation, favoriteTransfer } = useFavoriteEvent();
 
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
