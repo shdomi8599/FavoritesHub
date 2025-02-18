@@ -20,12 +20,18 @@ import { PresetsService } from "src/presets/presets.service";
 import { Favorite, Preset } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
 import { generateRandomNumber } from "src/util";
-import { ReqPostFavoriteAddDto, ReqPutPavoriteDto } from "./dto/req/favorite";
-import { ReqPostFavoriteImportDto } from "./dto/req/favorite/reqPostFavoriteImport.dto";
-import { ReqPostFavoriteRelocationDto } from "./dto/req/favorite/reqPostFavoriteRelocation.dto";
-import { ReqPostFavoriteTransferDto } from "./dto/req/favorite/reqPostFavoriteTransfer.dto";
-import { ReqPostPresetAddDto, ReqPutPresetDto } from "./dto/req/preset";
-import { ReqPostPresetRelocationDto } from "./dto/req/preset/reqPostPresetRelocation.dto";
+import {
+  ReqPostFavoriteAddDto,
+  ReqPostFavoriteImportDto,
+  ReqPostFavoriteRelocationDto,
+  ReqPostFavoriteTransferDto,
+  ReqPutPavoriteDto,
+} from "./dto/req/favorite";
+import {
+  ReqPostPresetAddDto,
+  ReqPostPresetRelocationDto,
+  ReqPutPresetDto,
+} from "./dto/req/preset";
 import { ReqPostUserSignUpDto } from "./dto/req/user";
 import {
   ResGetAuthAccessTokenDto,
@@ -617,7 +623,7 @@ export class ApiController {
   @Post("favoriteTransfer")
   @ApiResponse({
     status: 200,
-    description: "즐겨찾기 삽입에 사용되는 API입니다.",
+    description: "즐겨찾기 이전에 사용되는 API입니다.",
   })
   async postTransferFavorite(
     @Request() req,
