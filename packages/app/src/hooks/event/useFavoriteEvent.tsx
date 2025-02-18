@@ -2,12 +2,12 @@ import {
   deleteFavorite,
   getFavoriteHandleStar,
   getFavoriteVisited,
+  getUpVisitedCountFavorite,
   postFavoriteAdd,
   postFavoriteImport,
   postFavoriteRelocation,
   postFavoriteTransfer,
   putFavoriteEdit,
-  upVisitedCountFavorite,
 } from "@/api/favorite";
 import {
   accessTokenState,
@@ -166,7 +166,7 @@ export const useFavoriteEvent = () => {
     try {
       setIsDisableLayoutUpdate(true);
       await favoriteRelocation();
-      await upVisitedCountFavorite(id, accessToken);
+      await getUpVisitedCountFavorite(id, accessToken);
     } catch (e: any) {
       if (e?.code === 401) {
         location.reload();

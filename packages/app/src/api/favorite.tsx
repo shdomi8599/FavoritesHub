@@ -134,7 +134,7 @@ export const deleteFavorite = async (
   });
 };
 
-export const upVisitedCountFavorite = async (
+export const getUpVisitedCountFavorite = async (
   favoriteId: number,
   accessToken: string,
 ) => {
