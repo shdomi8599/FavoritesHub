@@ -230,6 +230,43 @@ export class FavoritesService {
   }
 
   async transfer(presetId: number, targetPresetId: number, favoriteId: number) {
-    // 기존 아이디에서 삭제하고 타겟에 추가되면 될듯
+    const favorite = await this.favoriteTable.findOne({
+      where: { id: favoriteId, preset: { id: presetId } },
+      relations: ["preset"],
+    });
+
+    if (!favorite) {
+      throw new Error(
+        "해당 즐겨찾기가 존재하지 않거나 잘못된 Preset에 속해 있습니다.",
+      );
+    }
+
+    const targetPreset = new Preset();
+    targetPreset.id = targetPresetId;
+    favorite.preset = targetPreset;
+    await this.favoriteTable.save(favorite);
+
+    const remainingFavorites = await this.favoriteTable.find({
+      where: { preset: { id: presetId } },
+      order: { order: "ASC" },
+    });
+
+    const updatedOrder = remainingFavorites.map((fav, index) => ({
+      id: fav.id,
+      order: index,
+    }));
+
+    const targetFavorites = await this.favoriteTable.find({
+      where: { preset: { id: targetPresetId } },
+      order: { order: "ASC" },
+    });
+
+    const updatedTargetOrder = targetFavorites.map((fav, index) => ({
+      id: fav.id,
+      order: index,
+    }));
+
+    await this.relocation(presetId, updatedOrder);
+    await this.relocation(targetPresetId, updatedTargetOrder);
   }
 }
