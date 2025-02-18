@@ -4,7 +4,12 @@ import { useAuth } from "@/hooks/data";
 import { useFavoriteEvent, usePresetEvent } from "@/hooks/event";
 import { useGuestPresetEvent } from "@/hooks/guest";
 import { usePresetModal } from "@/hooks/modal";
-import { isPresetEventState, viewPresetState } from "@/states";
+import {
+  dragFavoriteIdState,
+  dragFavoriteItemState,
+  isPresetEventState,
+  viewPresetState,
+} from "@/states";
 import { Preset } from "@/types";
 import {
   Dashboard as DashboardIcon,
@@ -21,7 +26,7 @@ import {
   styled,
 } from "@mui/material";
 import { useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 interface Props {
   preset: Preset;
@@ -36,8 +41,11 @@ export default function PresetItem({ preset }: Props) {
   const { favoriteRelocation } = useFavoriteEvent();
   const { presetDeleteGuest } = useGuestPresetEvent();
 
-  const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
   const setIsPresetEvent = useSetRecoilState(isPresetEventState);
+  const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
+  const dragFavoriteItem = useRecoilValue(dragFavoriteItemState);
+  const dragFavoriteId = useRecoilValue(dragFavoriteIdState);
+  const isViewPreset = viewPreset?.id === id;
 
   const handleViewPreset = async () => {
     await favoriteRelocation();
@@ -50,6 +58,15 @@ export default function PresetItem({ preset }: Props) {
 
   return (
     <ListItemButton
+      onMouseMove={() => {
+        if (isViewPreset) {
+          return;
+        }
+        if (!dragFavoriteItem && dragFavoriteId) {
+          console.log(dragFavoriteId);
+          // 여기에 이벤트 작성하면 될듯
+        }
+      }}
       onClick={handleViewPreset}
       sx={{
         padding: "8px 0px",

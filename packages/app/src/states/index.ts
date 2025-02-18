@@ -5,6 +5,7 @@ import {
   Preset,
   PresetModalState,
 } from "@/types";
+import { GridItemHTMLElement } from "gridstack";
 import { atom } from "recoil";
 
 export const isLoginState = atom({
@@ -95,6 +96,16 @@ export const favoriteOrderListState = atom<Favorite[]>({
 
 export const favoritesLengthState = atom({
   key: "favoritesLengthState",
+  default: 0,
+});
+
+export const dragFavoriteItemState = atom<GridItemHTMLElement>({
+  key: "dragFavoriteItemState",
+  default: null!,
+});
+
+export const dragFavoriteIdState = atom({
+  key: "dragFavoriteIdState",
   default: 0,
 });
 

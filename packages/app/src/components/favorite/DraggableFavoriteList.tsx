@@ -1,14 +1,16 @@
 import { useBreakPoints } from "@/hooks/common";
 import {
   dragFavoriteDataState,
+  dragFavoriteIdState,
+  dragFavoriteItemState,
   favoriteOrderListState,
   isDisableLayoutUpdateState,
 } from "@/states";
 import { Box } from "@mui/material";
-import { GridStack, GridStackNode } from "gridstack";
+import { GridItemHTMLElement, GridStack, GridStackNode } from "gridstack";
 import "gridstack/dist/gridstack.css";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import FavoriteCard from "./FavoriteCard";
 
 interface Props {
@@ -18,11 +20,14 @@ interface Props {
 export default function DraggableFavoriteList({ isGrid }: Props) {
   const { isMaxWidth900, isMaxWidth1200 } = useBreakPoints();
   const dragFavoriteData = useRecoilValue(dragFavoriteDataState);
+  const setDragFavoriteId = useSetRecoilState(dragFavoriteIdState);
   const setFavoriteOrderList = useSetRecoilState(favoriteOrderListState);
   const isDiableLayoutUpdate = useRecoilValue(isDisableLayoutUpdateState);
 
   const gridRef = useRef<GridStack>(null!);
   const [gridData, setGridData] = useState<any[]>(null!);
+  const [dragFavoriteItem, setDragFavoriteItemState] =
+    useRecoilState<GridItemHTMLElement>(dragFavoriteItemState);
 
   /**
    * 로직 정리
@@ -87,6 +92,19 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
   };
 
   useEffect(() => {
+    if (dragFavoriteItem) {
+      const dragFavoriteId = Number(
+        dragFavoriteItem.className.split(" ")[0].split("-")[1],
+      );
+      setDragFavoriteId(dragFavoriteId);
+      return;
+    }
+    setTimeout(() => {
+      setDragFavoriteId(0);
+    }, 10);
+  }, [dragFavoriteItem]);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       import("gridstack").then((module) => {
         const gridInstance = module.GridStack.init({
@@ -94,6 +112,13 @@ export default function DraggableFavoriteList({ isGrid }: Props) {
           float: false,
         });
         gridRef.current = gridInstance;
+        gridInstance.on("dragstart", (event, el) => {
+          setDragFavoriteItemState(el);
+        });
+        gridInstance.on("dragstop", () => {
+          setDragFavoriteItemState(null!);
+        });
+
         updateGridLayout(gridInstance, isGrid);
 
         const savaItems = () => {

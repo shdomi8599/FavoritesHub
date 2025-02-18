@@ -103,7 +103,8 @@ function FavoriteCard({ isDrag, isGrid, favorite }: Props) {
     return (
       <div
         id={`favorite-${order}`}
-        className="grid-stack-item"
+        tabIndex={id}
+        className={`favoriteId-${id} grid-stack-item`}
         gs-no-resize="true"
       >
         <Card

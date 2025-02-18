@@ -228,4 +228,8 @@ export class FavoritesService {
       ),
     );
   }
+
+  async transfer(presetId: number, targetPresetId: number, favoriteId: number) {
+    // 기존 아이디에서 삭제하고 타겟에 추가되면 될듯
+  }
 }
