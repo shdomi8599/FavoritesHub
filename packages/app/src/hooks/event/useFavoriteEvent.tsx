@@ -5,12 +5,14 @@ import {
   postFavoriteAdd,
   postFavoriteImport,
   postFavoriteRelocation,
+  postFavoriteTransfer,
   putFavoriteEdit,
   upVisitedCountFavorite,
 } from "@/api/favorite";
 import {
   accessTokenState,
   dragFavoriteDataState,
+  dragFavoriteIdState,
   favoriteOrderListState,
   isDisableLayoutUpdateState,
   isLoadingState,
@@ -35,6 +37,7 @@ export const useFavoriteEvent = () => {
   const accessToken = useRecoilValue(accessTokenState);
   const dragFavoriteData = useRecoilValue(dragFavoriteDataState);
   const favoriteOrderList = useRecoilValue(favoriteOrderListState);
+  const dragFavoriteId = useRecoilValue(dragFavoriteIdState);
   const selectedFavoriteId = useRecoilValue(selectedFavoriteIdState);
   const id = viewPreset?.id;
 
@@ -246,6 +249,29 @@ export const useFavoriteEvent = () => {
     }
   };
 
+  const favoriteTransfer = async (targetPresetId: number) => {
+    setIsLoading(true);
+    try {
+      await confirmAlert(
+        "즐겨찾기 이전을 진행하시겠습니까?",
+        "즐겨찾기 이전이",
+      );
+      await postFavoriteTransfer(
+        viewPreset.id,
+        targetPresetId,
+        dragFavoriteId,
+        accessToken,
+      );
+
+      resetFavoriteList(viewPreset?.id);
+      resetFavoriteList(targetPresetId);
+    } catch {
+      location.reload();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     favoriteAdd,
     favoriteEdit,
@@ -256,5 +282,6 @@ export const useFavoriteEvent = () => {
     favoriteRelocation,
     favoriteExport,
     favoriteImport,
+    favoriteTransfer,
   };
 };

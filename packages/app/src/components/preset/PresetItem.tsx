@@ -38,6 +38,7 @@ export default function PresetItem({ preset }: Props) {
   const { isDashboard } = useDashboard();
   const { presetDelete } = usePresetEvent();
   const { editPresetModal } = usePresetModal();
+  const { favoriteTransfer } = useFavoriteEvent();
   const { favoriteRelocation } = useFavoriteEvent();
   const { presetDeleteGuest } = useGuestPresetEvent();
 
@@ -52,21 +53,22 @@ export default function PresetItem({ preset }: Props) {
     setViewPreset(preset);
   };
 
+  const mouseMoveEvent = async () => {
+    if (isViewPreset) {
+      return;
+    }
+    if (!dragFavoriteItem && dragFavoriteId) {
+      await favoriteTransfer(id);
+    }
+  };
+
   useEffect(() => {
     setIsPresetEvent(false);
   }, [preset]);
 
   return (
     <ListItemButton
-      onMouseMove={() => {
-        if (isViewPreset) {
-          return;
-        }
-        if (!dragFavoriteItem && dragFavoriteId) {
-          console.log(dragFavoriteId);
-          // 여기에 이벤트 작성하면 될듯
-        }
-      }}
+      onMouseMove={mouseMoveEvent}
       onClick={handleViewPreset}
       sx={{
         padding: "8px 0px",

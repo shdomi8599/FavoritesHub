@@ -84,6 +84,22 @@ export const postFavoriteImport = async (
     .then((res) => res.data);
 };
 
+export const postFavoriteTransfer = async (
+  presetId: number,
+  targetPresetId: number,
+  favoriteId: number,
+  accessToken: string,
+) => {
+  const body = { presetId, targetPresetId, favoriteId };
+  await api
+    .post<ApiResultMessage>(`favoriteTransfer`, body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then((res) => res.data);
+};
+
 export const getFavoriteVisited = async (
   favoriteId: number,
   accessToken: string,
