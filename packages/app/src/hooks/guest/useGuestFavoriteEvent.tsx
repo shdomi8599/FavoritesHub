@@ -59,7 +59,6 @@ export const useGuestFavoriteEvent = () => {
 
       offFavoriteModal();
       successAlert("즐겨찾기가 수정되었습니다.", "즐겨찾기 수정");
-    } catch (e) {
     } finally {
       setTimeout(() => {
         setIsDisableLayoutUpdate(false);
@@ -119,25 +118,18 @@ export const useGuestFavoriteEvent = () => {
   };
 
   const favoriteImportGuest = async (fileData: ImportFavorite[]) => {
-    try {
-      await confirmAlert(
-        "즐겨찾기 삽입을 진행하시겠습니까?",
-        "즐겨찾기 삽입이",
-      );
+    await confirmAlert("즐겨찾기 삽입을 진행하시겠습니까?", "즐겨찾기 삽입이");
 
-      await Promise.all(
-        fileData.map(
-          async ({ favoriteName, address }) =>
-            await guestFavoriteAdd(favoriteName, address),
-        ),
-      );
+    await Promise.all(
+      fileData.map(
+        async ({ favoriteName, address }) =>
+          await guestFavoriteAdd(favoriteName, address),
+      ),
+    );
 
-      const favorites: Favorite[] = getLocalStorageItem("favoriteList");
-      setGuestFavorites([...favorites]);
-      offFavoriteModal();
-    } catch {
-    } finally {
-    }
+    const favorites: Favorite[] = getLocalStorageItem("favoriteList");
+    setGuestFavorites([...favorites]);
+    offFavoriteModal();
   };
 
   return {

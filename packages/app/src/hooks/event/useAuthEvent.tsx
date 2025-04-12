@@ -111,12 +111,14 @@ export const useAuthEvent = () => {
             await guestFavoritesAdd(guestFavoriteList, mail, presetName);
           });
         }
-      } finally {
-        callbackSuccessAlert(
+        await callbackSuccessAlert(
           "회원가입을 축하합니다.",
           "로그인 하러가기",
           moveLogin,
         );
+      } catch {
+        return errorAlert("잠시 후에 다시 시도해주세요.", "회원가입");
+      } finally {
         offAuthModal();
         setIsLoading(false);
       }

@@ -227,7 +227,6 @@ export const useFavoriteEvent = () => {
       });
       downloadJsonFile(resetFavorites, "favorites");
       offFavoriteModal();
-    } catch {
     } finally {
       setIsLoading(false);
     }
@@ -244,6 +243,7 @@ export const useFavoriteEvent = () => {
       resetFavoriteList(viewPreset?.id);
       offFavoriteModal();
     } catch {
+      errorAlert("잠시 후에 다시 시도해주세요.", "즐겨찾기 삽입");
     } finally {
       setIsLoading(false);
     }
@@ -266,6 +266,7 @@ export const useFavoriteEvent = () => {
       resetFavoriteList(viewPreset?.id);
       resetFavoriteList(targetPresetId);
     } catch {
+      errorAlert("잠시 후에 다시 시도해주세요.", "즐겨찾기 이전");
     } finally {
       setIsLoading(false);
     }

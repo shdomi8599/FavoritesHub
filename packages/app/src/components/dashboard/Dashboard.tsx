@@ -49,30 +49,44 @@ export default function Dashboard({
     setUserMail,
     setAccessToken,
   } = useAuth();
+  const { pathname, moveGuest } = useRouters();
   const { setIsDashboard } = useDashboard();
   const { resetPresetList } = useResetQuery();
   const { ref: barRef, barHeight } = useBarHeight();
   const { presetRelocation } = usePresetEvent();
   const { favoriteRelocation } = useFavoriteEvent();
   const { favoriteRelocationGuest } = useGuestFavoriteEvent();
-  const { pathname, moveGuest } = useRouters();
+  const { data: presets } = usePresetList(userId, accessToken);
   const { isMinWidth600, isMaxWidth900 } = useBreakPoints();
 
   const setPresetLength = useSetRecoilState(presetLengthState);
   const [viewPreset, setViewPreset] = useRecoilState(viewPresetState);
+  const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
   const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
   const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);
-
-  const { data: presets } = usePresetList(userId, accessToken);
-
   const [dragPresetData, setDragPresetData] =
     useRecoilState(dragPresetDataState);
+
+  const refreshEvent = async () => {
+    try {
+      const { accessToken, userId, mail } = await getAuthRefreshToken();
+      if (!accessToken && !userId && pathname !== "/login") {
+        moveGuest();
+      }
+      setUserId(userId);
+      setAccessToken(accessToken!);
+      setUserMail(mail);
+    } catch {
+      moveGuest();
+    } finally {
+      handleMount();
+    }
+  };
+
   useEffect(() => {
     if (!presets?.length) return;
     setDragPresetData(presets);
   }, [presets]);
-
-  const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
 
   // 이펙트
   useEffect(() => {
@@ -140,22 +154,7 @@ export default function Dashboard({
       deleteCookie("googleId");
     }
 
-    getAuthRefreshToken()
-      .then((res) => {
-        if (res) {
-          const { accessToken, userId, mail } = res;
-
-          if (!accessToken && !userId && pathname !== "/login") {
-            moveGuest();
-          }
-
-          setUserId(userId);
-          setAccessToken(accessToken!);
-          setUserMail(mail);
-        }
-      })
-      .catch(moveGuest)
-      .finally(handleMount);
+    refreshEvent();
   }, []);
 
   // 게스트 용

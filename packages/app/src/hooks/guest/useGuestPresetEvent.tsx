@@ -15,6 +15,7 @@ import {
 } from "@/states";
 import {
   confirmAlert,
+  errorAlert,
   removeLocalStorageItem,
   setLocalStorageItem,
   successAlert,
@@ -78,6 +79,8 @@ export const useGuestPresetEvent = () => {
         removeLocalStorageItem("favoriteList");
         setFavoritesLength(0);
       }
+    } catch {
+      errorAlert("잠시 후에 다시 시도해주세요.", "프리셋 삭제");
     } finally {
       setIsLoading(false);
       setGuestFavorites([]);
