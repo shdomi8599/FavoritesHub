@@ -11,12 +11,22 @@ export class GPTService {
   async recommendation() {
     let response = "";
     try {
-      const gptResponse = await client.responses.create({
+      const gptResponse = await client.chat.completions.create({
         model: "gpt-4o",
-        input:
-          "Just recommend a fresh and fun site address. Don't say anything else. Recommend an address. Site address in https format.",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant. Only recommend one existing, real, fun, and trendy website that is accessible via https.",
+          },
+          {
+            role: "user",
+            content:
+              "Recommend a fun and fresh website that actually exists. Only respond with the full URL (e.g., https://example.com). Do not make up sites. Only return sites that are live and working.",
+          },
+        ],
       });
-      response = gptResponse.output_text;
+      response = gptResponse.choices[0].message.content;
     } catch (error) {
       console.error("Error fetching GPT response:", error);
       response = "Error fetching GPT response";
