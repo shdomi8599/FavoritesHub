@@ -16,6 +16,7 @@ import { AuthService } from "src/auth/auth.service";
 import { GoogleAuthGuard, JwtAuthGuard, LocalAuthGuard } from "src/auth/guard";
 import { baseClientURL } from "src/constants";
 import { FavoritesService } from "src/favorites/favorites.service";
+import { GPTService } from "src/gpt/gpt.service";
 import { PresetsService } from "src/presets/presets.service";
 import { Favorite, Preset } from "src/source/entity";
 import { UsersService } from "src/users/users.service";
@@ -46,6 +47,7 @@ const myCache = new NodeCache({ checkperiod: 120 });
 @Controller("api")
 export class ApiController {
   constructor(
+    private readonly gptService: GPTService,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly presetsService: PresetsService,
@@ -631,5 +633,16 @@ export class ApiController {
   ) {
     const { presetId, targetPresetId, favoriteId } = dto;
     await this.favoritesService.transfer(presetId, targetPresetId, favoriteId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("ai/recommendation")
+  @ApiResponse({
+    status: 200,
+    description: "AI 추천 사이트입니다.",
+  })
+  async getAIRecommendation(@Request() req) {
+    const recommendation = await this.gptService.recommendation();
+    return recommendation;
   }
 }

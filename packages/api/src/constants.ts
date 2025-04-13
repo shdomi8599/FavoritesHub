@@ -16,6 +16,7 @@ export const {
   JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET,
   DB_PASSWORD,
+  OPENAI_API_KEY,
 } = process.env;
 
 export const baseClientURL =

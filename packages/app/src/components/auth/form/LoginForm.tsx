@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+import { getAIRecommendation } from "@/api/ai";
 import { postAuthLogin, postUserExist } from "@/api/auth";
 import {
   ModalButton,
@@ -10,7 +10,11 @@ import {
 import { authFormOptions, authInputLabel } from "@/const";
 import { useRouters } from "@/hooks/common/useRouters";
 import { useAuth } from "@/hooks/data";
-import { isPasswordForgotState, isRefreshTokenState } from "@/states";
+import {
+  aiRecommendationState,
+  isPasswordForgotState,
+  isRefreshTokenState,
+} from "@/states";
 import { AuthModalState, LoginFormInput } from "@/types";
 import { callbackSuccessAlert, errorAlert } from "@/util";
 import {
@@ -43,6 +47,7 @@ export default function LoginForm({ openAuthModal, handleAuthModal }: Props) {
   };
 
   const setIsForgot = useSetRecoilState(isPasswordForgotState);
+  const setAIRecommendationState = useSetRecoilState(aiRecommendationState);
 
   const {
     register,
@@ -100,12 +105,16 @@ export default function LoginForm({ openAuthModal, handleAuthModal }: Props) {
 
     setUserId(userId);
     setAccessToken(accessToken!);
+
+    // AI 추천 사이트 가져오기
+    const aiRecommendation = await getAIRecommendation(accessToken!);
+    setAIRecommendationState(aiRecommendation);
+
     moveHome();
   };
 
   useEffect(() => {
     setIsForgot(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

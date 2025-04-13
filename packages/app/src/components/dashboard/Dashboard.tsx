@@ -1,3 +1,4 @@
+import { getAIRecommendation } from "@/api/ai";
 import { getAuthRefreshToken } from "@/api/auth";
 import {
   useBarHeight,
@@ -10,6 +11,7 @@ import { useFavoriteEvent, usePresetEvent } from "@/hooks/event";
 import { useGuestFavoriteEvent } from "@/hooks/guest";
 import { usePresetList, useResetQuery } from "@/hooks/react-query";
 import {
+  aiRecommendationState,
   dragPresetDataState,
   guestPresetsState,
   isGuideModalState,
@@ -24,9 +26,9 @@ import {
   getLocalStorageItem,
   setLocalStorageItem,
 } from "@/util";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import Blind from "../blind/Blind";
 import DashboardBar from "./bar/DashBoardBar";
@@ -39,6 +41,12 @@ export default function Dashboard({
   children: ReactNode;
   handleMount: () => void;
 }) {
+  // 일반 상태
+  const [isAIRecommend, setIsAIRecommend] = useState(false);
+  const closeAIRecommend = () => {
+    setIsAIRecommend(false);
+  };
+
   // 훅
   const {
     userId,
@@ -64,6 +72,9 @@ export default function Dashboard({
   const [guestPresets, setGuestPresets] = useRecoilState(guestPresetsState);
   const [isGuideModal, setIsGuideModal] = useRecoilState(isGuideModalState);
   const [isPresetEvent, setIsPresetEvent] = useRecoilState(isPresetEventState);
+  const [aiRecommendation, setAIRecommendationState] = useRecoilState(
+    aiRecommendationState,
+  );
   const [dragPresetData, setDragPresetData] =
     useRecoilState(dragPresetDataState);
 
@@ -76,12 +87,21 @@ export default function Dashboard({
       setUserId(userId);
       setAccessToken(accessToken!);
       setUserMail(mail);
+
+      // AI 추천 사이트 가져오기
+      const aiRecommendation = await getAIRecommendation(accessToken!);
+      setAIRecommendationState(aiRecommendation);
     } catch {
       moveGuest();
     } finally {
       handleMount();
     }
   };
+
+  useEffect(() => {
+    if (!aiRecommendation) return;
+    setIsAIRecommend(true);
+  }, [aiRecommendation]);
 
   useEffect(() => {
     if (!presets?.length) return;
@@ -194,6 +214,35 @@ export default function Dashboard({
         <Main component="main" barheight={barHeight}>
           {children}
         </Main>
+        <Snackbar
+          sx={{
+            background: "white",
+          }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={isAIRecommend}
+          onClose={closeAIRecommend}
+          autoHideDuration={4000}
+        >
+          <Alert severity="success" variant="filled" sx={{ width: "100%" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                fontSize: "1.2rem",
+              }}
+            >
+              <span>AI 추천 사이트</span>
+              <CustomLink
+                href={aiRecommendation}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {aiRecommendation}
+              </CustomLink>
+            </Box>
+          </Alert>
+        </Snackbar>
       </Box>
     </>
   );
@@ -206,3 +255,9 @@ const Main = styled(Box)(({ barheight }: { barheight: number }) => ({
   paddingTop: `${barheight}px`,
   backgroundColor: "#f3f3f3",
 }));
+
+const CustomLink = styled("a")({
+  textDecoration: "underline",
+  color: "white",
+  cursor: "pointer",
+});
