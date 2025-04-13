@@ -168,3 +168,8 @@ export const isDisableLayoutUpdateState = atom({
   key: "isDisableLayoutUpdateState",
   default: false,
 });
+
+export const aiRecommendationState = atom({
+  key: "aiRecommendationState",
+  default: "",
+});
