@@ -11,7 +11,6 @@ export class GPTService {
   async recommendation() {
     let response = "";
     try {
-      console.log(1);
       const gptResponse = await client.responses.create({
         model: "gpt-4o",
         input:
